@@ -23,6 +23,8 @@ class TopicCatalogTests(unittest.TestCase):
             "firewall": "network.firewall",
             "yubikey": "accounts.yubikey",
             "grub": "system.startup-boot",
+            "资源分配": "system.resource-allocation",
+            "uresourced": "system.resource-allocation",
             "btrfs": "recovery.snapshots",
             "factory reset": "recovery.factory-reset",
             "scanner": "hardware.scanners",

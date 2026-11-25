@@ -90,6 +90,15 @@ def topics() -> tuple[ControlPanelTopic, ...]:
             handler="boot-settings",
         ),
         _topic(
+            "system.resource-allocation",
+            "system",
+            N_("Resource Allocation Settings"),
+            N_("Keep the desktop responsive under load"),
+            ("resource", "uresourced", "priority", "oom", "cpu", "desktop protection", "资源", "分配", "资源分配", "优先级", "桌面保护"),
+            "preferences-system-performance-symbolic",
+            handler="resource-settings",
+        ),
+        _topic(
             "system.virtual-memory",
             "system",
             N_("Virtual Memory Settings"),

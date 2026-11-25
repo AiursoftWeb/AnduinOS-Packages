@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-control-panel</PackageName>
-    <PackageVersion>2.1.0-5+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-6+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS Control Panel — a category-based home for system, hardware, application, account, appearance, and recovery settings.</PackageDescription>
     <Section>utils</Section>
@@ -51,6 +51,7 @@
     <IncludeFile Include="src/anduinos_control_panel/app.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/app.py" />
     <IncludeFile Include="src/anduinos_control_panel/model.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/model.py" />
     <IncludeFile Include="src/anduinos_control_panel/prediction_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/prediction_settings.py" />
+    <IncludeFile Include="src/anduinos_control_panel/resource_settings.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/resource_settings.py" />
     <IncludeFile Include="src/anduinos_control_panel/software_sources.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/software_sources.py" />
     <IncludeFile Include="src/anduinos_control_panel/topics.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/topics.py" />
     <IncludeFile Include="src/anduinos_control_panel/search_provider.py" Target="/usr/lib/python3/dist-packages/anduinos_control_panel/search_provider.py" />

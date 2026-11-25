@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-uresourced</PackageName>
-    <PackageVersion>0.5.5-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.5.5-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Protect the active graphical session and prioritize focused applications with upstream uresourced.</PackageDescription>
     <Section>admin</Section>
@@ -40,6 +40,9 @@
     <Dependency Include="libsystemd0" />
     <Dependency Include="libpipewire-0.3-0t64" />
     <Dependency Include="systemd" />
+    <Dependency Include="systemd-oomd" />
+    <Dependency Include="python3" />
+    <Dependency Include="pkexec" />
     <Dependency Include="dbus-user-session" />
     <Dependency Include="init-system-helpers" />
     <Dependency Include="pipewire" />
@@ -49,7 +52,17 @@
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="deploy/usr/lib/systemd/system/uresourced.service" Target="/usr/lib/systemd/system/uresourced.service" />
-    <ConfFile Include="deploy/etc/uresourced.conf" Target="/etc/uresourced.conf" />
+    <IncludeFile Include="data/defaults.conf" Target="/usr/share/anduinos-uresourced/defaults.conf" />
+    <IncludeFile Include="data/system-policy.conf" Target="/usr/lib/systemd/system/uresourced.service.d/30-anduinos-policy.conf" />
+    <IncludeFile Include="data/user-policy.conf" Target="/usr/lib/systemd/user/uresourced.service.d/30-anduinos-policy.conf" />
+    <IncludeScript Include="scripts/aos-bg" Target="/usr/bin/aos-bg" />
+    <IncludeScript Include="scripts/helper" Target="/usr/lib/anduinos-uresourced/helper" />
+    <IncludeFile Include="data/com.anduinos.ResourcePolicy.policy" Target="/usr/share/polkit-1/actions/com.anduinos.ResourcePolicy.policy" />
+    <IncludeFile Include="data/oomd-app.conf" Target="/usr/lib/systemd/user/app.slice.d/30-anduinos-resource-policy.conf" />
+    <IncludeFile Include="data/oomd-app.conf" Target="/usr/lib/systemd/user/background.slice.d/30-anduinos-resource-policy.conf" />
+    <IncludeFile Include="data/oomd-user.conf" Target="/usr/lib/systemd/system/user@.service.d/30-anduinos-resource-policy.conf" />
+    <IncludeFile Include="data/oomd-root.conf" Target="/usr/lib/systemd/system/-.slice.d/30-anduinos-resource-policy.conf" />
+    <PreInstallScript Include="scripts/preinst.sh" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript Include="scripts/prerm.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />

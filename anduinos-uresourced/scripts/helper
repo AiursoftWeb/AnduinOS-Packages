@@ -1,0 +1,241 @@
+#!/usr/bin/python3 -I
+"""Apply the machine's desktop resource policy; configuration is always persistent."""
+import configparser
+import fcntl
+import io
+import json
+import os
+from pathlib import Path
+import pwd
+import stat
+import subprocess
+import sys
+import tempfile
+
+DAEMON = '/usr/libexec/uresourced'
+GUI = Path('/etc/uresourced.conf.d/90-anduinos-control-panel.conf')
+ENV = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LANG': 'C.UTF-8', 'LC_ALL': 'C.UTF-8'}
+
+
+def run(arguments, *, user=None, check=True):
+    environment = ENV.copy()
+    if user is not None:
+        account = pwd.getpwuid(user)
+        runtime = f'/run/user/{user}'
+        environment.update(HOME=account.pw_dir, USER=account.pw_name,
+                           XDG_RUNTIME_DIR=runtime,
+                           DBUS_SESSION_BUS_ADDRESS=f'unix:path={runtime}/bus')
+        if os.geteuid() == 0:
+            arguments = ['/usr/sbin/runuser', '-u', account.pw_name, '--', *arguments]
+        elif user != os.geteuid():
+            raise PermissionError('Cannot inspect another user session')
+    result = subprocess.run(arguments, cwd='/', env=environment, text=True,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=45)
+    if check and result.returncode:
+        raise RuntimeError(result.stderr.strip() or f'{arguments[-1]} failed ({result.returncode})')
+    return result
+
+
+def config(*, user=None, personal=False):
+    arguments = [DAEMON, '--dump-config'] + (['--user'] if personal else [])
+    if user is None and os.geteuid() != 0:
+        # A read-only unprivileged invocation uses its own real XDG directory.
+        result = subprocess.run(arguments, capture_output=True, text=True, timeout=15)
+        if result.returncode:
+            raise RuntimeError(result.stderr.strip())
+    else:
+        # Match custom XDG_CONFIG_HOME from the existing user manager.
+        if user is not None and personal:
+            setting = run(['/usr/bin/systemctl', '--user', 'show-environment'], user=user)
+            xdg = next((line.split('=', 1)[1] for line in setting.stdout.splitlines()
+                        if line.startswith('XDG_CONFIG_HOME=')), None)
+            if xdg:
+                arguments = ['/usr/bin/env', f'XDG_CONFIG_HOME={xdg}', *arguments]
+        result = run(arguments, user=user)
+    parser = configparser.ConfigParser(interpolation=None, strict=False)
+    parser.optionxform = str
+    parser.read_string(result.stdout)
+    return parser
+
+
+def ctl(*arguments, user=None, check=True):
+    return run(['/usr/bin/systemctl', *(['--user'] if user is not None else []),
+                *arguments], user=user, check=check)
+
+
+def users():
+    result = run(['/usr/bin/loginctl', 'list-users', '--no-legend', '--no-pager'])
+    return [int(line.split()[0]) for line in result.stdout.splitlines()
+            if line.split() and line.split()[0].isdigit()
+            and Path(f'/run/user/{line.split()[0]}/bus').exists()]
+
+
+def active(user=None, unit='uresourced.service'):
+    return ctl('is-active', '--quiet', unit, user=user, check=False).returncode == 0
+
+
+def values(parser):
+    return {'enabled': parser.getboolean('AnduinOS', 'Enabled'),
+            'memory': parser['ActiveUser']['MemoryMin'],
+            'cpu_weight': parser.getint('AppBoost', 'ActiveCPUWeight'),
+            'io_weight': parser.getint('AppBoost', 'ActiveIOWeight')}
+
+
+def status():
+    global_config = config()
+    personal = config(personal=True)
+    current = os.getuid() if os.geteuid() != 0 else None
+    return {'values': values(global_config), 'personal': values(personal),
+            'sources': dict(global_config['AnduinOSSources']),
+            'personal_sources': dict(personal['AnduinOSSources']),
+            'system_active': active(),
+            'user_active': active(current) if current is not None else False,
+            'gui_exists': GUI.exists()}
+
+
+def safe_gui():
+    if GUI.parent.exists():
+        directory = GUI.parent.lstat()
+        if not stat.S_ISDIR(directory.st_mode) or directory.st_uid != 0 or directory.st_mode & 0o022:
+            raise RuntimeError('Unsafe resource configuration directory')
+    if GUI.is_symlink():
+        raise RuntimeError('The Control Panel configuration must not be a symbolic link')
+    if GUI.exists():
+        info = GUI.stat()
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != 0 or info.st_mode & 0o022 or info.st_size > 65536:
+            raise RuntimeError('Unsafe Control Panel configuration file')
+
+
+def write_gui(data):
+    safe_gui()
+    if data is None:
+        GUI.unlink(missing_ok=True)
+        return
+    GUI.parent.mkdir(mode=0o755, exist_ok=True)
+    descriptor, temporary = tempfile.mkstemp(prefix='.resource-policy-', dir=GUI.parent)
+    try:
+        with os.fdopen(descriptor, 'wb') as stream:
+            stream.write(data)
+            stream.flush()
+            os.fchmod(stream.fileno(), 0o644)
+            os.fsync(stream.fileno())
+        os.replace(temporary, GUI)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
+
+
+def edit(payload):
+    if not isinstance(payload, dict) or set(payload) - {'enabled', 'memory_mib', 'priority'}:
+        raise ValueError('Unsupported resource setting')
+    parser = configparser.ConfigParser(interpolation=None)
+    parser.optionxform = str
+    if GUI.exists():
+        parser.read_string(GUI.read_text())
+    def put(group, key, value):
+        if not parser.has_section(group):
+            parser.add_section(group)
+        parser[group][key] = str(value)
+    if 'enabled' in payload:
+        if type(payload['enabled']) is not bool:
+            raise ValueError('Enabled must be true or false')
+        put('AnduinOS', 'Enabled', str(payload['enabled']).lower())
+    if 'memory_mib' in payload:
+        memory = payload['memory_mib']
+        if type(memory) is not int or not 32 <= memory <= 4096:
+            raise ValueError('Desktop memory protection must be between 32 and 4096 MiB')
+        put('ActiveUser', 'MemoryMin', f'{memory}M')
+    if 'priority' in payload:
+        priority = payload['priority']
+        if type(priority) is not int or priority not in (100, 300, 500):
+            raise ValueError('Foreground priority must be 100, 300 or 500')
+        put('AppBoost', 'ActiveCPUWeight', priority)
+        put('AppBoost', 'ActiveIOWeight', priority)
+    output = io.StringIO()
+    output.write('# Saved by AnduinOS Control Panel. Administrator overrides: 95-local.conf.\n')
+    parser.write(output, space_around_delimiters=False)
+    return output.getvalue().encode()
+
+
+def apply_policy(available):
+    policy = config()
+    enabled = policy.getboolean('AnduinOS', 'Enabled')
+    graphical = [uid for uid in available if active(uid, 'graphical-session.target')]
+    for uid in graphical:
+        config(user=uid, personal=True)  # Validate before changing any running service.
+    print('Stopping application resource management…', flush=True)
+    for uid in available:
+        if active(uid):
+            ctl('stop', 'uresourced.service', user=uid)
+    print('Applying desktop resource allocation…', flush=True)
+    ctl('stop', 'uresourced.service')
+    if enabled:
+        ctl('start', 'uresourced.service')
+        if not active():
+            raise RuntimeError('The desktop resource service did not start; check administrator service overrides')
+        for uid in graphical:
+            ctl('daemon-reload', user=uid)
+            ctl('start', 'uresourced.service', user=uid)
+            if not active(uid):
+                raise RuntimeError(f'Application resource management did not start for user {uid}')
+    # A stopped system daemon must also release the generated session policy.
+    for uid in available:
+        ctl('daemon-reload', user=uid)
+    actual = ctl('show', 'user.slice', '-p', 'MemoryMin', '--value').stdout.strip()
+    print(f'Desktop protection {"enabled" if enabled else "disabled"}; user.slice MemoryMin={actual}', flush=True)
+    if not enabled and (active() or any(active(uid) for uid in available)):
+        raise RuntimeError('Resource protection is still running')
+    print('Saved settings and running services verified.', flush=True)
+
+
+def change(action, payload=None):
+    safe_gui()
+    descriptor = os.open('/run/lock/anduinos-uresourced.lock', os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
+    with os.fdopen(descriptor, 'w') as lock:
+        if os.fstat(lock.fileno()).st_uid != 0:
+            raise RuntimeError('Unsafe resource policy lock')
+        try:
+            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            raise RuntimeError('Another resource allocation change is in progress') from None
+        previous = GUI.read_bytes() if GUI.exists() else None
+        available = users()
+        touched = action in ('set', 'reset')
+        try:
+            if touched:
+                write_gui(edit(payload) if action == 'set' else None)
+            apply_policy(available)
+        except Exception:
+            if touched:
+                print('Applying settings failed; restoring the previous configuration…', flush=True)
+                write_gui(previous)
+                try:
+                    apply_policy(available)
+                except Exception as rollback:
+                    print(f'Could not fully restore the previous running state: {rollback}', file=sys.stderr, flush=True)
+            raise
+
+
+def main():
+    if sys.argv[1:] == ['status']:
+        print(json.dumps(status()))
+        return
+    if os.geteuid() != 0:
+        raise PermissionError('Administrator authentication is required')
+    action = sys.argv[1] if len(sys.argv) > 1 else ''
+    if action == 'cleanup' and len(sys.argv) == 2:
+        Path('/run/systemd/user/session.slice.d/99-uresourced.conf').unlink(missing_ok=True)
+        run(['/usr/bin/deb-systemd-invoke', '--user', 'daemon-reload'])
+    elif action in ('apply', 'reset') and len(sys.argv) == 2:
+        change(action)
+    elif action == 'set' and len(sys.argv) == 3:
+        change(action, json.loads(sys.argv[2]))
+    else:
+        raise ValueError('Usage: helper status|apply|reset|set JSON')
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (OSError, ValueError, RuntimeError, configparser.Error, subprocess.TimeoutExpired) as error:
+        print(str(error), file=sys.stderr, flush=True)
+        sys.exit(1)
