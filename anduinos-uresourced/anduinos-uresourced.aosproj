@@ -1,0 +1,57 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-uresourced</PackageName>
+    <PackageVersion>0.5.5-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>Protect the active graphical session and prioritize focused applications with upstream uresourced.</PackageDescription>
+    <Section>admin</Section>
+    <PackageHomepage>https://gitlab.freedesktop.org/benzea/uresourced</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>LGPL-2.1-or-later</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
+    <Component>main</Component>
+    <Provides>uresourced</Provides>
+    <Conflicts>uresourced</Conflicts>
+    <Replaces>uresourced</Replaces>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <BuildSource Name="ubuntu" Url="https://archive.ubuntu.com/ubuntu" Suites="$(SuiteShortName) $(SuiteShortName)-updates $(SuiteShortName)-security" Components="main universe" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" Condition="'$(Arch)' == 'amd64'" />
+    <BuildSource Name="ubuntu" Url="https://ports.ubuntu.com/ubuntu-ports" Suites="$(SuiteShortName) $(SuiteShortName)-updates $(SuiteShortName)-security" Components="main universe" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" Condition="'$(Arch)' == 'arm64'" />
+    <BuildSource Name="tools-amd64" Url="https://archive.ubuntu.com/ubuntu" Suites="resolute resolute-updates resolute-security" Components="main universe" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" />
+    <BuildSource Name="tools-arm64" Url="https://ports.ubuntu.com/ubuntu-ports" Suites="resolute resolute-updates resolute-security" Components="main universe" SignedBy="/usr/share/keyrings/ubuntu-archive-keyring.gpg" />
+    <!-- Fetch build-only tools and development files without changing the runner. -->
+    <BuildInput Include="meson" Id="meson" Sources="tools-amd64" Arch="amd64" />
+    <BuildInput Include="python3-packaging" Id="packaging" Sources="tools-amd64" Arch="amd64" />
+    <BuildInput Include="ninja-build" Id="ninja-amd64" Sources="tools-amd64" Arch="amd64" />
+    <BuildInput Include="ninja-build" Id="ninja-arm64" Sources="tools-arm64" Arch="arm64" />
+    <BuildInput Include="systemd-dev" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libsystemd-dev" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libsystemd0" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpipewire-0.3-dev" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libpipewire-0.3-0t64" Sources="ubuntu" Arch="$(Arch)" />
+    <BuildInput Include="libspa-0.2-dev" Sources="ubuntu" Arch="$(Arch)" />
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
+    <Dependency Include="libc6" />
+    <Dependency Include="libglib2.0-0t64" />
+    <Dependency Include="libsystemd0" />
+    <Dependency Include="libpipewire-0.3-0t64" />
+    <Dependency Include="systemd" />
+    <Dependency Include="dbus-user-session" />
+    <Dependency Include="init-system-helpers" />
+    <Dependency Include="pipewire" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFile Include="deploy/usr/lib/systemd/system/uresourced.service" Target="/usr/lib/systemd/system/uresourced.service" />
+    <ConfFile Include="deploy/etc/uresourced.conf" Target="/etc/uresourced.conf" />
+    <PostInstallScript Include="scripts/postinst.sh" />
+    <PreRemoveScript Include="scripts/prerm.sh" />
+    <PostRemoveScript Include="scripts/postrm.sh" />
+  </ItemGroup>
+</Project>
