@@ -249,6 +249,18 @@ class DesktopTests(unittest.TestCase):
         self.assertIn("paired-library:arm64", self.labels())
         self.assertIn("foreign-dev:arm64", self.labels())
         with patch.object(self.window, "command") as command:
+            button = self.window.content.get_first_child()
+            while button is not None:
+                if isinstance(button, self.gui.Gtk.Button) and button.get_label() == self.gui._("Cancel"):
+                    button.emit("clicked")
+                    break
+                button = button.get_next_sibling()
+            else:
+                self.fail("Removal review must offer Cancel")
+            self.assertIsNone(self.window.report)
+            self.assertIsNone(self.window.job)
+            command.assert_not_called()
+            self.window.show_report(self.fixture.bundle, preview)
             self.window.prepare()
             self.assertEqual(command.call_args.args[0],
                              ["prepare", str(self.fixture.bundle), "--allow-foreign-removals"])

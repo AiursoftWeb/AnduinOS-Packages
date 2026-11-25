@@ -317,7 +317,7 @@ class UpdateWindow(Adw.ApplicationWindow):
             self.content.append(removals)
         if state == "foreign-removal-required":
             self.button(_("Review removal and update"), self.prepare, True)
-            self.button(_("Cancel"), self.choose_file)
+            self.button(_("Cancel"), lambda *_: self.home())
             self.details(report)
             return
         if state == "blocked":
