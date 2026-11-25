@@ -96,6 +96,7 @@ class ResourceSettingsTests(unittest.TestCase):
                                         'cpu_weight': 711, 'io_weight': 912}}
         self.window._loaded(state, None)
         self.assertEqual(self.window.priority.get_selected(), 3)
+        self.assertEqual(self.window.memory.get_value_as_int(), 8192)
         self.window.enabled.set_active(False)
         self.assertEqual(self.window._payload(), {'enabled': False})
 

@@ -183,6 +183,7 @@ class ResourceSettingsWindow(Adw.Window):
         amount, suffix = int(match[1]), match[2]
         mib = amount * ram_kib / 1024 / 100 if suffix == '%' else amount * {
             '': 1 / 1048576, 'K': 1 / 1024, 'M': 1, 'G': 1024, 'T': 1048576}[suffix]
+        self.memory.set_range(min(32, mib), max(4096, mib))
         self.memory.set_value(mib)
         self.saved_memory = self.memory.get_value_as_int()
         weights = values['cpu_weight'], values['io_weight']
