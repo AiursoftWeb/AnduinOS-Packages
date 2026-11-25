@@ -1,3 +1,14 @@
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -8,6 +8,8 @@
+
+ uresourced_sources = [
+   'main.c',
++  'anduin-config.c',
++  'anduin-resources.c',
+   'r-manager.c',
+   'r-sd-login.c',
+   'utils.c',
 --- a/src/main.c
 +++ b/src/main.c
 @@ -3,6 +3,8 @@
@@ -6,7 +17,7 @@
  #include "r-manager.h"
 +#include "anduin-config.h"
 +#include "anduin-resources.h"
- 
+
  #ifdef HAVE_APP_MANAGEMENT
  #include "r-app-monitor.h"
 @@ -79,9 +81,13 @@
@@ -22,7 +33,7 @@
 +    { "restore-properties", 0, 0, G_OPTION_ARG_NONE, &restore_properties, "Restore managed runtime properties", NULL },
      { NULL }
    };
- 
+
 @@ -99,6 +105,34 @@
        g_printerr ("%s\n", PACKAGE_VERSION);
        return EXIT_SUCCESS;
@@ -55,24 +66,13 @@
 +    return enabled ? 0 : 1;
 +  if (!enabled)
 +    return EXIT_SUCCESS;
- 
+
    loop = g_main_loop_new (NULL, FALSE);
- 
---- a/src/meson.build
-+++ b/src/meson.build
-@@ -8,6 +8,8 @@
- 
- uresourced_sources = [
-   'main.c',
-+  'anduin-config.c',
-+  'anduin-resources.c',
-   'r-manager.c',
-   'r-sd-login.c',
-   'utils.c',
+
 --- a/src/r-manager.c
 +++ b/src/r-manager.c
 @@ -2,6 +2,8 @@
- 
+
  #include <gio/gio.h>
  #include "r-manager.h"
 +#include "anduin-config.h"
@@ -99,7 +99,7 @@
 @@ -385,9 +389,9 @@
    g_autoptr(GKeyFile) file = NULL;
    g_autoptr(GError) error = NULL;
- 
+
 -  file = g_key_file_new ();
 -
 -  if (!g_key_file_load_from_file (file, SYSCONFDIR "/uresourced.conf", G_KEY_FILE_NONE, &error))
@@ -109,41 +109,80 @@
      {
        g_warning ("Could not read configuration file: %s", error->message);
        return;
+@@ -607,14 +611,8 @@
+ void
+ r_manager_stop (RManager *self)
+ {
+-  /* Shutting down gracefully, set as if no user is active (disable protections). */
+-  for (guint i = 0; i < self->all_users->len; i++)
+-    {
+-      set_user_resources (self, g_array_index (self->all_users, uid_t, i), FALSE);
+-    }
+-
+-  set_user_slice_resources (self, 0);
+-
++  /* ExecStopPost restores the properties we took over. Do not write fixed
++   * inactive defaults here: those would overwrite administrator changes. */
+   g_array_set_size (self->graphical_users, 0);
+   g_array_set_size (self->all_users, 0);
+
 --- a/src/r-app-policy.c
 +++ b/src/r-app-policy.c
 @@ -5,6 +5,8 @@
  #include <glib.h>
- 
+
  #include "uresourced-config.h"
 +#include "anduin-config.h"
 +#include "anduin-resources.h"
  #include "r-app-monitor.h"
  #include "r-app-policy.h"
- 
-@@ -82,8 +84,10 @@
+
+@@ -12,6 +14,7 @@
+ {
+   GObject      parent_instance;
+
++  guint        pending_calls;
+   GDBusProxy  *proxy;
+   RAppMonitor *app_monitor;
+
+@@ -45,9 +48,11 @@
+
+ static void
+ set_application_resources_cb (GObject *source_object, GAsyncResult *res,
+-                              G_GNUC_UNUSED gpointer user_data)
++                              gpointer user_data)
+ {
+   GDBusProxy *proxy = G_DBUS_PROXY (source_object);
++  RAppPolicy *self = user_data;
++  self->pending_calls--;
+
+   g_autoptr(GError) error = NULL;
+   g_autoptr(GVariant) var = NULL;
+@@ -82,8 +87,11 @@
    app->cpu_weight_set = app->cpu_weight;
    app->io_weight_set = app->io_weight;
- 
+
 +  g_autoptr(GVariant) parameters = g_variant_ref_sink (g_variant_builder_end (&builder));
 +  anduin_resources_remember (parameters);
++  self->pending_calls++;
    g_dbus_proxy_call (self->proxy, "SetUnitProperties",
 -                     g_variant_builder_end (&builder), G_DBUS_CALL_FLAGS_NONE,
 +                     parameters, G_DBUS_CALL_FLAGS_NONE,
                       1000, NULL, set_application_resources_cb, self);
  }
- 
-@@ -139,7 +143,6 @@
+
+@@ -139,7 +147,6 @@
  {
    g_autoptr(GKeyFile) file = NULL;
    g_autoptr(GError) error = NULL;
 -  g_autofree char *user_config_path = NULL;
- 
+
    self->default_cpu_weight = 100;
    self->default_io_weight = 100;
-@@ -148,18 +151,11 @@
+@@ -148,18 +155,11 @@
    self->boost_cpu_weight_inc = 0;
    self->boost_io_weight_inc = 0;
- 
+
 -  file = g_key_file_new ();
 -  user_config_path = g_strdup_printf ("%s/uresourced.conf", g_get_user_config_dir ());
 -
@@ -162,37 +201,20 @@
 +      g_warning ("Could not read application policy: %s", error->message);
 +      goto out;
      }
- 
+
    set_integer_from_key_file (file, "AppBoost", "DefaultCPUWeight", &self->default_cpu_weight);
-
---- a/src/r-manager.c
-+++ b/src/r-manager.c
-@@ -607,14 +607,8 @@
- void
- r_manager_stop (RManager *self)
- {
--  /* Shutting down gracefully, set as if no user is active (disable protections). */
--  for (guint i = 0; i < self->all_users->len; i++)
--    {
--      set_user_resources (self, g_array_index (self->all_users, uid_t, i), FALSE);
--    }
--
--  set_user_slice_resources (self, 0);
--
-+  /* ExecStopPost restores the properties we took over. Do not write fixed
-+   * inactive defaults here: those would overwrite administrator changes. */
-   g_array_set_size (self->graphical_users, 0);
-   g_array_set_size (self->all_users, 0);
- 
-
---- a/src/r-app-policy.c
-+++ b/src/r-app-policy.c
-@@ -205,7 +205,7 @@
+@@ -205,10 +205,13 @@
  void
  r_app_policy_stop (RAppPolicy *self)
  {
 -  r_app_monitor_reset_all_apps (self->app_monitor);
 +  /* ExecStopPost restores the original resource properties. */
- 
+
    g_dbus_connection_flush_sync (g_dbus_proxy_get_connection (self->proxy),
                                  NULL, NULL);
++
++  while (self->pending_calls > 0)
++    g_main_context_iteration (NULL, TRUE);
+
+   g_clear_object (&self->proxy);
+ }
