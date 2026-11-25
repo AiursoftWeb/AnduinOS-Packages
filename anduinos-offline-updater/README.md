@@ -41,6 +41,16 @@ layout. `--work-directory` chooses temporary storage for the unpacked bundle.
 
 After verification, the preview retains the package target, suite, architecture and UTC build time even if the current system is incompatible. The GTK view compares the computer and update package, explains the blocker and offers another file without allowing installation. Failed verification never labels package metadata as trusted.
 
+If updating a native package requires removing matching foreign-architecture
+software, the preview returns `foreign-removal-required` with the complete
+removal list. The desktop asks for explicit confirmation of that list after
+administrator import. The terminal equivalent is
+`sudo anduinos-offline-updater apply update.atgz --allow-foreign-removals`;
+`--yes` alone does not allow foreign removals. Removal of held, essential,
+protected or important packages, or any native package, blocks this path.
+Foreign architecture registrations and unrelated packages are retained.
+The root worker recreates and compares the approved plan before installation.
+
 Results distinguish `update-available`, `already-installed`, `blocked` and
 `updater-update-required`. The latter previews only the updater bootstrap,
 not the later OS transaction. Space estimates do not claim an exact installation

@@ -145,16 +145,23 @@ def copy_as_user(source, destination, uid):
     return digest.hexdigest(), size
 
 
-def inspect_import(path):
+def inspect_import(path, *, allow_foreign_removals=False):
     # Separate interpreter: read-only APT configuration must not leak into live APT.
-    result = subprocess.run(["/usr/bin/anduinos-offline-updater", "inspect", str(path / "bundle.atgz"),
-                             "--work-directory", str(path), "--json"],
+    arguments = ["/usr/bin/anduinos-offline-updater", "inspect", str(path / "bundle.atgz"),
+                 "--work-directory", str(path), "--json"]
+    if allow_foreign_removals:
+        arguments.append("--allow-foreign-removals")
+    result = subprocess.run(arguments,
                             capture_output=True, text=True, check=False)
     require(result.returncode in (0, 2), "Imported update could not be previewed")
     return json.loads(result.stdout)
 
 
 def ensure_installable(report):
+    if report["state"] == "foreign-removal-required":
+        packages = ", ".join(p["name"] + ":" + p["architecture"] for p in report["foreign_removals"])
+        raise BundleError("Removing these packages requires explicit consent: " + packages +
+                         ". Review with the desktop app or use --allow-foreign-removals.")
     require(report["state"] in ("update-available", "already-installed", "updater-update-required"),
             "; ".join(report.get("blockers", [])) or "This bundle requires a newer installation engine")
     if report["state"] == "updater-update-required":
@@ -176,19 +183,20 @@ def save_plan(path, report):
     return plan_hash
 
 
-def prepare(source, uid):
+def prepare(source, uid, *, allow_foreign_removals=False):
     trusted_directory(ROOT, create=True)
     path = ROOT / uuid.uuid4().hex; path.mkdir(mode=0o711)
     try:
         update(path, schema_version=1, job_id=path.name, owner_uid=uid, state="importing")
         digest, size = copy_as_user(source, path / "bundle.atgz", uid)
-        report = inspect_import(path)
+        report = inspect_import(path, allow_foreign_removals=True) if allow_foreign_removals else inspect_import(path)
         ensure_installable(report)
         # Bind confirmation to the complete root-produced plan, not caller JSON.
         plan_hash = save_plan(path, report)
         # Keep the large package plan out of frequently rewritten progress records.
         result = update(path, state="prepared", archive_sha256=digest, archive_bytes=size,
-                        plan_sha256=plan_hash, source_version=report["current_version"],
+                        plan_sha256=plan_hash, allow_foreign_removals=allow_foreign_removals,
+                        source_version=report["current_version"],
                         target_version=report["target_version"])
         return dict(result, preview=report)
     except (Exception, KeyboardInterrupt):

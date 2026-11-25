@@ -138,7 +138,11 @@ def configure(work, repository, keyring, system_root, architectures):
     apt_pkg.init_system()
 
 
-def resolve_stage(cache, stage, m, *, bootstrap_needed=False):
+class ForeignArchitectureChange(BundleError):
+    """The ordinary solver needs an explicitly reviewed foreign removal."""
+
+
+def resolve_stage(cache, stage, m, *, bootstrap_needed=False, allow_foreign_removals=False):
     """One solver and safety gate for both simulation and installation."""
     catalog = {identity(p["identity"]): p for p in m["packages"]}
     require(cache.broken_count == 0, "The current package dependencies are broken")
@@ -154,11 +158,23 @@ def resolve_stage(cache, stage, m, *, bootstrap_needed=False):
     for item in cache.get_changes():
         before = item.installed.version if item.installed else None
         arch = item.installed.architecture if item.marked_delete else item.candidate.architecture
-        require(arch in native and (item.installed is None or item.installed.architecture in native),
-                f"This update would change {item.fullname}, which is outside this bundle's architecture")
+        foreign = arch not in native or (item.installed is not None and item.installed.architecture not in native)
+        if foreign:
+            if not allow_foreign_removals:
+                raise ForeignArchitectureChange(
+                    f"This update would change {item.fullname}, which is outside this bundle's architecture")
+            require(item.marked_delete and item.installed is not None and not bootstrap_needed,
+                    f"Cannot safely remove the foreign package: {item.fullname}")
+        record = item.installed.record if item.installed is not None else {}
+        protected = item.essential or record.get("Protected") == "yes" or record.get("Priority") in ("required", "important")
         require(item._pkg.selected_state != apt_pkg.SELSTATE_HOLD, f"Held package would change: {item.name}")
         if item.marked_delete:
-            require(not bootstrap_needed and not item.essential and item.name in m["allowed_removals"], f"Unapproved package removal: {item.name}")
+            require(not protected, f"Protected package would be removed: {item.fullname}")
+            if foreign:
+                require(allow_foreign_removals, f"Foreign package removal was not approved: {item.fullname}")
+            else:
+                require(not allow_foreign_removals and not bootstrap_needed and item.name in m["allowed_removals"],
+                        f"Unapproved native package removal: {item.fullname}")
             after = None
         else:
             candidate = item.candidate
@@ -173,7 +189,7 @@ def resolve_stage(cache, stage, m, *, bootstrap_needed=False):
                 record.pop(key, None)
             record["Status"] = "install ok installed"
             replacements.append(record)
-        changes.append({"action": "remove" if after is None else "install", "name": item.name,
+        changes.append({"action": "remove" if after is None else "install", "name": item.name.split(":", 1)[0],
                         "architecture": arch, "before": before, "after": after})
     return sorted(changes, key=lambda c: (c["name"], c["architecture"])), replacements, peak_installed
 
@@ -220,7 +236,7 @@ def bootstrap_plan(cache, manifest, packages):
     return [{"stage": stage, "changes": changes}], expanded
 
 
-def simulate(m, repository, keyring, system_root, work, *, client_version=VERSION):
+def simulate(m, repository, keyring, system_root, work, *, client_version=VERSION, allow_foreign_removals=False):
     status_file = system_root / "var/lib/dpkg/status"
     status_bytes = status_file.read_bytes()
     records = paragraphs(status_bytes.decode())
@@ -250,7 +266,8 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
     results, peak_installed = [], 0
     for stage in stages:
         with apt.Cache(progress=OpProgress(), memonly=True) as cache:
-            changes, replacements, expanded = resolve_stage(cache, stage, m, bootstrap_needed=bootstrap_needed)
+            changes, replacements, expanded = resolve_stage(cache, stage, m, bootstrap_needed=bootstrap_needed,
+                                                    allow_foreign_removals=allow_foreign_removals)
             runtime = {c["name"] for c in changes if replaces_runtime(c["name"])}
             if runtime:
                 # Replan the minimal bootstrap from the original installed state,
@@ -261,11 +278,12 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
                 require(status_file.read_bytes() == status_bytes, "System package state changed during preview; try again")
                 return bootstrap, size, True, hashlib.sha256(status_bytes).hexdigest()
             peak_installed += expanded
-            changed = {c["name"] for c in changes}
             # Replace only native/all records, allowing a native-to-all
             # transition while preserving same-name foreign records.
-            records = [r for r in records if r.get("Package") not in changed or
-                       r.get("Architecture") not in (m["architecture"], "all")] + replacements
+            removed = {(c["name"], c["architecture"]) for c in changes if c["action"] == "remove"}
+            updated = {c["name"] for c in changes if c["action"] == "install"}
+            records = [r for r in records if (r.get("Package"), r.get("Architecture")) not in removed and
+                       (r.get("Package") not in updated or r.get("Architecture") not in (m["architecture"], "all"))] + replacements
             status.write_text(control_text(records))
             results.append({"stage": stage, "changes": sorted(changes, key=lambda c: (c["name"], c["architecture"]))})
     final = installed(records)
@@ -274,7 +292,7 @@ def simulate(m, repository, keyring, system_root, work, *, client_version=VERSIO
     return results, peak_installed, bootstrap_needed, hashlib.sha256(status_bytes).hexdigest()
 
 
-def preview(m, repository, keyring, system_root, workspace_root=None, *, client_version=VERSION):
+def preview(m, repository, keyring, system_root, workspace_root=None, *, client_version=VERSION, allow_foreign_removals=False):
     # The caller has authenticated the manifest and payload. Keep that identity
     # in the report even when this machine cannot install the update.
     system_root = Path(system_root).resolve()
@@ -317,7 +335,16 @@ def preview(m, repository, keyring, system_root, workspace_root=None, *, client_
         if result["blockers"]:
             return result
         with tempfile.TemporaryDirectory(prefix="offline-plan-", dir=workspace_root) as name:
-            stages, expanded, bootstrap, status_hash = simulate(m, repository, keyring, system_root, Path(name), client_version=client_version)
+            try:
+                stages, expanded, bootstrap, status_hash = simulate(
+                    m, repository, keyring, system_root, Path(name), client_version=client_version,
+                    allow_foreign_removals=allow_foreign_removals)
+            except ForeignArchitectureChange:
+                # Recreate the complete transaction from the unchanged starting state.
+                with tempfile.TemporaryDirectory(prefix="foreign-plan-", dir=workspace_root) as alternate:
+                    stages, expanded, bootstrap, status_hash = simulate(
+                        m, repository, keyring, system_root, Path(alternate), client_version=client_version,
+                        allow_foreign_removals=True)
             result.update(stages=stages, status_sha256=status_hash)
             result["space"].update(package_expansion_upper_estimate_bytes=expanded,
                                    observed_available_bytes=shutil.disk_usage(system_root).free)
@@ -325,6 +352,13 @@ def preview(m, repository, keyring, system_root, workspace_root=None, *, client_
             changed = any(s["changes"] for s in stages)
             require(changed or current == m["target_version"], "OS version differs despite an empty APT plan")
             result["state"] = "updater-update-required" if bootstrap else "update-available" if changed else "already-installed"
+            removals = [c for stage in stages for c in stage["changes"]
+                        if c["action"] == "remove" and c["architecture"] not in (m["architecture"], "all")]
+            if removals:
+                result["foreign_removals"] = removals
+                if not allow_foreign_removals:
+                    result["state"] = "foreign-removal-required"
+                    result["blockers"] = ["This update requires removing the listed foreign-architecture packages."]
     except (BundleError, apt_pkg.Error, SystemError, OSError) as error:
         result["blockers"].append(str(error))
     return result

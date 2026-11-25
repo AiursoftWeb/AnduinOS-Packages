@@ -69,7 +69,7 @@ def wait_for_update(job):
     return job
 
 
-def apply_update(file, assume_yes):
+def apply_update(file, assume_yes, *, allow_foreign_removals=False):
     if os.geteuid() != 0:
         print("Use sudo anduinos-offline-updater apply to authorize installation.", file=sys.stderr)
         return 2
@@ -77,7 +77,10 @@ def apply_update(file, assume_yes):
     job_id = None
     try:
         print("Checking the update file…", flush=True)
-        job = call_helper("prepare", str(file.absolute()))
+        arguments = ["prepare", str(file.absolute())]
+        if allow_foreign_removals:
+            arguments.append("--allow-foreign-removals")
+        job = call_helper(*arguments)
         job_id = job["job_id"]
         print(f"Update job: {job_id}", flush=True)
         for step in range(2):
@@ -93,7 +96,8 @@ def apply_update(file, assume_yes):
                 return 0
             if plan["state"] != "already-installed" and not assume_yes:
                 try:
-                    confirmed = input("Install this plan? [y/N] ").strip().lower() in {"y", "yes"}
+                    question = "Remove the listed foreign packages and install this plan? [y/N] " if plan.get("foreign_removals") else "Install this plan? [y/N] "
+                    confirmed = input(question).strip().lower() in {"y", "yes"}
                 except EOFError:
                     confirmed = False
                 if not confirmed:
@@ -137,8 +141,12 @@ def main(argv=None):
     command = sub.add_parser("apply", help="Review and install a signed update in the terminal")
     command.add_argument("file", type=Path)
     command.add_argument("-y", "--yes", action="store_true", help="Confirm installation plans without prompting")
+    command.add_argument("--allow-foreign-removals", action="store_true",
+                         help="Allow removal of listed non-native packages after plan review")
     command = sub.add_parser("prepare", help="Import and preview with administrator authorization; does not install")
     command.add_argument("file", type=Path)
+    command.add_argument("--allow-foreign-removals", action="store_true",
+                         help="Prepare a plan that may remove non-native packages")
     command = sub.add_parser("install", help="Start exactly the previously prepared and confirmed plan")
     command.add_argument("job")
     command.add_argument("--confirm-plan", required=True, help="SHA256 returned by prepare")
@@ -152,11 +160,12 @@ def main(argv=None):
         command.add_argument("--work-directory", type=Path, help="Existing temporary-storage parent directory")
         command.add_argument("--json", action="store_true")
         if name == "inspect":
+            command.add_argument("--allow-foreign-removals", action="store_true")
             command.add_argument("--system-root", type=Path, default=Path("/"),
                                  help="Read captured system state from a different root; no files there are changed")
     args = parser.parse_args(argv)
     if args.command == "apply":
-        return apply_update(args.file, args.yes)
+        return apply_update(args.file, args.yes, allow_foreign_removals=args.allow_foreign_removals)
     if args.command in ("prepare", "install", "status", "discard"):
         from . import jobs
         try:
@@ -167,6 +176,8 @@ def main(argv=None):
             action = "start" if args.command == "install" else args.command
             values = [str(args.file.absolute())] if action == "prepare" else [args.job]
             if action == "start": values.append(args.confirm_plan)
+            if action == "prepare" and args.allow_foreign_removals:
+                values.append("--allow-foreign-removals")
             return subprocess.run(prefix + [jobs.HELPER, action, *values], check=False).returncode
         except (ValueError, OSError) as error:
             print(json.dumps({"state": "blocked", "blockers": [str(error)]}))
@@ -176,7 +187,8 @@ def main(argv=None):
             result = verify(args.file, args.keyring, name)
             if args.command == "inspect":
                 report = preview(result["manifest"], Path(name) / "repository", args.keyring, args.system_root,
-                                 args.work_directory, client_version=client_version)
+                                 args.work_directory, client_version=client_version,
+                                 allow_foreign_removals=args.allow_foreign_removals)
                 report.update(verification="verified", signer=result["signer"], archive_bytes=args.file.stat().st_size)
             else:
                 m = result["manifest"]
@@ -196,7 +208,7 @@ def main(argv=None):
         for reason in report.get("blockers", []):
             print(reason)
         print("Read-only preview. No system packages were changed.")
-    return 2 if report["state"] == "blocked" else 0
+    return 2 if report["state"] in ("blocked", "foreign-removal-required") else 0
 
 
 if __name__ == "__main__":

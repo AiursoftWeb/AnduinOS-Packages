@@ -108,11 +108,12 @@ class PreviewTests(unittest.TestCase):
         (self.system / "var/lib/dpkg/status").write_text(self.package("base-files", version + "-1", "base-library (>= 5)" if version == "2.0.5" else "base-library (>= 1)") +
             self.package("base-library", lib, hold=hold) + self.package("vim-common", lib) + extra)
 
-    def inspect(self, file=None, client_version="2.1.0-1"):
+    def inspect(self, file=None, client_version="2.1.0-1", *, allow_foreign_removals=False):
         with tempfile.TemporaryDirectory(dir=self.work) as path:
             v = verify(file or self.bundle, self.keyring, path)
             before = (self.system / "var/lib/dpkg/status").read_bytes()
-            result = preview(v["manifest"], Path(path) / "repository", self.keyring, self.system, self.work, client_version=client_version)
+            result = preview(v["manifest"], Path(path) / "repository", self.keyring, self.system, self.work, client_version=client_version,
+                             allow_foreign_removals=allow_foreign_removals)
             self.assertEqual(before, (self.system / "var/lib/dpkg/status").read_bytes()); return result
 
     def test_old_intermediate_current_and_user_apps(self):
@@ -135,14 +136,59 @@ class PreviewTests(unittest.TestCase):
         self.state("2.0.5", "5", foreign + native)
         self.assertEqual(self.inspect()["state"], "already-installed")
 
-    def test_update_requiring_the_matching_foreign_version_is_blocked(self):
-        (self.system / "var/lib/dpkg/arch").write_text("amd64\ni386\n")
+    def foreign_pair(self, architecture="arm64", extra=""):
+        (self.system / "var/lib/dpkg/arch").write_text(f"amd64\n{architecture}\n")
         pair = "".join(self.package("paired-library", "1", architecture=arch, multi_arch="same")
-                       for arch in ("amd64", "i386"))
-        self.state("2.0.5", "5", pair)
+                       for arch in ("amd64", architecture))
+        self.state("2.0.5", "5", pair + extra)
+
+    def test_foreign_pair_removal_requires_explicit_review(self):
+        self.foreign_pair()
         result = self.inspect()
+        self.assertEqual(result["state"], "foreign-removal-required", result)
+        self.assertFalse(result["can_install"])
+        self.assertEqual(result["foreign_removals"], [
+            {"action": "remove", "name": "paired-library", "architecture": "arm64", "before": "1", "after": None}])
+        approved = self.inspect(allow_foreign_removals=True)
+        self.assertEqual(approved["state"], "update-available", approved)
+        self.assertEqual(result["stages"], approved["stages"])
+        self.assertEqual(result["status_sha256"], approved["status_sha256"])
+
+    def test_foreign_dependents_are_listed_and_unrelated_packages_survive(self):
+        extra = self.package("foreign-dev", "1", "paired-library (= 1)", architecture="arm64")
+        extra += self.package("unrelated", "1", architecture="arm64")
+        self.foreign_pair(extra=extra)
+        result = self.inspect()
+        self.assertEqual(result["state"], "foreign-removal-required", result)
+        self.assertEqual({p["name"] for p in result["foreign_removals"]}, {"foreign-dev", "paired-library"})
+        self.assertFalse(any(c["name"] == "unrelated" for stage in result["stages"] for c in stage["changes"]))
+
+    def test_native_dependents_block_foreign_removal_even_when_signed_for_removal(self):
+        self.foreign_pair(extra=self.package("native-app", "1", "paired-library:arm64 (= 1)"))
+        # A removal allowance in the bundle must not authorize removal of native
+        # applications as part of the separately reviewed foreign cleanup.
+        m = copy.deepcopy(self.manifest)
+        m["allowed_removals"] = ["native-app"]
+        result = self.inspect(self.pack(m, "native-removal"), allow_foreign_removals=True)
         self.assertEqual(result["state"], "blocked", result)
-        self.assertIn("paired-library:i386", result["blockers"][0])
+        self.assertIn("native", str(result["blockers"]).lower())
+
+    def test_held_or_protected_foreign_packages_block_removal(self):
+        for field in ("Essential: yes", "Protected: yes", "Priority: required", "Priority: important"):
+            with self.subTest(field=field):
+                self.foreign_pair()
+                status = self.system / "var/lib/dpkg/status"
+                data = status.read_text()
+                marker = "Package: paired-library\nArchitecture: arm64\n"
+                status.write_text(data.replace(marker, marker + field + "\n"))
+                result = self.inspect(allow_foreign_removals=True)
+                self.assertEqual(result["state"], "blocked", result)
+        self.foreign_pair()
+        status = self.system / "var/lib/dpkg/status"
+        status.write_text(status.read_text().replace(
+            "Package: paired-library\nArchitecture: arm64\nVersion: 1\nStatus: install",
+            "Package: paired-library\nArchitecture: arm64\nVersion: 1\nStatus: hold"))
+        self.assertEqual(self.inspect(allow_foreign_removals=True)["state"], "blocked")
 
     def test_held_and_strict_vim_dependencies_block(self):
         self.state("2.0.0", "1", hold=True); self.assertEqual(self.inspect()["state"], "blocked")

@@ -139,7 +139,7 @@ def finish_handoff(path, job):
     """Only the newly exec'd interpreter may inspect the post-bootstrap system."""
     try:
         check_archive(path, job)
-        report = jobs.inspect_import(path)
+        report = jobs.inspect_import(path, allow_foreign_removals=True) if job.get("allow_foreign_removals") else jobs.inspect_import(path)
         jobs.ensure_installable(report)
         require(report["state"] != "updater-update-required", "A second bootstrap was requested; no automatic self-update loop is allowed")
         plan_hash = jobs.save_plan(path, report)
@@ -172,7 +172,7 @@ def execute(identifier):
             if (path / "payload").exists(): shutil.rmtree(path / "payload")
             verified = verify(path / "bundle.atgz", jobs.KEYRING, path / "payload")
             manifest = verified["manifest"]
-            current = jobs.inspect_import(path)
+            current = jobs.inspect_import(path, allow_foreign_removals=True) if job.get("allow_foreign_removals") else jobs.inspect_import(path)
             jobs.ensure_installable(current)
             require(current["state"] == plan["state"] and current["stages"] == plan["stages"] and
                     current["current_version"] == plan["current_version"],
@@ -195,7 +195,8 @@ def execute(identifier):
                         jobs.update(path, space=space_check(path, manifest, current))
                     for number, approved in enumerate(plan["stages"], start=1):
                         with apt.Cache(progress=OpProgress(), memonly=True) as cache:
-                            changes, _, _ = resolve_stage(cache, approved["stage"], manifest, bootstrap_needed=bootstrap)
+                            changes, _, _ = resolve_stage(cache, approved["stage"], manifest, bootstrap_needed=bootstrap,
+                                                          allow_foreign_removals=bool(job.get("allow_foreign_removals")))
                             require(changes == approved["changes"], "APT plan changed; no further stages will run")
                             if changes:
                                 space_check(path, manifest, current)

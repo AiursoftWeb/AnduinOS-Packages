@@ -36,6 +36,17 @@ class ApplyCommandTests(unittest.TestCase):
                             "stages": [{"changes": changes}]},
                 **fields}
 
+    def test_foreign_removal_flag_and_refusal_do_not_start_installation(self):
+        pending = self.plan()
+        pending["preview"]["foreign_removals"] = [
+            {"name": "paired-library", "architecture": "arm64", "before": "1", "after": None}]
+        code, _, _, commands, prompts = self.apply(
+            [pending, {}], answers=["no"], flags=["--allow-foreign-removals"])
+        self.assertEqual(code, 1)
+        self.assertEqual(prompts, 1)
+        self.assertEqual(commands, [call("prepare", "/tmp/update.atgz", "--allow-foreign-removals"),
+                                    call("discard", "test-job")])
+
     def test_refusing_or_closing_input_discards_unstarted_job(self):
         for answer in ("", "no", EOFError):
             with self.subTest(answer=answer):
