@@ -173,11 +173,13 @@ def apply_policy(available, changing=lambda: None):
     print('Applying desktop resource allocation…', flush=True)
     ctl('stop', 'uresourced.service')
     if enabled:
+        ctl('reset-failed', 'uresourced.service')
         ctl('start', 'uresourced.service')
         if not active():
             raise RuntimeError('The desktop resource service did not start; check administrator service overrides')
         for uid in graphical:
             ctl('daemon-reload', user=uid)
+            ctl('reset-failed', 'uresourced.service', user=uid)
             ctl('start', 'uresourced.service', user=uid)
             if not active(uid):
                 raise RuntimeError(f'Application resource management did not start for user {uid}')
