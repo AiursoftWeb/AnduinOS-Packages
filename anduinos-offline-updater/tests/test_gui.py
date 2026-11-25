@@ -271,7 +271,12 @@ class DesktopTests(unittest.TestCase):
             dialog = self.window.get_visible_dialog()
             self.assertIsInstance(dialog, self.gui.Adw.AlertDialog)
             self.assertEqual(dialog.get_default_response(), "cancel")
-            self.assertIn("foreign-dev:arm64", dialog.get_body())
+            package_list = dialog.get_extra_child()
+            self.assertEqual(package_list.get_max_content_height(), 240)
+            label = package_list.get_child()
+            if isinstance(label, self.gui.Gtk.Viewport):
+                label = label.get_child()
+            self.assertIn("foreign-dev:arm64", label.get_label())
             dialog.emit("response", "cancel")
             dialog.force_close()
             command.assert_not_called()

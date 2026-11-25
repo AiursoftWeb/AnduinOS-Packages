@@ -446,7 +446,12 @@ class UpdateWindow(Adw.ApplicationWindow):
                                   for p in self.report["foreign_removals"])
             dialog = Adw.AlertDialog(
                 heading=_("Remove the listed software and update?"),
-                body=_("These packages will be removed. Applications or development tools that depend on them may stop working.") + "\n\n" + packages)
+                body=_("These packages will be removed. Applications or development tools that depend on them may stop working."))
+            package_list = Gtk.ScrolledWindow(
+                hscrollbar_policy=Gtk.PolicyType.NEVER, min_content_height=64,
+                max_content_height=240, propagate_natural_height=True)
+            package_list.set_child(text(packages))
+            dialog.set_extra_child(package_list)
             dialog.add_response("cancel", _("Cancel"))
             dialog.add_response("remove", _("Remove and update"))
             dialog.set_response_appearance("remove", Adw.ResponseAppearance.DESTRUCTIVE)
