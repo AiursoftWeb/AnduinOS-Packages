@@ -201,6 +201,15 @@ anduinos-deskmon:
   variables:
     PACKAGE_DIR: anduinos-deskmon
 
+anduinos-uresourced:
+  extends: .publish
+  needs:
+    - lint-all
+    - verify-ci-package-needs
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-uresourced
+
 anduinos-theme-sync:
   extends: .publish
   needs:
