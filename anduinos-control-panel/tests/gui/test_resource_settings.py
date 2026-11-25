@@ -112,3 +112,10 @@ class ResourceSettingsTests(unittest.TestCase):
         self.assertFalse(self.window.enabled.get_sensitive())
         self.assertFalse(self.window.apply.get_sensitive())
         self.assertTrue(self.window.retry.get_visible())
+
+    def test_manual_disable_is_not_reported_applied_while_services_run(self):
+        state = {**self.state, 'values': {**self.state['values'], 'enabled': False}}
+        self.window._loaded(state, None)
+        self.assertFalse(self.window.enabled.get_active())
+        self.assertIn('protection is enabled', self.window.status.get_label())
+        self.assertTrue(self.window.apply.get_sensitive())

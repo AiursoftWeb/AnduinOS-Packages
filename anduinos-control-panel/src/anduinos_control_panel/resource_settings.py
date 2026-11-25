@@ -134,8 +134,10 @@ class ResourceSettingsWindow(Adw.Window):
         self.install.set_sensitive(not self.busy)
         self.close_button.set_sensitive(not self.busy)
         self.set_deletable(not self.busy)
-        unhealthy = readable and self.saved['values']['enabled'] and not (
-            self.saved['system_active'] and self.saved['user_active'])
+        unhealthy = False
+        if readable:
+            running = (self.saved['system_active'], self.saved['user_active'])
+            unhealthy = not all(running) if self.saved['values']['enabled'] else any(running)
         self.apply.set_sensitive(usable and bool(self.reset_pending or self._payload() or unhealthy))
 
     def _load(self, message=None):
@@ -202,10 +204,10 @@ class ResourceSettingsWindow(Adw.Window):
                         'personal_sources': state['personal_sources']}, ensure_ascii=False, indent=2) + '\n')
         if message:
             self.status.set_label(message)
-        elif values['enabled'] and not (state['system_active'] and state['user_active']):
+        elif (values['enabled'] or state['system_active'] or state['user_active']) and not (state['system_active'] and state['user_active']):
             self.status.set_label(_("Protection is enabled, but a resource service is not running."))
         else:
-            self.status.set_label(_("Desktop resource protection is enabled.") if values['enabled']
+            self.status.set_label(_("Desktop resource protection is enabled.") if state['system_active'] and state['user_active']
                                   else _("Desktop resource protection is disabled."))
         self.updating = False
         self._sensitivity()
