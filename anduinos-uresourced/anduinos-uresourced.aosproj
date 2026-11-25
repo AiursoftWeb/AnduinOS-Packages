@@ -52,7 +52,7 @@
     <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
     <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
     <IncludeFile Include="deploy/usr/lib/systemd/system/uresourced.service" Target="/usr/lib/systemd/system/uresourced.service" />
-    <IncludeFile Include="data/defaults.conf" Target="/usr/share/anduinos-uresourced/defaults.conf" />
+    <ConfFile Include="deploy/etc/uresourced.conf" Target="/etc/uresourced.conf" />
     <IncludeFile Include="data/system-policy.conf" Target="/usr/lib/systemd/system/uresourced.service.d/30-anduinos-policy.conf" />
     <IncludeFile Include="data/user-policy.conf" Target="/usr/lib/systemd/user/uresourced.service.d/30-anduinos-policy.conf" />
     <IncludeScript Include="scripts/aos-bg" Target="/usr/bin/aos-bg" />
@@ -62,7 +62,6 @@
     <IncludeFile Include="data/oomd-app.conf" Target="/usr/lib/systemd/user/background.slice.d/30-anduinos-resource-policy.conf" />
     <IncludeFile Include="data/oomd-user.conf" Target="/usr/lib/systemd/system/user@.service.d/30-anduinos-resource-policy.conf" />
     <IncludeFile Include="data/oomd-root.conf" Target="/usr/lib/systemd/system/-.slice.d/30-anduinos-resource-policy.conf" />
-    <PreInstallScript Include="scripts/preinst.sh" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript Include="scripts/prerm.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />

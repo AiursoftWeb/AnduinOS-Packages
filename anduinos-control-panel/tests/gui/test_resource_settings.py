@@ -31,8 +31,8 @@ class ResourceSettingsTests(unittest.TestCase):
         self.state = {
             'values': {'enabled': True, 'memory': '250M', 'cpu_weight': 300, 'io_weight': 300},
             'personal': {'enabled': True, 'memory': '250M', 'cpu_weight': 300, 'io_weight': 300},
-            'sources': {}, 'personal_sources': {}, 'system_active': True,
-            'user_active': True, 'gui_exists': True,
+            'sources': {}, 'overridden': False, 'system_active': True,
+            'user_active': True, 'can_reset': True,
         }
         self.patches = [
             patch.object(module, '_', side_effect=lambda text: text),
@@ -81,7 +81,7 @@ class ResourceSettingsTests(unittest.TestCase):
         self.assertFalse(self.window.close_button.get_sensitive())
         self.assertTrue(self.window.advanced.get_expanded())
 
-    def test_failed_apply_reads_back_restored_settings(self):
+    def test_failed_apply_reads_back_actual_settings(self):
         self.window.enabled.set_active(False)
         self.window.apply.emit('clicked')
         self.operations[0][2]('Authentication was cancelled.')

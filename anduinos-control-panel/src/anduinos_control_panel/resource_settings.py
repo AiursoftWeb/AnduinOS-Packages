@@ -129,7 +129,7 @@ class ResourceSettingsWindow(Adw.Window):
         self.enabled.set_sensitive(usable and not self.reset_pending)
         self.memory_row.set_sensitive(usable and self.enabled.get_active() and not self.reset_pending)
         self.priority.set_sensitive(usable and self.enabled.get_active() and not self.reset_pending)
-        self.reset.set_sensitive(usable and self.saved['gui_exists'])
+        self.reset.set_sensitive(usable and self.saved['can_reset'])
         self.retry.set_sensitive(not self.busy and not self.loading)
         self.install.set_sensitive(not self.busy)
         self.close_button.set_sensitive(not self.busy)
@@ -191,17 +191,12 @@ class ResourceSettingsWindow(Adw.Window):
         weights = values['cpu_weight'], values['io_weight']
         selected = PRIORITIES.index(weights[0]) if weights[0] == weights[1] and weights[0] in PRIORITIES else 3
         self.priority.set_selected(selected)
-        overrides = any(Path(source).name > '90-anduinos-control-panel.conf'
-                        for source in state['sources'].values()
-                        if Path(source).parent == Path('/etc/uresourced.conf.d'))
-        overrides = overrides or any(source != state['sources'].get(key)
-                                    for key, source in state['personal_sources'].items()
-                                    if key.startswith('AppBoost.'))
+        overrides = state['overridden']
         self.notice.set_label(_("Some choices are overridden by administrator or personal configuration.") if overrides else '')
         self.notice.set_visible(overrides)
         self.owner._append_package_output(self.buffer, self.output,
             json.dumps({'effective': values, 'personal': state['personal'], 'sources': state['sources'],
-                        'personal_sources': state['personal_sources']}, ensure_ascii=False, indent=2) + '\n')
+                        'personal_override': state['overridden']}, ensure_ascii=False, indent=2) + '\n')
         if message:
             self.status.set_label(message)
         elif (values['enabled'] or state['system_active'] or state['user_active']) and not (state['system_active'] and state['user_active']):

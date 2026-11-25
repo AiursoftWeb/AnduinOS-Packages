@@ -1,67 +1,59 @@
 # Desktop resource policy
 
-`anduinos-uresourced` packages upstream uresourced 0.5.5 with application management
-and without cgroupify. `anduinos-desktop` recommends it; Control Panel provides the
-settings window and calls this package's Polkit helper.
+The package builds unmodified upstream uresourced 0.5.5 with application management
+and without cgroupify. `anduinos-desktop` recommends it. Control Panel provides a
+switch and two adjustments through a small Polkit helper.
 
-## Configuration
+## One configuration file
 
-`src/anduin-config.c` merges INI keys in this order:
+`/etc/uresourced.conf` is the upstream INI file and a normal dpkg conffile.
+Control Panel and administrators edit this same file. There are no configuration
+layers, generated effective configuration, or local daemon patches.
 
-1. `/usr/share/anduinos-uresourced/defaults.conf` (required vendor defaults).
-2. `/etc/uresourced.conf` (optional legacy administrator configuration).
-3. `/etc/uresourced.conf.d/*.conf`, sorted by filename.
-4. The user's XDG `uresourced.conf`, for `AppBoost` only.
+The helper adds `[AnduinOS] Enabled=true/false` to this file when the switch is
+saved. Upstream ignores that section; systemd `ExecCondition` uses the helper to
+read it. Missing `Enabled` means enabled. Both daemon instances use the same
+machine switch, including after reboot and package upgrades.
 
-Control Panel writes only `90-anduinos-control-panel.conf`. A later administrator
-file such as `95-local.conf` wins. `[AnduinOS] Enabled` is machine-wide and gates
-both units through `ExecCondition`; it cannot be overridden by an ordinary user's
-file. `--dump-config` reports the merged values and their source paths. This reader
-is shared by both daemon modes and helper validation. Upstream 0.5.5 does not
-provide this layering; `patches/desktop-policy.patch` integrates the local reader.
+Upstream can read a personal XDG `uresourced.conf` for application policy. When
+present it replaces the system application configuration; missing application
+keys use upstream's built-in defaults, not values merged from the system file.
+Control Panel reports this existing personal override and does not modify it.
 
-The old packaged `/etc/uresourced.conf` is removed on upgrade only when its hash
-still matches dpkg's old conffile entry. Modified files remain overrides. It can
-remain registered as an obsolete conffile, so dpkg's normal purge semantics apply
-to that legacy path. New administrator drop-ins are not package-owned files.
+## Apply and lifecycle
 
-## Apply and restore
+The helper reads status without authentication. Changes require root, accept only
+the switch, memory amount and foreground-priority values, lock concurrent changes,
+and replace the configuration atomically. Other INI keys remain; saving formats
+the file using Python's standard INI writer. Restore Recommended Settings resets
+only these controls to enabled, 250 MiB and priority 300.
 
-`scripts/helper` accepts only `status`, `apply`, `reset`, `cleanup`, and `set JSON`.
-Read-only status needs no authentication. Mutation is root-only, serialized,
-validated, and limited to the GUI file and this package's services. Only changed
-UI fields are supplied; unrelated native keys remain intact. Failed changes
-restore the old GUI file and attempt to restore running policy; a failed rollback
-is reported. Persistence is implicit; neither UI nor helper offers a temporary mode.
+At boot the normal upstream services read the file. Apply stops/restarts these
+services and reports their actual state. If saving succeeds but a service fails,
+the saved file remains and the error is shown. There is no state snapshot or
+rollback journal. Shutdown uses upstream's normal inactive/default resource
+settings, not restoration of arbitrary pre-existing runtime properties. Standard
+systemd restart-on-failure handles daemon failures.
 
-`src/anduin-resources.c` records the previous systemd runtime resource-property
-files before each unit is first managed. The private `RuntimeDirectory` journal
-allows `ExecStopPost` to restore after both normal shutdown and a crash. Restoration
-only touches the four managed properties and checks that the runtime value still
-matches the daemon's last update, preserving later external changes. It never
-uses `systemctl revert` or removes administrator `/etc/systemd` drop-ins. The root
-cleanup also removes the daemon's generated session drop-in and reloads user
-managers. Upstream's fixed shutdown resets are replaced by this restoration.
+The system service also removes upstream's generated session drop-in on stop and
+reloads user managers. This is a computed `/run` file, not saved preferences.
+Remove preserves the conffile; purge follows dpkg's normal conffile removal.
+Removing Control Panel does not remove or disable the backend.
 
-Remove stops user and system instances and withdraws runtime policy; saved GUI
-choices remain. Purge also removes the GUI file, without deleting administrator
-drop-ins or personal XDG files. Disabled choices remain disabled on upgrade,
-relogin, reboot, and reinstall until changed or reset.
+## OOM and jobs
 
-## OOM and workload boundaries
+Standard systemd drop-ins monitor user `app.slice` and `background.slice` at 80%
+memory PSI for 20 seconds, and cancel base root/user@ monitoring. Administrator
+monitoring on other ancestors must still be considered. The switch does not
+change these boundaries, swap settings or existing GNOME notifications.
 
-The fixed systemd drop-ins monitor user `app.slice` and `background.slice` at
-80% memory PSI for 20 seconds, and cancel base root/user@ monitoring. `auto` is not
-recursive exclusion: administrator monitoring on another ancestor must be
-considered. These fixed OOM boundaries remain when desktop priority is disabled;
-this does not stop oomd, change swap settings, or replace GNOME notifications.
+`aos-bg` creates a unique background scope, preserves literal arguments and exit
+status, and keeps heavy work outside the interactive shell's OOM group.
 
-`aos-bg` creates a unique background scope, preserving argv and exit status so
-heavy terminal work does not share the interactive shell's OOM group. System
-services, containers, and VMs need their own budgets.
+## Build
 
-Build through the standard `.aosproj` (Resolute/Stonking, amd64/arm64). Runtime
-acceptance belongs in isolated graphical VMs: cover the GUI, real focus changes,
-configuration migration and overrides, on/off/reset, crash/removal recovery,
-relogin/reboot, and CPU/I/O/PSI pressure. A MemoryMax OOM notification test alone
-does not validate oomd's victim selection.
+Use `apkg build --all`. The existing build script downloads the upstream archive,
+runs standard Meson setup/compile/install and stages the package. Build inputs are
+declared in `.aosproj`; architecture-specific compilers and fetched development
+files provide the normal amd64/arm64 cross-build paths. No C injection or patch
+application is performed.

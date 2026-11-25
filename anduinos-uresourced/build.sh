@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 source ../lib/build-guards.sh
-for tool in curl tar gcc pkg-config glib-compile-resources python3 patch; do
+for tool in curl tar gcc pkg-config glib-compile-resources python3; do
     need_cmd "$tool"
 done
 : "${APKG_INPUTS_DIR:?Build with apkg}"
@@ -29,8 +29,6 @@ curl --fail --location --silent --show-error --retry 3 \
     --output "$work/source.tar.bz2"
 tar -xjf "$work/source.tar.bz2" -C "$work"
 src=$work/uresourced-v0.5.5
-cp src/anduin-config.[ch] src/anduin-resources.[ch] "$src/src/"
-patch -d "$src" -p1 < patches/desktop-policy.patch
 sysroot=$work/sysroot
 mkdir -p "$sysroot"
 for package in systemd-dev libsystemd-dev libsystemd0 libpipewire-0.3-dev libpipewire-0.3-0t64 libspa-0.2-dev; do
@@ -83,6 +81,6 @@ cp "$src/README" "$src/NEWS.md" "$doc/"
 cp "$APKG_INPUTS_DIR/manifest.json" "$doc/build-inputs.json"
 # Explicitly declare the service for APKG's existing enable/restart/remove
 # lifecycle without copying a second unit under /lib on merged-/usr systems.
-mkdir -p deploy/usr/lib/systemd/system
+mkdir -p deploy/usr/lib/systemd/system deploy/etc
 cp "$APKG_STAGE_DIR/usr/lib/systemd/system/uresourced.service" deploy/usr/lib/systemd/system/
-rm "$APKG_STAGE_DIR/etc/uresourced.conf"
+cp "$APKG_STAGE_DIR/etc/uresourced.conf" deploy/etc/
