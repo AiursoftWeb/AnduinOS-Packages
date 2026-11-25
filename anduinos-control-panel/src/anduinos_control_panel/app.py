@@ -38,6 +38,7 @@ from .model import (
 )
 from .topics import ControlPanelTopic, get_topic
 from .software_sources import SoftwareSourceWindow
+from .resource_settings import ResourceSettingsWindow
 
 
 APP_ID = "com.anduinos.ControlPanel"
@@ -89,6 +90,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
         self._bottles_window: Adw.Window | None = None
         self._voice_install_window: Adw.Window | None = None
         self._boot_settings_window: Adw.Window | None = None
+        self._resource_settings_window: Adw.Window | None = None
         self._software_source_window: Adw.Window | None = None
 
         self._install_css()
@@ -231,6 +233,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
             action("system.settings"),
             action("system.startup-boot"),
             action("system.virtual-memory"),
+            action("system.resource-allocation"),
         ]
 
         security_actions = [action("security.secure-boot")]
@@ -415,6 +418,7 @@ class ControlPanelWindow(Adw.ApplicationWindow):
 
         handlers: dict[str, Callable[[], None]] = {
             "boot-settings": self._show_boot_settings,
+            "resource-settings": self._show_resource_settings,
             "software-source": self._open_software_source,
             "voice-typing": self._open_voice_typing,
             "flatseal": self._open_flatseal,
@@ -676,6 +680,17 @@ class ControlPanelWindow(Adw.ApplicationWindow):
 
         dialog.connect("response", response_received)
         dialog.present()
+
+    def _show_resource_settings(self) -> None:
+        if self._resource_settings_window is None:
+            self._resource_settings_window = ResourceSettingsWindow(self)
+            def closed(window):
+                if window.busy:
+                    return True
+                self._resource_settings_window = None
+                return False
+            self._resource_settings_window.connect("close-request", closed)
+        self._resource_settings_window.present()
 
     def _show_boot_settings(self) -> None:
         if self._boot_settings_window is not None:

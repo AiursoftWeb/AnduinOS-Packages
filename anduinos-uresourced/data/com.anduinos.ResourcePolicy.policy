@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN" "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+  <vendor>AnduinOS</vendor>
+  <vendor_url>https://www.anduinos.com</vendor_url>
+  <action id="com.anduinos.ResourcePolicy.configure">
+    <description>Change desktop resource allocation</description>
+    <description xml:lang="ar_SA">تغيير تخصيص موارد سطح المكتب</description>
+    <description xml:lang="da_DK">Skift fordelingen af skrivebordets ressourcer</description>
+    <description xml:lang="de_DE">Desktop-Ressourcenzuweisung ändern</description>
+    <description xml:lang="el_GR">Αλλαγή κατανομής πόρων επιφάνειας εργασίας</description>
+    <description xml:lang="en_GB">Change desktop resource allocation</description>
+    <description xml:lang="es_ES">Cambiar la asignación de recursos del escritorio</description>
+    <description xml:lang="fi_FI">Muuta työpöydän resurssien jakoa</description>
+    <description xml:lang="fr_FR">Modifier l’allocation des ressources du bureau</description>
+    <description xml:lang="hi_IN">डेस्कटॉप संसाधन आवंटन बदलें</description>
+    <description xml:lang="hr">Promjena dodjele resursa radne površine</description>
+    <description xml:lang="id_ID">Ubah alokasi sumber daya desktop</description>
+    <description xml:lang="it_IT">Modifica l’allocazione delle risorse del desktop</description>
+    <description xml:lang="ja_JP">デスクトップのリソース割り当てを変更する</description>
+    <description xml:lang="ko_KR">데스크톱 리소스 할당 변경</description>
+    <description xml:lang="nl_NL">Resourcetoewijzing voor het bureaublad wijzigen</description>
+    <description xml:lang="pl_PL">Zmiana przydziału zasobów pulpitu</description>
+    <description xml:lang="pt_BR">Alterar a alocação de recursos do desktop</description>
+    <description xml:lang="pt_PT">Alterar a atribuição de recursos do ambiente de trabalho</description>
+    <description xml:lang="ro_RO">Schimbarea alocării resurselor desktopului</description>
+    <description xml:lang="ru_RU">Изменение распределения ресурсов рабочего стола</description>
+    <description xml:lang="sv_SE">Ändra fördelningen av skrivbordets resurser</description>
+    <description xml:lang="th_TH">เปลี่ยนการจัดสรรทรัพยากรเดสก์ท็อป</description>
+    <description xml:lang="tr_TR">Masaüstü kaynak dağıtımını değiştir</description>
+    <description xml:lang="uk_UA">Зміна розподілу ресурсів стільниці</description>
+    <description xml:lang="vi_VN">Thay đổi phân bổ tài nguyên màn hình nền</description>
+    <description xml:lang="zh_CN">更改桌面资源分配</description>
+    <description xml:lang="zh_HK">變更桌面資源分配</description>
+    <description xml:lang="zh_TW">變更桌面資源分配</description>
+    <message>Authentication is required to change desktop resource allocation</message>
+    <message xml:lang="ar_SA">المصادقة مطلوبة لتغيير تخصيص موارد سطح المكتب</message>
+    <message xml:lang="da_DK">Godkendelse er påkrævet for at ændre fordelingen af skrivebordets ressourcer</message>
+    <message xml:lang="de_DE">Zum Ändern der Desktop-Ressourcenzuweisung ist eine Authentifizierung erforderlich</message>
+    <message xml:lang="el_GR">Απαιτείται πιστοποίηση για αλλαγή της κατανομής πόρων επιφάνειας εργασίας</message>
+    <message xml:lang="en_GB">Authentication is required to change desktop resource allocation</message>
+    <message xml:lang="es_ES">Se requiere autenticación para cambiar la asignación de recursos del escritorio</message>
+    <message xml:lang="fi_FI">Työpöydän resurssien jaon muuttaminen vaatii tunnistautumisen</message>
+    <message xml:lang="fr_FR">Une authentification est requise pour modifier l’allocation des ressources du bureau</message>
+    <message xml:lang="hi_IN">डेस्कटॉप संसाधन आवंटन बदलने के लिए प्रमाणीकरण आवश्यक है</message>
+    <message xml:lang="hr">Za promjenu dodjele resursa radne površine potrebna je autentifikacija</message>
+    <message xml:lang="id_ID">Autentikasi diperlukan untuk mengubah alokasi sumber daya desktop</message>
+    <message xml:lang="it_IT">È richiesta l’autenticazione per modificare l’allocazione delle risorse del desktop</message>
+    <message xml:lang="ja_JP">デスクトップのリソース割り当てを変更するには認証が必要です</message>
+    <message xml:lang="ko_KR">데스크톱 리소스 할당을 변경하려면 인증이 필요합니다</message>
+    <message xml:lang="nl_NL">Authenticatie is vereist om de resourcetoewijzing voor het bureaublad te wijzigen</message>
+    <message xml:lang="pl_PL">Zmiana przydziału zasobów pulpitu wymaga uwierzytelnienia</message>
+    <message xml:lang="pt_BR">É necessário autenticar-se para alterar a alocação de recursos do desktop</message>
+    <message xml:lang="pt_PT">É necessária autenticação para alterar a atribuição de recursos do ambiente de trabalho</message>
+    <message xml:lang="ro_RO">Este necesară autentificarea pentru a schimba alocarea resurselor desktopului</message>
+    <message xml:lang="ru_RU">Для изменения распределения ресурсов рабочего стола требуется аутентификация</message>
+    <message xml:lang="sv_SE">Autentisering krävs för att ändra fördelningen av skrivbordets resurser</message>
+    <message xml:lang="th_TH">ต้องยืนยันตัวตนเพื่อเปลี่ยนการจัดสรรทรัพยากรเดสก์ท็อป</message>
+    <message xml:lang="tr_TR">Masaüstü kaynak dağıtımını değiştirmek için kimlik doğrulama gerekir</message>
+    <message xml:lang="uk_UA">Для зміни розподілу ресурсів стільниці потрібна автентифікація</message>
+    <message xml:lang="vi_VN">Cần xác thực để thay đổi phân bổ tài nguyên màn hình nền</message>
+    <message xml:lang="zh_CN">更改桌面资源分配需要身份验证</message>
+    <message xml:lang="zh_HK">變更桌面資源分配需要驗證身分</message>
+    <message xml:lang="zh_TW">變更桌面資源分配需要驗證身分</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>auth_admin_keep</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/lib/anduinos-uresourced/helper</annotate>
+  </action>
+</policyconfig>
