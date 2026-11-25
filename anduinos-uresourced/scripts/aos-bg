@@ -6,4 +6,4 @@ if [ "$#" -eq 0 ]; then
     exit 2
 fi
 unit="aos-bg-$(cat /proc/sys/kernel/random/uuid)"
-exec systemd-run --user --scope --collect --slice=background.slice --unit="$unit" -- "$@"
+exec systemd-run --user --scope --collect --expand-environment=no --slice=background.slice --unit="$unit" -- "$@"
