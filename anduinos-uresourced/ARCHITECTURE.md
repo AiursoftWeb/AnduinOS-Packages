@@ -35,8 +35,9 @@ rollback journal. Shutdown uses upstream's normal inactive/default resource
 settings, not restoration of arbitrary pre-existing runtime properties. Standard
 systemd restart-on-failure handles daemon failures.
 
-The system service also removes upstream's generated session drop-in on stop and
-reloads user managers. This is a computed `/run` file, not saved preferences.
+Apply also removes upstream's generated session drop-in before starting the saved
+policy and reloads the existing graphical user managers. This computed `/run`
+file is not saved preferences. Boot does not run a cleanup or recovery hook.
 Remove preserves the conffile; purge follows dpkg's normal conffile removal.
 Removing Control Panel does not remove or disable the backend.
 

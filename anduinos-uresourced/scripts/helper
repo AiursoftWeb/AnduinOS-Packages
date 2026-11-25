@@ -119,6 +119,9 @@ def apply():
         if active(uid):
             ctl('stop', 'uresourced.service', user=uid)
     ctl('stop', 'uresourced.service')
+    Path('/run/systemd/user/session.slice.d/99-uresourced.conf').unlink(missing_ok=True)
+    for uid in graphical:
+        ctl('daemon-reload', user=uid)
     if enabled:
         ctl('reset-failed', 'uresourced.service')
         ctl('start', 'uresourced.service')
@@ -139,10 +142,6 @@ def main():
         sys.exit(0 if read().getboolean('AnduinOS', 'Enabled', fallback=True) else 1)
     if os.geteuid() != 0:
         raise PermissionError('Administrator authentication is required')
-    if sys.argv[1:] == ['cleanup']:
-        Path('/run/systemd/user/session.slice.d/99-uresourced.conf').unlink(missing_ok=True)
-        subprocess.run(['/usr/bin/deb-systemd-invoke', '--user', 'daemon-reload'], check=True)
-        return
     descriptor = os.open('/run/lock/anduinos-uresourced.lock', os.O_CREAT | os.O_RDWR | os.O_NOFOLLOW, 0o600)
     with os.fdopen(descriptor, 'w') as lock:
         if os.fstat(lock.fileno()).st_uid != 0:
