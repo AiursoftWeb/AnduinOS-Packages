@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-uresourced</PackageName>
-    <PackageVersion>0.5.5-2+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.5.5-3+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Protect the active graphical session and prioritize focused applications with upstream uresourced.</PackageDescription>
     <Section>admin</Section>
@@ -55,7 +55,6 @@
     <ConfFile Include="deploy/etc/uresourced.conf" Target="/etc/uresourced.conf" />
     <IncludeFile Include="data/system-policy.conf" Target="/usr/lib/systemd/system/uresourced.service.d/30-anduinos-policy.conf" />
     <IncludeFile Include="data/user-policy.conf" Target="/usr/lib/systemd/user/uresourced.service.d/30-anduinos-policy.conf" />
-    <IncludeScript Include="scripts/aos-bg" Target="/usr/bin/aos-bg" />
     <IncludeScript Include="scripts/helper" Target="/usr/lib/anduinos-uresourced/helper" />
     <IncludeFile Include="data/com.anduinos.ResourcePolicy.policy" Target="/usr/share/polkit-1/actions/com.anduinos.ResourcePolicy.policy" />
     <IncludeFile Include="data/oomd-app.conf" Target="/usr/lib/systemd/user/app.slice.d/30-anduinos-resource-policy.conf" />

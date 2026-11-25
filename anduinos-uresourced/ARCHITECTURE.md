@@ -41,15 +41,12 @@ file is not saved preferences. Boot does not run a cleanup or recovery hook.
 Remove preserves the conffile; purge follows dpkg's normal conffile removal.
 Removing Control Panel does not remove or disable the backend.
 
-## OOM and jobs
+## OOM policy
 
 Standard systemd drop-ins monitor user `app.slice` and `background.slice` at 80%
 memory PSI for 20 seconds, and cancel base root/user@ monitoring. Administrator
 monitoring on other ancestors must still be considered. The switch does not
 change these boundaries, swap settings or existing GNOME notifications.
-
-`aos-bg` creates a unique background scope, preserves literal arguments and exit
-status, and keeps heavy work outside the interactive shell's OOM group.
 
 ## Build
 

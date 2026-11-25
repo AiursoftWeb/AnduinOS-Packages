@@ -1,9 +1,0 @@
-#!/bin/sh
-# Put a heavy terminal job in its own, lower-priority OOM boundary.
-set -eu
-if [ "$#" -eq 0 ]; then
-    echo 'Usage: aos-bg COMMAND [ARGUMENT...]' >&2
-    exit 2
-fi
-unit="aos-bg-$(cat /proc/sys/kernel/random/uuid)"
-exec systemd-run --user --scope --collect --expand-environment=no --slice=background.slice --unit="$unit" -- "$@"
