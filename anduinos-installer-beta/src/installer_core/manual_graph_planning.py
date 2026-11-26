@@ -589,16 +589,6 @@ def validate_manual_storage_graph(
     return disk
 
 
-def manual_selection_from_graph(
-    plan: InstallPlan,
-    disk: DiskInventory,
-) -> ManualStorageSelection:
-    graph = plan.storage.graph
-    if graph is None or graph.mode is not StorageGraphMode.MANUAL:
-        raise ManualStorageGraphError("Manual storage graph is missing")
-    return _selection_from_graph(plan, disk, graph)
-
-
 def _selection_from_graph(
     plan: InstallPlan,
     disk: DiskInventory,

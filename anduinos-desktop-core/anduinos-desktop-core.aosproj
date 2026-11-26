@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-desktop-core</PackageName>
-    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS desktop core metapackage — pure upstream GNOME desktop environment with multimedia, printing, and input method support. No AnduinOS branding.</PackageDescription>
     <Section>metapackages</Section>
@@ -107,7 +107,6 @@
     <!-- ============================================================
          System Essentials
          ============================================================ -->
-    <Dependency Include="apt-transport-https" />
     <Dependency Include="systemd-timesyncd" />
   </ItemGroup>
 
