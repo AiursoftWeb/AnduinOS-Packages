@@ -67,6 +67,15 @@ Use the repository's standard APKG workflow for this `.aosproj`.
 Run the source tests with the existing `anduinos-package-release-test` profile.
 Tests use temporary keys/repositories and never install packages.
 
+For cross-language acceptance, set `OFFLINE_CONTRACT_EXPORT` to an absolute
+temporary directory. In the OfflineBundles repository, run
+`dotnet test --filter FullyQualifiedName~BootstrapIncludesUpdaterDependenciesAndRemainsAnAuthenticatedBoundary`
+with that variable exported. Then, from this package directory, run
+`apkg test --path . --profile publisher-contract` with the same variable.
+The consumer verifies the exact bundles signed by the publisher test and
+previews them against its exported dpkg baseline. Remove the temporary
+directory after both commands finish.
+
 `anduinos-desktop-apps` recommends this package on Resolute and Stonking, so
 normal desktop/ISO installations with recommendations enabled include it.
 It is not recommended on Noble. Disabling recommendations or removing the
