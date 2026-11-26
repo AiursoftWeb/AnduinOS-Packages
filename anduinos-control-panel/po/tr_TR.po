@@ -1255,16 +1255,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "Kaynak ayarları okunamadı: {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "Koruma etkin, ancak bir kaynak hizmeti çalışmıyor."
+msgid "The resource services do not match the saved setting."
+msgstr "Kaynak hizmetlerinin durumu kaydedilen ayarla eşleşmiyor."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "Masaüstü kaynak koruması etkin."
+msgid "Desktop resource priority is enabled."
+msgstr "Masaüstü kaynak önceliği etkin."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "Masaüstü kaynak koruması devre dışı."
+msgid "Desktop resource priority is disabled."
+msgstr "Masaüstü kaynak önceliği devre dışı."
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1273,3 +1273,7 @@ msgstr "Ayarlar uygulanamadı: {error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "Yük altında masaüstünün yanıt vermesini sağla"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "Bazı kişisel uygulama ayarları okunamadı. Sistem ayarlarını değiştirmeye devam edebilirsiniz."

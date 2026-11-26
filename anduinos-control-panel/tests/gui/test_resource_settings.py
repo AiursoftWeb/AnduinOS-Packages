@@ -96,9 +96,46 @@ class ResourceSettingsTests(unittest.TestCase):
                                         'cpu_weight': 711, 'io_weight': 912}}
         self.window._loaded(state, None)
         self.assertEqual(self.window.priority.get_selected(), 3)
-        self.assertEqual(self.window.memory.get_value_as_int(), 8192)
+        self.assertFalse(self.window.memory.get_visible())
+        self.assertIn("8192M", self.window.custom_memory.get_label())
         self.window.enabled.set_active(False)
         self.assertEqual(self.window._payload(), {'enabled': False})
+
+    def test_editing_custom_memory_only_offers_supported_values(self):
+        for spec, nearest in [('8192M', 4096), ('1M', 32)]:
+            with self.subTest(spec=spec):
+                self.window._loaded({**self.state, 'values': {**self.state['values'], 'memory': spec}}, None)
+                self.assertEqual(self.window._payload(), {})
+                self.assertTrue(self.window.custom_memory.get_visible())
+                self.window.custom_memory.emit('clicked')
+                self.assertTrue(self.window.memory.get_visible())
+                self.assertEqual(self.window._payload(), {'memory_mib': nearest})
+                for value, expected in [(8191, 4096), (1, 32), (384, 384)]:
+                    self.window.memory.set_value(value)
+                    self.assertEqual(self.window._payload(), {'memory_mib': expected})
+
+    def test_personal_file_warning_keeps_machine_controls_available(self):
+        state = {**self.state, 'personal_errors': ['Invalid ActiveCPUWeight']}
+        self.window._loaded(state, None)
+        self.assertTrue(self.window.personal_warning.get_visible())
+        self.assertTrue(self.window.enabled.get_sensitive())
+        self.assertTrue(self.window.reset.get_sensitive())
+        self.window.enabled.set_active(False)
+        self.assertTrue(self.window.apply.get_sensitive())
+        self.window._loaded(self.state, None)
+        self.assertFalse(self.window.personal_warning.get_visible())
+
+    def test_saved_change_is_read_back_if_a_service_fails(self):
+        self.window.memory.set_value(384)
+        self.window.apply.emit('clicked')
+        self.state['values']['memory'] = '384M'
+        self.state['user_active'] = False
+        self.operations[0][2]('Could not start the user service.')
+        self.settle()
+        self.assertEqual(self.window.memory.get_value_as_int(), 384)
+        self.assertIn('Could not start the user service.', self.window.status.get_label())
+        self.assertEqual(self.window._payload(), {})
+        self.assertTrue(self.window.apply.get_sensitive())
 
     def test_reset_waits_for_apply(self):
         self.window.reset.emit('clicked')
@@ -117,5 +154,5 @@ class ResourceSettingsTests(unittest.TestCase):
         state = {**self.state, 'values': {**self.state['values'], 'enabled': False}}
         self.window._loaded(state, None)
         self.assertFalse(self.window.enabled.get_active())
-        self.assertIn('protection is enabled', self.window.status.get_label())
+        self.assertIn('do not match the saved setting', self.window.status.get_label())
         self.assertTrue(self.window.apply.get_sensitive())

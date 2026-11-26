@@ -1244,16 +1244,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "Could not read resource settings: {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "Protection is enabled, but a resource service is not running."
+msgid "The resource services do not match the saved setting."
+msgstr "The resource services do not match the saved setting."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "Desktop resource protection is enabled."
+msgid "Desktop resource priority is enabled."
+msgstr "Desktop resource priority is enabled."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "Desktop resource protection is disabled."
+msgid "Desktop resource priority is disabled."
+msgstr "Desktop resource priority is disabled."
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1262,3 +1262,7 @@ msgstr "Could not apply settings: {error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "Keep the desktop responsive under load"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "Some personal application settings could not be read. You can still change the system settings."

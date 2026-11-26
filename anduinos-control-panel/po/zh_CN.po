@@ -1222,16 +1222,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "无法读取资源设置：{error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "保护已启用，但部分资源服务未运行。"
+msgid "The resource services do not match the saved setting."
+msgstr "资源服务的运行状态与已保存的设置不一致。"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "桌面资源保护已启用。"
+msgid "Desktop resource priority is enabled."
+msgstr "已启用桌面资源优先级。"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "桌面资源保护已关闭。"
+msgid "Desktop resource priority is disabled."
+msgstr "已关闭桌面资源优先级。"
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1240,3 +1240,7 @@ msgstr "无法应用设置：{error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "在高负载下保持桌面流畅"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "部分个人应用设置无法读取。你仍然可以更改系统设置。"

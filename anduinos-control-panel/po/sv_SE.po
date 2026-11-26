@@ -1255,16 +1255,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "Kunde inte läsa resursinställningar: {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "Skyddet är aktiverat, men en resurstjänst körs inte."
+msgid "The resource services do not match the saved setting."
+msgstr "Resurstjänsternas tillstånd motsvarar inte den sparade inställningen."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "Skyddet för skrivbordets resurser är aktiverat."
+msgid "Desktop resource priority is enabled."
+msgstr "Prioritering av skrivbordets resurser är aktiverad."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "Skyddet för skrivbordets resurser är inaktiverat."
+msgid "Desktop resource priority is disabled."
+msgstr "Prioritering av skrivbordets resurser är inaktiverad."
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1273,3 +1273,7 @@ msgstr "Kunde inte tillämpa inställningar: {error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "Håll skrivbordet responsivt under belastning"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "Vissa personliga programinställningar kunde inte läsas. Du kan fortfarande ändra systeminställningarna."

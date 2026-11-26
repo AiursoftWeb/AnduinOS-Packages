@@ -1261,16 +1261,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "Resurssiasetuksia ei voitu lukea: {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "Suojaus on käytössä, mutta jokin resurssipalvelu ei ole käynnissä."
+msgid "The resource services do not match the saved setting."
+msgstr "Resurssipalvelujen tila ei vastaa tallennettua asetusta."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "Työpöydän resurssinsuojaus on käytössä."
+msgid "Desktop resource priority is enabled."
+msgstr "Työpöydän resurssien priorisointi on käytössä."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "Työpöydän resurssinsuojaus on poissa käytöstä."
+msgid "Desktop resource priority is disabled."
+msgstr "Työpöydän resurssien priorisointi on poissa käytöstä."
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1279,3 +1279,7 @@ msgstr "Asetuksia ei voitu ottaa käyttöön: {error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "Pidä työpöytä reagoivana kuormituksessa"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "Joitakin henkilökohtaisia sovellusasetuksia ei voitu lukea. Voit silti muuttaa järjestelmän asetuksia."
