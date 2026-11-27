@@ -3,7 +3,7 @@ use adw::subclass::prelude::*;
 use gtk::glib;
 
 use crate::i18n::{i18n, i18n_fmt};
-use crate::swap::{persist, zram};
+use crate::swap::{persist, ram_info, zram};
 use crate::utils;
 use crate::widgets::usage_bar::UsageBar;
 
@@ -88,7 +88,7 @@ impl ZramView {
                     .use_markup(true)
                     .label(&i18n_fmt(
                         &i18n("<i>Recommended: {0} MiB, lz4, priority 100 (for {1} GiB RAM)</i>"),
-                        &[&rec_mb.to_string(), &format!("{:.0}", ram_gb)],
+                        &[&rec_mb.to_string(), &format!("{:.1}", ram_gb)],
                     ))
                     .css_classes(["caption"])
                     .halign(gtk::Align::Start)
@@ -219,7 +219,7 @@ impl ZramView {
         // ─── Simple view: hint + slider ────────────────────────────
         let hint = gtk::Label::builder()
             .label(&format!(
-                "{} MiB (50% of {:.0} GiB RAM — recommended)",
+                "{} MiB (50% of {:.1} GiB RAM — recommended)",
                 default_mb, ram_gb
             ))
             .css_classes(["caption"])
@@ -247,7 +247,7 @@ impl ZramView {
             .build();
         content.append(&scale);
 
-        // ─── Advanced expander ──────────────────────────────────────
+        // ─── Advanced expander ─────────────────────────────────────
         let expander = gtk::Expander::builder()
             .label(&i18n("Advanced options"))
             .margin_start(12)
@@ -541,17 +541,22 @@ impl ZramView {
                     let used_mb = dev.used_bytes as f64 / (1024.0 * 1024.0);
                     let orig_mb = dev.orig_data_size as f64 / (1024.0 * 1024.0);
                     let compr_mb = dev.compr_data_size as f64 / (1024.0 * 1024.0);
-                    let stats_text = if used_mb > 1.0 {
-                        if orig_mb > 1.0 {
+                    let stats_text = if dev.used_bytes > 0 {
+                        let used_mb_str = if used_mb >= 1.0 {
+                            format!("{:.0}", used_mb)
+                        } else {
+                            format!("{:.2}", used_mb.max(0.01))
+                        };
+                        if orig_mb > 1.0 && compr_mb < orig_mb {
                             let saved = (1.0 - compr_mb / orig_mb) * 100.0;
                             i18n_fmt(
                                 &i18n("{0} MiB used · saved {1}%"),
-                                &[&format!("{:.0}", used_mb), &format!("{:.0}", saved)],
+                                &[&used_mb_str, &format!("{:.0}", saved)],
                             )
                         } else {
                             i18n_fmt(
                                 &i18n("{0} MiB used (stats reset)"),
-                                &[&format!("{:.0}", used_mb)],
+                                &[&used_mb_str],
                             )
                         }
                     } else {
@@ -566,10 +571,11 @@ impl ZramView {
                     } else {
                         0.0
                     };
-                    let used_gb = dev.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                    let total_gb = dev.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
                     let bar = UsageBar::new("", (1.0, 0.47, 0.0));
-                    bar.set_fraction(frac, &format!("{:.2} / {:.1} GiB", used_gb, total_gb));
+                    bar.set_fraction(
+                        frac,
+                        &ram_info::format_usage_pair(dev.used_bytes, dev.size_bytes),
+                    );
 
                     let row = adw::ActionRow::builder()
                         .title(&format!("{} — {}", dev.name, dev.comp_algorithm))

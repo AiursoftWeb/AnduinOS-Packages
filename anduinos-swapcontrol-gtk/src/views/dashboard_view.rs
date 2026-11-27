@@ -20,6 +20,7 @@ mod imp {
         pub swap_bar: RefCell<Option<UsageBar>>,
         pub last_dmidecode: RefCell<Option<std::time::Instant>>,
         pub dmidecode_pending: RefCell<bool>,
+        pub installed_ram_gb: RefCell<Option<u32>>,
         pub ram_total: RefCell<Option<gtk::Label>>,
         pub ram_type: RefCell<Option<gtk::Label>>,
         pub ram_speed: RefCell<Option<gtk::Label>>,
@@ -58,40 +59,6 @@ glib::wrapper! {
     pub struct DashboardView(ObjectSubclass<imp::DashboardView>)
         @extends gtk::Widget, gtk::Box,
         @implements gtk::Accessible, gtk::Buildable, gtk::ConstraintTarget, gtk::Orientable;
-}
-
-#[derive(Default)]
-struct MemInfo {
-    total: u64,
-    used: u64,
-    buffers: u64,
-    cached: u64,
-    free: u64,
-}
-
-fn read_meminfo() -> MemInfo {
-    let mut info = MemInfo::default();
-    let Ok(content) = std::fs::read_to_string("/proc/meminfo") else {
-        return info;
-    };
-    for line in content.lines() {
-        let p: Vec<&str> = line.split_whitespace().collect();
-        if p.len() < 2 {
-            continue;
-        }
-        let kb: u64 = p[1].parse().unwrap_or(0) * 1024;
-        match p[0].trim_end_matches(':') {
-            "MemTotal" => info.total = kb,
-            "MemFree" => info.free = kb,
-            "Buffers" => info.buffers = kb,
-            "Cached" => info.cached = kb,
-            _ => {}
-        }
-    }
-    info.used = info
-        .total
-        .saturating_sub(info.free + info.buffers + info.cached);
-    info
 }
 
 impl DashboardView {
@@ -169,7 +136,7 @@ impl DashboardView {
                 let total_ram =
                     crate::swap::sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
                 let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-                i18n_fmt(&i18n("for {0} GiB RAM"), &[&format!("{:.0}", ram_gb)])
+                i18n_fmt(&i18n("for {0} GiB RAM"), &[&format!("{:.1}", ram_gb)])
             };
             inner.append(
                 &gtk::Label::builder()
@@ -250,13 +217,14 @@ impl DashboardView {
 
         middle.insert(&ring_col, -1);
 
-        // Right: 3 usage bars (align top to match ring)
+        // Right: 3 usage bars (align top to match ring, keep sensible minimum width)
         let bars = gtk::Box::builder()
             .orientation(gtk::Orientation::Vertical)
             .spacing(16)
             .vexpand(true)
             .valign(gtk::Align::Start)
             .hexpand(true)
+            .width_request(280)
             .margin_top(10)
             .build();
 
@@ -275,7 +243,7 @@ impl DashboardView {
         middle.insert(&bars, -1);
         inner.append(&middle);
 
-        // ─── Bottom status cards ────────────────────────────────────
+        // ─── Bottom status cards ──────────────────────────────────────
         let grid = gtk::FlowBox::builder()
             .row_spacing(8)
             .column_spacing(8)
@@ -357,9 +325,12 @@ impl DashboardView {
                                     l.set_text(&s);
                                 }
                             }
-                            let pop: Vec<_> = full.dimms.iter().filter(|d| d.size_gb > 0).collect();
-                            if !pop.is_empty() {
-                                let d = format!("{}×{}GB", pop.len(), pop[0].size_gb);
+                            let installed = ram_info::installed_ram_gb(&full.dimms);
+                            *imp.installed_ram_gb.borrow_mut() = installed;
+                            if let Some(l) = imp.ram_total.borrow().as_ref() {
+                                l.set_text(&ram_info::format_ram_total(full.total_gb, installed));
+                            }
+                            if let Some(d) = ram_info::format_dimm_summary(&full.dimms) {
                                 if let Some(l) = imp.ram_dimm.borrow().as_ref() {
                                     l.set_text(&d);
                                 }
@@ -369,8 +340,8 @@ impl DashboardView {
                 });
             }
         }
-        // Total RAM always updates from /proc/meminfo
-        let ram_gb_str = format!("{:.0} GiB", ram.total_gb);
+        // Total RAM always updates from /proc/meminfo (combining installed capacity when known)
+        let ram_gb_str = ram_info::format_ram_total(ram.total_gb, *imp.installed_ram_gb.borrow());
         if let Some(l) = imp.ram_total.borrow().as_ref() {
             l.set_text(&ram_gb_str);
         }
@@ -388,19 +359,17 @@ impl DashboardView {
                 l.set_text(if ram.speed_mts > 0 { &speed_str } else { "-" });
             }
             if let Some(l) = imp.ram_dimm.borrow().as_ref() {
-                let pop: Vec<_> = ram.dimms.iter().filter(|d| d.size_gb > 0).collect();
                 let auth_str = i18n("Auth needed");
-                let dimm_str = if !pop.is_empty() {
-                    format!("{}×{}GB", pop.len(), pop[0].size_gb)
+                if let Some(dimm_str) = ram_info::format_dimm_summary(&ram.dimms) {
+                    l.set_text(&dimm_str);
                 } else {
-                    String::new()
-                };
-                l.set_text(if pop.is_empty() { &auth_str } else { &dimm_str });
+                    l.set_text(&auth_str);
+                }
             }
         }
 
         // ─── Ring chart ─────────────────────────────────────────────
-        let mem = read_meminfo();
+        let mem = ram_info::read_meminfo();
         if let Some(ring) = imp.ring.borrow().as_ref() {
             ring.set_segments(vec![
                 Segment {
@@ -479,16 +448,21 @@ impl DashboardView {
             } else {
                 let d = &devs[0];
                 let total_gb = d.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                let used_gb = d.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
                 // Use /proc/swaps usage (survives zram reset), mm_stat for compression ratio
-                if used_gb > 0.001 {
-                    let frac = d.used_bytes as f64 / d.size_bytes as f64;
-                    let saved = if d.orig_data_size > 1024 * 1024 {
+                if d.used_bytes > 0 {
+                    let frac = if d.size_bytes > 0 {
+                        d.used_bytes as f64 / d.size_bytes as f64
+                    } else {
+                        0.0
+                    };
+                    let saved = if d.orig_data_size > 1024 * 1024
+                        && d.compr_data_size < d.orig_data_size
+                    {
                         (1.0 - d.compr_data_size as f64 / d.orig_data_size as f64) * 100.0
                     } else {
                         0.0
                     };
-                    let bar_str = format!("{:.2} / {:.1} GiB", used_gb, total_gb);
+                    let bar_str = ram_info::format_usage_pair(d.used_bytes, d.size_bytes);
                     if saved > 0.0 {
                         bar.set_fraction(
                             frac,
@@ -532,9 +506,10 @@ impl DashboardView {
             if let Some(bar) = imp.swap_bar.borrow().as_ref() {
                 if status.active && status.size_bytes > 0 {
                     let frac = status.used_bytes as f64 / status.size_bytes as f64;
-                    let used_gb = status.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                    let total_gb = status.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                    bar.set_fraction(frac, &format!("{:.1} / {:.1} GiB", used_gb, total_gb));
+                    bar.set_fraction(
+                        frac,
+                        &ram_info::format_usage_pair(status.used_bytes, status.size_bytes),
+                    );
                 } else {
                     bar.set_fraction(0.0, &i18n("Inactive"));
                 }
@@ -817,6 +792,14 @@ mod tests {
                 "Recommendation",
                 "Rounded card test",
             );
+            let usage_bar = UsageBar::new("Zram", (1.0, 0.47, 0.0));
+            usage_bar.set_fraction(0.072, "573.4 MiB / 7.7 GiB · économisé 66%");
+            let narrow_bars = gtk::Box::builder()
+                .orientation(gtk::Orientation::Vertical)
+                .width_request(280)
+                .halign(gtk::Align::Start)
+                .build();
+            narrow_bars.append(&usage_bar);
             let stress = StressTestView::new();
             let content = gtk::Box::builder()
                 .orientation(gtk::Orientation::Vertical)
@@ -827,6 +810,7 @@ mod tests {
                 .margin_bottom(24)
                 .build();
             content.append(&recommendation);
+            content.append(&narrow_bars);
             content.append(&stress);
             let window = gtk::Window::builder()
                 .default_width(800)
@@ -836,6 +820,7 @@ mod tests {
             window.present();
             settle();
             assert_rounded_clip(recommendation.upcast_ref());
+            usage_bar.assert_two_row_non_overlapping();
             let mut warnings = Vec::new();
             accent_cards(stress.upcast_ref(), &mut warnings);
             assert_eq!(warnings.len(), 1, "find the actual stress warning card");

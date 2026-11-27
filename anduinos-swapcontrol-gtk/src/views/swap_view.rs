@@ -4,7 +4,7 @@ use gtk::glib;
 use std::cell::RefCell;
 
 use crate::i18n::{i18n, i18n_fmt};
-use crate::swap::{hibernation, persist, swapfile, sysctl, zram, zswap};
+use crate::swap::{hibernation, persist, ram_info, swapfile, sysctl, zram, zswap};
 use crate::utils;
 use crate::widgets::usage_bar::UsageBar;
 
@@ -124,7 +124,7 @@ impl SwapView {
             } else {
                 let total_ram = sysctl::read_total_ram().unwrap_or(32 * 1024 * 1024 * 1024);
                 let ram_gb = total_ram as f64 / (1024.0 * 1024.0 * 1024.0);
-                i18n_fmt(&i18n("for {0} GiB RAM"), &[&format!("{:.0}", ram_gb)])
+                i18n_fmt(&i18n("for {0} GiB RAM"), &[&format!("{:.1}", ram_gb)])
             };
             inner.append(
                 &gtk::Label::builder()
@@ -773,13 +773,18 @@ impl SwapView {
             row.set_active(managed.active);
             row.set_sensitive(managed.active || (filesystem_supported && managed.size_bytes > 0));
             if managed.active {
+                let used_gb = managed.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
+                let used_str = if managed.used_bytes > 0 && used_gb < 0.01 {
+                    "<0.01".to_string()
+                } else if managed.used_bytes > 0 && used_gb < 0.1 {
+                    format!("{:.2}", used_gb)
+                } else {
+                    format!("{:.1}", used_gb)
+                };
                 row.set_subtitle(&i18n_fmt(
                     &i18n("Active — {0} GiB used / {1} GiB total"),
                     &[
-                        &format!(
-                            "{:.1}",
-                            managed.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0)
-                        ),
+                        &used_str,
                         &format!(
                             "{:.1}",
                             managed.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0)
@@ -808,9 +813,10 @@ impl SwapView {
         if let Some(bar) = imp.usage_bar.borrow().as_ref() {
             if aggregate.active && aggregate.size_bytes > 0 {
                 let frac = aggregate.used_bytes as f64 / aggregate.size_bytes as f64;
-                let used_gb = aggregate.used_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                let total_gb = aggregate.size_bytes as f64 / (1024.0 * 1024.0 * 1024.0);
-                bar.set_fraction(frac, &format!("{:.1} / {:.1} GiB", used_gb, total_gb));
+                bar.set_fraction(
+                    frac,
+                    &ram_info::format_usage_pair(aggregate.used_bytes, aggregate.size_bytes),
+                );
             } else {
                 bar.set_fraction(0.0, &i18n("Inactive"));
             }

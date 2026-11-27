@@ -91,9 +91,13 @@ impl MemoryRing {
             start_angle += sweep;
         }
 
-        // Center text
+        // Center text — adapt to dark and light themes.
         let total_gb = total / (1024.0 * 1024.0 * 1024.0);
-        cr.set_source_rgb(1.0, 1.0, 1.0);
+        if adw::StyleManager::default().is_dark() {
+            cr.set_source_rgb(1.0, 1.0, 1.0);
+        } else {
+            cr.set_source_rgb(0.12, 0.12, 0.14);
+        }
         cr.select_font_face("Sans", cairo::FontSlant::Normal, cairo::FontWeight::Bold);
         cr.set_font_size(18.0);
 
