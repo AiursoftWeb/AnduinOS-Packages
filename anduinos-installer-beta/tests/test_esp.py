@@ -168,6 +168,29 @@ class EspInspectionTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "outside EFI/AnduinOS"):
                 verify_preserved_esp_tree(snapshot, root)
 
+    def test_new_efi_parent_is_allowed_only_for_the_first_vendor_tree(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            marker = root / "keep"
+            marker.write_bytes(b"original")
+            before = capture_preserved_esp_tree(root)
+            parent = root / "EFI"
+            parent.mkdir()
+            with self.assertRaisesRegex(RuntimeError, "outside EFI/AnduinOS"):
+                verify_preserved_esp_tree(before, root)
+            vendor = parent / "AnduinOS"
+            vendor.mkdir()
+            (vendor / "grubx64.efi").write_bytes(b"loader")
+            verify_preserved_esp_tree(before, root)
+            third_party = parent / "other"
+            third_party.mkdir()
+            with self.assertRaisesRegex(RuntimeError, "outside EFI/AnduinOS"):
+                verify_preserved_esp_tree(before, root)
+            third_party.rmdir()
+            marker.unlink()
+            with self.assertRaisesRegex(RuntimeError, "outside EFI/AnduinOS"):
+                verify_preserved_esp_tree(before, root)
+
     def test_empty_and_mixed_case_vendor_directories_are_occupied(self):
         for name in ("EFI/AnduinOS", "efi/ANDUINOS", "EfI/anduinos"):
             with self.subTest(name=name), tempfile.TemporaryDirectory() as directory:

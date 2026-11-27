@@ -197,10 +197,17 @@ def verify_preserved_esp_tree(
     mounted_esp: Path,
 ) -> None:
     actual = capture_preserved_esp_tree(mounted_esp)
-    if actual != expected:
-        raise RuntimeError(
-            "Shared EFI System Partition changed outside EFI/AnduinOS"
-        )
+    if actual == expected:
+        return
+    # An empty FAT ESP may have no EFI directory. Installing the first
+    # vendor loader necessarily creates that parent as well as EFI/AnduinOS.
+    extra = set(actual).difference(expected)
+    if len(extra) == 1 and set(expected).issubset(actual):
+        entry = extra.pop()
+        if (entry.kind == "directory" and entry.relative_path.casefold() == "efi"
+                and capture_esp_vendor_tree(mounted_esp)):
+            return
+    raise RuntimeError("Shared EFI System Partition changed outside EFI/AnduinOS")
 
 
 def capture_esp_vendor_tree(root: Path) -> tuple[EspTreeEntry, ...]:
