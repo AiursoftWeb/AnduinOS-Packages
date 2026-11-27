@@ -68,8 +68,7 @@ class ApplyCommandTests(unittest.TestCase):
     def test_yes_confirms_a_new_plan_after_the_updater_handoff(self):
         handoff = self.plan("fresh", confirmation_required=True)
         code, out, _, commands, prompts = self.apply(
-            [self.plan(state="updater-update-required"), {"state": "handoff", "job_id": "test-job"},
-             {"state": "complete"}], flags=["-y"], statuses=[handoff])
+            [self.plan(state="updater-update-required"), handoff, {"state": "complete"}], flags=["-y"])
         self.assertEqual(code, 0)
         self.assertEqual(prompts, 0)
         self.assertIn("Remaining update plan", out)
