@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <TestCommand Name="source" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests -v" TimeoutSeconds="300" />
+    <TestCommand Name="publisher-contract" Profile="publisher-contract" Run="PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 tests/publisher_contract.py -v" TimeoutSeconds="300" />
     <TestCommand Name="desktop" Profile="gui" Run="LANGUAGE=C GSETTINGS_BACKEND=memory GDK_BACKEND=x11 GTK_A11Y=none PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src dbus-run-session -- xvfb-run -a python3 -m unittest discover -s tests -p test_gui.py -v" TimeoutSeconds="300" />
   </ItemGroup>
 </Project>
