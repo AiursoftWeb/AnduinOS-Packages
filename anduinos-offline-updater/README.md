@@ -153,8 +153,10 @@ normally. Snapshot results are reported separately, and an unconfirmed snapshot
 is not a recovery guarantee. Local staging, package expansion and separate boot
 partition capacity are checked conservatively; script and CoW peaks can vary.
 
-Imported files and results remain in `/var/lib/anduinos-offline-updater` until
-explicitly removed. Save any needed diagnostic results, then release the space:
+If a shutdown or crash interrupts a file import, select the file again. The next
+authorized import reclaims your incomplete copy and keeps the interrupted job's
+result. A prepared file and its job history remain in
+`/var/lib/anduinos-offline-updater` until you remove them:
 
 ```sh
 anduinos-offline-updater discard JOB_ID

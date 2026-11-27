@@ -20,6 +20,7 @@ ROOT = Path("/var/lib/anduinos-offline-updater")
 KEYRING = Path("/usr/share/keyrings/anduinos-offline-updates.gpg")
 HELPER = "/usr/libexec/anduinos-offline-updater-helper"
 TERMINAL = {"complete", "already-installed", "blocked", "partial", "failed", "interrupted"}
+IMPORT_INTERRUPTED = "File import stopped before installation. Select the update file again."
 
 
 def atomic_json(path, value, mode=0o600):
@@ -65,9 +66,45 @@ def job_lock(path):
         os.close(fd)
 
 
+@contextmanager
+def import_writer(path):
+    # Publish the read-only marker after the importer owns its write lock.
+    # The kernel drops this process's record lock on exit, including a crash.
+    fd = os.open(path / "import.lock", os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        fcntl.lockf(fd, fcntl.LOCK_EX)
+        os.fchmod(fd, 0o444)
+        yield
+    finally:
+        os.close(fd)
+
+
+def import_stopped(path, report):
+    try:
+        marker = (path / "import.lock").open("rb")
+    except FileNotFoundError:
+        # Older importers have no lock. Only a previous boot proves they exited.
+        for line in Path("/proc/stat").read_text().splitlines():
+            if line.startswith("btime "):
+                return report["updated_at"] < int(line.split()[1])
+        return False
+    with marker:
+        try:
+            fcntl.lockf(marker, fcntl.LOCK_SH | fcntl.LOCK_NB)
+        except (BlockingIOError, PermissionError):
+            return False
+        return True
+
+
 def status(identifier, uid):
-    report = json.loads((job_path(identifier) / "status.json").read_text())
+    path = job_path(identifier)
+    report = json.loads((path / "status.json").read_text())
     require(uid in (0, report["owner_uid"]), "This job belongs to another user")
+    if report["state"] == "importing" and import_stopped(path, report):
+        # A successful writer publishes prepared before releasing its lock.
+        report = json.loads((path / "status.json").read_text())
+        if report["state"] == "importing":
+            report.update(state="interrupted", error=IMPORT_INTERRUPTED)
     if (report["state"] in {"complete", "already-installed"} and report.get("reboot_required") and
             report.get("boot_id") and report["boot_id"] != Path("/proc/sys/kernel/random/boot_id").read_text().strip()):
         # Keep the stored result as history, but do not repeat a reboot request
@@ -79,12 +116,12 @@ def status(identifier, uid):
         boot_changed = report.get("boot_id") != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
         if boot_changed or active.returncode != 0 or active.stdout.strip() in {"inactive", "failed"}:
             report.update(state="interrupted", error="Installation service stopped without a final result; inspect dpkg before retrying")
-    plan = job_path(identifier) / "plan.json"
+    plan = path / "plan.json"
     if report["state"] == "prepared" and (report.get("confirmation_required") or
             (plan.exists() and plan.stat().st_mode & stat.S_IROTH)):
         # New jobs expose package metadata for reconnecting GTK. Legacy private
         # plans remain queryable without requiring their contents to be readable.
-        report["preview"] = json.loads((job_path(identifier) / "plan.json").read_text())
+        report["preview"] = json.loads(plan.read_text())
     if not report.get("source_version") or not report.get("target_version"):
         # Older jobs kept versions only in the public installation plan.
         # Never infer a completed job's starting version from today's system.
@@ -183,25 +220,54 @@ def save_plan(path, report):
     return plan_hash
 
 
+def recover_imports(uid):
+    # prepare can be killed before the GUI receives the job ID. Reclaim this
+    # user's interrupted imports on retry and retain their status for diagnosis.
+    for file in ROOT.glob("*/status.json"):
+        path = file.parent
+        if not re.fullmatch(r"[a-f0-9]{32}", path.name):
+            continue
+        try:
+            report = json.loads(file.read_text())
+            if report["owner_uid"] != uid or report["state"] != "importing":
+                continue
+            if not import_stopped(path, report):
+                continue
+            with job_lock(path):
+                if status(path.name, uid)["state"] != "interrupted":
+                    continue
+                (path / "bundle.atgz").unlink(missing_ok=True)
+                # inspect and its APT planners create temporary directories
+                # here. The job directory is writable only by the helper.
+                for temporary in path.iterdir():
+                    if temporary.is_dir():
+                        shutil.rmtree(temporary)
+                update(path, state="interrupted", error=IMPORT_INTERRUPTED)
+        except (FileNotFoundError, BundleError):
+            # Another authorized client may be discarding or recovering this job.
+            continue
+
+
 def prepare(source, uid, *, allow_foreign_removals=False):
     trusted_directory(ROOT, create=True)
-    path = ROOT / uuid.uuid4().hex; path.mkdir(mode=0o711)
-    try:
-        update(path, schema_version=1, job_id=path.name, owner_uid=uid, state="importing")
-        digest, size = copy_as_user(source, path / "bundle.atgz", uid)
-        report = inspect_import(path, allow_foreign_removals=True) if allow_foreign_removals else inspect_import(path)
-        ensure_installable(report)
-        # Bind confirmation to the complete root-produced plan, not caller JSON.
-        plan_hash = save_plan(path, report)
-        # Keep the large package plan out of frequently rewritten progress records.
-        result = update(path, state="prepared", archive_sha256=digest, archive_bytes=size,
-                        plan_sha256=plan_hash, allow_foreign_removals=allow_foreign_removals,
-                        source_version=report["current_version"],
-                        target_version=report["target_version"])
-        return dict(result, preview=report)
-    except (Exception, KeyboardInterrupt):
-        shutil.rmtree(path)
-        raise
+    recover_imports(uid)
+    path = ROOT / uuid.uuid4().hex
+    path.mkdir(mode=0o711)
+    with import_writer(path):
+        try:
+            update(path, schema_version=1, job_id=path.name, owner_uid=uid, state="importing")
+            digest, size = copy_as_user(source, path / "bundle.atgz", uid)
+            report = inspect_import(path, allow_foreign_removals=True) if allow_foreign_removals else inspect_import(path)
+            ensure_installable(report)
+            # Bind confirmation to the complete root-produced plan, not caller JSON.
+            plan_hash = save_plan(path, report)
+            result = update(path, state="prepared", archive_sha256=digest, archive_bytes=size,
+                            plan_sha256=plan_hash, allow_foreign_removals=allow_foreign_removals,
+                            source_version=report["current_version"], target_version=report["target_version"])
+            return dict(result, preview=report)
+        except (Exception, KeyboardInterrupt):
+            shutil.rmtree(path)
+            raise
 
 
 def start(identifier, plan_hash, uid):

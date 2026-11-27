@@ -2,6 +2,8 @@
 import io
 import json
 import os
+import subprocess
+import sys
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
@@ -121,6 +123,64 @@ class ApplyCommandTests(unittest.TestCase):
 
 
 class InstallationChecks(unittest.TestCase):
+    def test_live_import_survives_retry_and_exited_import_is_recoverable(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            own, other, complete = (root / (letter * 32) for letter in "abc")
+            for path, owner, state in ((own, 1000, "importing"), (other, 1001, "importing"),
+                                       (complete, 1000, "prepared")):
+                path.mkdir()
+                jobs.update(path, job_id=path.name, owner_uid=owner, state=state)
+                (path / "bundle.atgz").write_bytes(b"archive")
+            (own / "offline-plan-test").mkdir()
+            (other / "import.lock").touch()
+            writer = "from anduinos_offline_updater import jobs; from pathlib import Path; import sys\n" \
+                     "with jobs.import_writer(Path(sys.argv[1])):\n print('ready', flush=True); sys.stdin.readline()"
+            with patch.object(jobs, "ROOT", root), patch.object(jobs, "trusted_directory", side_effect=lambda path: path):
+                with subprocess.Popen([sys.executable, "-c", writer, str(own)], text=True,
+                                      stdin=subprocess.PIPE, stdout=subprocess.PIPE) as child:
+                    try:
+                        self.assertEqual(child.stdout.readline().strip(), "ready")
+                        self.assertEqual((own / "import.lock").stat().st_mode & 0o777, 0o444)
+                        self.assertEqual(jobs.status(own.name, 1000)["state"], "importing")
+                        with self.assertRaises(BundleError):
+                            jobs.discard(own.name, 1000)
+                        jobs.recover_imports(1000)
+                        self.assertTrue((own / "bundle.atgz").exists())
+                    finally:
+                        child.kill()
+                self.assertEqual(jobs.status(own.name, 1000)["state"], "interrupted")
+                with self.assertRaises(BundleError):
+                    jobs.status(own.name, 1001)
+                jobs.recover_imports(1000)
+                jobs.recover_imports(1000)
+                self.assertFalse((own / "bundle.atgz").exists())
+                self.assertFalse((own / "offline-plan-test").exists())
+                self.assertEqual(json.loads((own / "status.json").read_text())["state"], "interrupted")
+                self.assertTrue((other / "bundle.atgz").exists())
+                self.assertTrue((complete / "bundle.atgz").exists())
+                self.assertEqual(jobs.discard(own.name, 1000)["state"], "discarded")
+
+    def test_only_previous_boot_proves_an_untracked_legacy_import_stopped(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            jobs.update(path, owner_uid=1000, state="importing")
+            with patch.object(jobs, "job_path", return_value=path):
+                self.assertEqual(jobs.status("legacy", 1000)["state"], "importing")
+                report = json.loads((path / "status.json").read_text())
+                jobs.atomic_json(path / "status.json", dict(report, updated_at=1), mode=0o644)
+                self.assertEqual(jobs.status("legacy", 1000)["state"], "interrupted")
+
+    def test_reader_observes_prepared_if_import_finishes_during_status(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory)
+            jobs.update(path, owner_uid=1000, state="importing")
+            def finish(*_args):
+                jobs.update(path, state="prepared")
+                return True
+            with patch.object(jobs, "job_path", return_value=path), patch.object(jobs, "import_stopped", side_effect=finish):
+                self.assertEqual(jobs.status("finishing", 1000)["state"], "prepared")
+
     def test_interrupted_import_removes_incomplete_job(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
