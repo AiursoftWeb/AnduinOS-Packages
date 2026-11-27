@@ -1,11 +1,10 @@
 """Unprivileged GTK frontend for verified, service-owned offline updates."""
 import gettext
 import json
-import os
 from pathlib import Path
 import re
 import sys
-import tempfile
+import uuid
 from datetime import datetime, timezone
 
 import gi
@@ -403,26 +402,31 @@ class UpdateWindow(Adw.ApplicationWindow):
         self.page(_("Preparing your update…"),
                   _("Authorize importing the file and checking the installation plan. No packages are installed yet."))
         self.content.append(Gtk.Spinner(spinning=True, halign=Gtk.Align.CENTER))
-        arguments = ["prepare", str(self.file)]
+        self.job = uuid.uuid4().hex
+        try:
+            self.remember()
+        except OSError:
+            self.content.append(text(_("Keep this job ID to reconnect from the command line.")))
+            self.content.append(text(self.job, "caption"))
+        arguments = ["prepare", str(self.file), "--job-id", self.job]
         if self.report.get("foreign_removals"):
             arguments.append("--allow-foreign-removals")
         self.command(arguments, self.prepared)
 
     def remember(self):
+        from .jobs import atomic_json
         self.bookmark.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-        with tempfile.NamedTemporaryFile(mode="w", dir=self.bookmark.parent, delete=False) as stream:
-            temporary = Path(stream.name)
-            try:
-                json.dump({"job_id": self.job}, stream)
-                stream.flush()
-                os.fsync(stream.fileno())
-                os.replace(temporary, self.bookmark)
-            finally:
-                temporary.unlink(missing_ok=True)
+        atomic_json(self.bookmark, {"job_id": self.job})
 
     def prepared(self, report, error):
         self.busy = False
         if error:
+            from .jobs import ROOT
+            if self.job and (ROOT / self.job).exists():
+                # The helper may have published a result before its reply was lost.
+                self.poll_job()
+                return
+            self.discarded(None, None)
             if not self.closed:
                 self.error(error)
             return

@@ -145,6 +145,7 @@ def main(argv=None):
                          help="Allow removal of listed non-native packages after plan review")
     command = sub.add_parser("prepare", help="Import and preview with administrator authorization; does not install")
     command.add_argument("file", type=Path)
+    command.add_argument("--job-id", help="Reserve a new 32-digit lowercase hexadecimal ID for reconnecting")
     command.add_argument("--allow-foreign-removals", action="store_true",
                          help="Prepare a plan that may remove non-native packages")
     command = sub.add_parser("install", help="Start exactly the previously prepared and confirmed plan")
@@ -176,6 +177,8 @@ def main(argv=None):
             action = "start" if args.command == "install" else args.command
             values = [str(args.file.absolute())] if action == "prepare" else [args.job]
             if action == "start": values.append(args.confirm_plan)
+            if action == "prepare" and args.job_id is not None:
+                values.extend(["--job-id", args.job_id])
             if action == "prepare" and args.allow_foreign_removals:
                 values.append("--allow-foreign-removals")
             return subprocess.run(prefix + [jobs.HELPER, action, *values], check=False).returncode

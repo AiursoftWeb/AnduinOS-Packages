@@ -263,7 +263,9 @@ class DesktopTests(unittest.TestCase):
             self.window.show_report(self.fixture.bundle, preview)
             self.window.prepare()
             self.assertEqual(command.call_args.args[0],
-                             ["prepare", str(self.fixture.bundle), "--allow-foreign-removals"])
+                             ["prepare", str(self.fixture.bundle), "--job-id", self.window.job, "--allow-foreign-removals"])
+            self.assertRegex(self.window.job, r"^[a-f0-9]{32}$")
+            self.assertEqual(json.loads(self.window.bookmark.read_text())["job_id"], self.window.job)
             approved = dict(preview, state="update-available", blockers=[])
             self.window.prepared(self.job_report(approved), None)
             command.reset_mock()
@@ -290,11 +292,28 @@ class DesktopTests(unittest.TestCase):
 
     def test_cancelled_import_does_not_create_a_session_or_offer_install(self):
         self.window.busy = True
+        self.window.job = "c" * 32
+        self.window.remember()
         self.window.prepared(None, "Authorization cancelled")
         self.assertFalse(self.window.busy)
         self.assertIsNone(self.window.job)
         self.assertFalse(self.window.bookmark.exists())
         self.assertIn(self.gui._("No system packages were changed."), self.labels())
+
+    def test_reopened_window_queries_job_reserved_before_prepare_returns(self):
+        preview = self.complete(self.fixture.bundle)
+        self.window.show_report(self.fixture.bundle, preview)
+        with patch.object(self.window, "command") as prepare:
+            self.window.prepare()
+        reserved = self.window.job
+        self.assertIn(reserved, prepare.call_args.args[0])
+        with patch.object(self.gui.UpdateWindow, "command") as query:
+            reopened = self.gui.UpdateWindow(self.application)
+            try:
+                self.assertEqual(reopened.job, reserved)
+                self.assertEqual(query.call_args.args[0], ["status", reserved])
+            finally:
+                reopened.close()
 
     def test_handoff_requires_a_new_confirmation_and_never_autostarts(self):
         preview = self.complete(self.fixture.bundle)

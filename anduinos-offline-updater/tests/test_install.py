@@ -123,6 +123,19 @@ class ApplyCommandTests(unittest.TestCase):
 
 
 class InstallationChecks(unittest.TestCase):
+    def test_reserved_id_never_reopens_an_existing_job(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            existing = root / ("a" * 32)
+            existing.mkdir()
+            jobs.update(existing, state="prepared", owner_uid=1001)
+            with patch.object(jobs, "ROOT", root), patch.object(jobs, "trusted_directory", return_value=root):
+                with self.assertRaises(FileExistsError):
+                    jobs.prepare(Path("/unused"), 1000, identifier=existing.name)
+                with self.assertRaises(BundleError):
+                    jobs.prepare(Path("/unused"), 1000, identifier="../invalid")
+            self.assertEqual(json.loads((existing / "status.json").read_text())["owner_uid"], 1001)
+
     def test_live_import_survives_retry_and_exited_import_is_recoverable(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

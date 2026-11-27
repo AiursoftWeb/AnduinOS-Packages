@@ -13,6 +13,7 @@ def main(argv=None):
     sub = parser.add_subparsers(dest="action", required=True)
     command = sub.add_parser("prepare")
     command.add_argument("file", type=Path)
+    command.add_argument("--job-id")
     command.add_argument("--allow-foreign-removals", action="store_true")
     command = sub.add_parser("start"); command.add_argument("job"); command.add_argument("plan")
     for name in ("run", "discard"):
@@ -31,7 +32,8 @@ def main(argv=None):
             from .install import execute
             return execute(args.job)
         if args.action == "prepare":
-            result = jobs.prepare(args.file, uid, allow_foreign_removals=True) if args.allow_foreign_removals else jobs.prepare(args.file, uid)
+            result = jobs.prepare(args.file, uid, allow_foreign_removals=args.allow_foreign_removals,
+                                  identifier=args.job_id)
         elif args.action == "start": result = jobs.start(args.job, args.plan, uid)
         else: result = jobs.discard(args.job, uid)
         print(json.dumps(result, indent=2))

@@ -48,8 +48,12 @@ def trusted_directory(path, create=False):
     return path
 
 
-def job_path(identifier):
+def validate_job_id(identifier):
     require(re.fullmatch(r"[a-f0-9]{32}", identifier) is not None, "Invalid job identifier")
+
+
+def job_path(identifier):
+    validate_job_id(identifier)
     trusted_directory(ROOT)
     return trusted_directory(ROOT / identifier)
 
@@ -248,10 +252,13 @@ def recover_imports(uid):
             continue
 
 
-def prepare(source, uid, *, allow_foreign_removals=False):
+def prepare(source, uid, *, allow_foreign_removals=False, identifier=None):
+    if identifier is None:
+        identifier = uuid.uuid4().hex
+    validate_job_id(identifier)
     trusted_directory(ROOT, create=True)
     recover_imports(uid)
-    path = ROOT / uuid.uuid4().hex
+    path = ROOT / identifier
     path.mkdir(mode=0o711)
     with import_writer(path):
         try:
