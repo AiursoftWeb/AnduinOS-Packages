@@ -14,7 +14,7 @@ source "$SCRIPT_DIR/../lib/build-guards.sh"
 need_cmd msgunfmt gettext
 need_cmd msgfmt gettext
 
-# ── Translation tables ─────────────────────────────────────────────────
+# ── Translation tables ─────────────────────────────────────────────
 
 declare -A ADD=(
     ["en"]="Add to Taskbar"
@@ -38,6 +38,12 @@ declare -A ADD=(
     ["pl"]="Dodaj do paska zadań"
     ["tr"]="Görev çubuğuna ekle"
     ["ro"]="Adăugați în bara de activități"
+    ["da"]="Tilføj til proceslinjen"
+    ["uk"]="Додати на панель завдань"
+    ["id"]="Tambahkan ke bilah tugas"
+    ["fi"]="Lisää tehtäväpalkkiin"
+    ["hi"]="टास्कबार में जोड़ें"
+    ["el"]="Προσθήκη στη γραμμή εργασιών"
     ["hr"]="Dodaj na programsku traku"
 )
 
@@ -63,10 +69,16 @@ declare -A REMOVE=(
     ["pl"]="Usuń z paska zadań"
     ["tr"]="Görev çubuğundan kaldır"
     ["ro"]="Anulați fixarea din bara de activități"
+    ["da"]="Fjern fra proceslinjen"
+    ["uk"]="Вилучити з панелі завдань"
+    ["id"]="Hapus dari bilah tugas"
+    ["fi"]="Poista tehtäväpalkista"
+    ["hi"]="टास्कबार से हटाएँ"
+    ["el"]="Αφαίρεση από τη γραμμή εργασιών"
     ["hr"]="Ukloni s programske trake"
 )
 
-# ── Ubuntu archive URL per suite ────────────────────────────────────────
+# ── Ubuntu archive URL per suite ───────────────────────────────────
 declare -A UBUNTU_MIRROR=(
     ["noble"]="https://mirror.aiursoft.com/ubuntu"
     ["resolute"]="https://mirror.aiursoft.com/ubuntu"
@@ -109,7 +121,7 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
         language-pack-gnome-en-base 2>/dev/null || true
 
     # For non-English: download langpacks we have translations for
-    for lang in zh-hans zh-hant ja ko vi th de fr es ru it pt nl sv pl tr ar ro hr; do
+    for lang in zh-hans zh-hant ja ko vi th de fr es ru it pt nl sv pl tr ar ro da uk id fi hi el hr; do
         apt-get download -qq \
             -o "Dir::Etc::SourceList=$APT_DIR/sources.list" \
             -o "Dir::Etc::SourceParts=/dev/null" \
@@ -119,7 +131,7 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
     done
     cd "$SCRIPT_DIR"
 
-    # ── Process each langpack ──────────────────────────────────────────
+    # ── Process each langpack ──────────────────────────────────────
     patched=0
 
     for deb in "$DL_DIR"/*.deb; do
@@ -143,8 +155,16 @@ for SUITE in "${!GNOME_TARGETS[@]}"; do
             echo "[$SUITE] Patching gnome-shell.mo: $lang"
             po_file="$APT_DIR/gnome-shell-$lang.po"
             msgunfmt "$mo_file" -o "$po_file"
-            sed -i '/msgid "Pin to Dash"/{n;s/.*/msgstr "'"${ADD[$lang]}"'"/}' "$po_file"
-            sed -i '/msgid "Unpin"/{n;s/.*/msgstr "'"${REMOVE[$lang]}"'"/}' "$po_file"
+            if grep -qx 'msgid "Pin to Dash"' "$po_file"; then
+                sed -i '/^msgid "Pin to Dash"$/{n;s/.*/msgstr "'"${ADD[$lang]}"'"/}' "$po_file"
+            else
+                printf '\nmsgid "Pin to Dash"\nmsgstr "%s"\n' "${ADD[$lang]}" >> "$po_file"
+            fi
+            if grep -qx 'msgid "Unpin"' "$po_file"; then
+                sed -i '/^msgid "Unpin"$/{n;s/.*/msgstr "'"${REMOVE[$lang]}"'"/}' "$po_file"
+            else
+                printf '\nmsgid "Unpin"\nmsgstr "%s"\n' "${REMOVE[$lang]}" >> "$po_file"
+            fi
 
             out_dir="$DEPLOY_DIR/$lang/LC_MESSAGES"
             mkdir -p "$out_dir"

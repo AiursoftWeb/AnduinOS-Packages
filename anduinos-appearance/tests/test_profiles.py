@@ -1,7 +1,9 @@
 import gettext
 import pathlib
 import string
+import subprocess
 import sys
+import tempfile
 import unittest
 from unittest import mock
 
@@ -42,13 +44,19 @@ class ProfileTests(unittest.TestCase):
         formatter = string.Formatter()
         def fields(text):
             return {field for _, field, _, _ in formatter.parse(text) if field}
-        for catalog in (root / 'locale').glob('*/LC_MESSAGES/anduinos-appearance.mo'):
-            with catalog.open('rb') as source:
-                translation = gettext.GNUTranslations(source)
-            for message in messages:
-                with self.subTest(locale=catalog.parents[1].name, message=message):
-                    self.assertIn(message, translation._catalog)
-                    self.assertEqual(fields(message), fields(translation.gettext(message)))
+        po_files = sorted((root / 'po').glob('*.po'))
+        self.assertGreater(len(po_files), 0)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            for po_file in po_files:
+                locale_name = po_file.stem
+                mo_file = pathlib.Path(tmpdir) / f'{locale_name}.mo'
+                subprocess.run(['msgfmt', '--check', str(po_file), '-o', str(mo_file)], check=True)
+                with mo_file.open('rb') as source:
+                    translation = gettext.GNUTranslations(source)
+                for message in messages:
+                    with self.subTest(locale=locale_name, message=message):
+                        self.assertIn(message, translation._catalog)
+                        self.assertEqual(fields(message), fields(translation.gettext(message)))
 
     def test_effective_defaults_and_disabled_overrides(self):
         settings = FakeSettings(disabled=[profiles.PANEL_EXTENSIONS[0]])
