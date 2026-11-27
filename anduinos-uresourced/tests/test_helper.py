@@ -81,3 +81,29 @@ class ResourceHelperTests(unittest.TestCase):
             with self.subTest(value=value), self.assertRaises(ValueError):
                 helper.save({'memory_mib': value})
         self.assertEqual(self.machine.read_text(), MACHINE)
+
+    def test_apply_reloads_graphical_and_lingering_managers(self):
+        root = self.machine.parent
+        for uid in (1000, 1001):
+            runtime = root / 'run/user' / str(uid)
+            runtime.mkdir(parents=True)
+            (runtime / 'bus').touch()
+
+        def test_path(path):
+            return root / Path(path).relative_to('/')
+
+        for enabled in (False, True):
+            with self.subTest(enabled=enabled):
+                self.machine.write_text(MACHINE.replace('Enabled=true', f'Enabled={enabled}'))
+                helper.active.side_effect = lambda user=None, unit=None: (
+                    user == 1000 if unit == 'graphical-session.target' else enabled and user != 1001)
+                with patch.object(helper, 'Path', side_effect=test_path), patch.object(helper, 'ctl') as ctl:
+                    helper.apply()
+
+                def actions(uid):
+                    return [c.args[0] for c in ctl.call_args_list if c.kwargs.get('user') == uid
+                            and c.args[0] in ('daemon-reload', 'start')]
+
+                reloads = ['daemon-reload'] * (2 if enabled else 1)
+                self.assertEqual(actions(1001), reloads)
+                self.assertEqual(actions(1000), reloads + (['start'] if enabled else []))

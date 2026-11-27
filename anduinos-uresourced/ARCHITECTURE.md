@@ -39,9 +39,11 @@ rollback journal. Shutdown uses upstream's normal inactive/default resource
 settings, not restoration of arbitrary pre-existing runtime properties. Standard
 systemd restart-on-failure handles daemon failures.
 
-Apply also removes upstream's generated session drop-in before starting the saved
-policy and reloads the existing graphical user managers. This computed `/run`
-file is not saved preferences. Boot does not run a cleanup or recovery hook.
+Apply reloads every running user manager after removing the generated session
+drop-in and again when the system daemon recreates it. This updates
+`session.slice` for users whose manager outlives their graphical login.
+Only active graphical sessions start the user daemon. The generated file lives
+in `/run`. Boot uses normal upstream service activation.
 During package configuration APKG manages the system service. Once this has
 finished, postinst reloads the user managers and applies the Debian service
 policy to the static user service in existing graphical sessions. Boot and
@@ -60,7 +62,8 @@ change these boundaries, swap settings or existing GNOME notifications.
 
 ## Build
 
-Use `apkg build --all`. The existing build script downloads the upstream archive,
+Use APKG CLI 10.0.78 or later for the service management scripts and run
+`apkg build --all`. The existing build script downloads the upstream archive,
 runs standard Meson setup/compile/install and stages the package. Build inputs are
 declared in `.aosproj`; architecture-specific compilers and fetched development
 files provide the normal amd64/arm64 cross-build paths. No C injection or patch

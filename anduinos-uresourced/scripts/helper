@@ -142,13 +142,14 @@ def apply():
             ctl('stop', 'uresourced.service', user=uid)
     ctl('stop', 'uresourced.service')
     Path('/run/systemd/user/session.slice.d/99-uresourced.conf').unlink(missing_ok=True)
-    for uid in graphical:
+    for uid in users:
         ctl('daemon-reload', user=uid)
     if enabled:
         ctl('reset-failed', 'uresourced.service')
         ctl('start', 'uresourced.service')
-        for uid in graphical:
+        for uid in users:
             ctl('daemon-reload', user=uid)
+        for uid in graphical:
             ctl('reset-failed', 'uresourced.service', user=uid)
             ctl('start', 'uresourced.service', user=uid)
     if active() != enabled or any(active(uid) != enabled for uid in graphical):
