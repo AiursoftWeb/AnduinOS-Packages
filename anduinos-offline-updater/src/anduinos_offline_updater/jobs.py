@@ -110,6 +110,7 @@ def status(identifier, uid):
     if report["state"] == "importing" and import_stopped(path, report):
         # A successful writer publishes prepared before releasing its lock.
         report = json.loads((path / "status.json").read_text())
+        require(uid in (0, report["owner_uid"]), "This job belongs to another user")
         if report["state"] == "importing":
             report.update(state="interrupted", error=IMPORT_INTERRUPTED)
     if (report["state"] in {"complete", "already-installed"} and report.get("reboot_required") and
@@ -174,15 +175,16 @@ def copy_as_user(source, destination, uid):
     os.close(write_fd)
     digest, size = hashlib.sha256(), 0
     try:
-        fd = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        with os.fdopen(read_fd, "rb") as incoming, os.fdopen(fd, "wb") as outgoing:
-            while chunk := incoming.read(1024 * 1024):
-                size += len(chunk)
-                require(size <= MAX_PAYLOAD, "Update file exceeds the import limit")
-                require(shutil.disk_usage(destination.parent).free >= len(chunk) + 64 * 1024 ** 2,
-                        "Insufficient space to import update file")
-                outgoing.write(chunk); digest.update(chunk)
-            outgoing.flush(); os.fsync(outgoing.fileno())
+        with os.fdopen(read_fd, "rb") as incoming:
+            fd = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            with os.fdopen(fd, "wb") as outgoing:
+                while chunk := incoming.read(1024 * 1024):
+                    size += len(chunk)
+                    require(size <= MAX_PAYLOAD, "Update file exceeds the import limit")
+                    require(shutil.disk_usage(destination.parent).free >= len(chunk) + 64 * 1024 ** 2,
+                            "Insufficient space to import update file")
+                    outgoing.write(chunk); digest.update(chunk)
+                outgoing.flush(); os.fsync(outgoing.fileno())
     finally:
         _, result = os.waitpid(pid, 0)
     require(result == 0 and size > 0, "Cannot read the selected regular file as the requesting user")
@@ -241,10 +243,10 @@ def recover_imports(uid):
                 continue
             if not isinstance(report, dict) or report.get("owner_uid") != uid or report.get("state") != "importing":
                 continue
-            if not import_stopped(path, report):
-                continue
-            with job_lock(path):
-                if status(path.name, uid)["state"] != "interrupted":
+            with job_lock(job_path(path.name)):
+                current = json.loads(file.read_text())
+                if (current.get("owner_uid") != uid or current.get("state") != "importing"
+                        or not import_stopped(path, current)):
                     continue
                 (path / "bundle.atgz").unlink(missing_ok=True)
                 # inspect and its APT planners create temporary directories

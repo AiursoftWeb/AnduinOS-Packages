@@ -123,6 +123,20 @@ class ApplyCommandTests(unittest.TestCase):
 
 
 class InstallationChecks(unittest.TestCase):
+    def test_staging_creation_error_closes_pipe_before_waiting_for_copy_child(self):
+        with tempfile.TemporaryDirectory() as directory:
+            destination = Path(directory) / "bundle.atgz"
+            destination.touch()
+            reader, writer = os.pipe()
+            def reap(pid, _options):
+                with self.assertRaises(OSError):
+                    os.fstat(reader)
+                return pid, 0
+            with patch.object(os, "pipe", return_value=(reader, writer)), patch.object(os, "fork", return_value=1), \
+                    patch.object(os, "waitpid", side_effect=reap):
+                with self.assertRaises(FileExistsError):
+                    jobs.copy_as_user(Path("/unused"), destination, 1000)
+
     def test_reserved_id_never_reopens_an_existing_job(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -197,6 +211,13 @@ class InstallationChecks(unittest.TestCase):
                 return True
             with patch.object(jobs, "job_path", return_value=path), patch.object(jobs, "import_stopped", side_effect=finish):
                 self.assertEqual(jobs.status("finishing", 1000)["state"], "prepared")
+            def replacement(*_args):
+                jobs.update(path, owner_uid=1001, state="prepared")
+                return True
+            jobs.update(path, owner_uid=1000, state="importing")
+            with patch.object(jobs, "job_path", return_value=path), patch.object(jobs, "import_stopped", side_effect=replacement):
+                with self.assertRaises(BundleError):
+                    jobs.status("finishing", 1000)
 
     def test_interrupted_import_removes_incomplete_job(self):
         with tempfile.TemporaryDirectory() as directory:
