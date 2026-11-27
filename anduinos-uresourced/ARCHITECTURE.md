@@ -18,7 +18,9 @@ machine switch, including after reboot and package upgrades.
 Upstream can read a personal XDG `uresourced.conf` for application policy. When
 present it replaces the system application configuration; missing application
 keys use upstream's built-in defaults, not values merged from the system file.
-Control Panel reports this existing personal override and does not modify it.
+Control Panel reports errors in personal application settings. An unreadable file
+falls back to the machine policy. An invalid foreground weight uses 100 for that
+key. The machine controls remain usable.
 
 ## Apply and lifecycle
 
@@ -26,7 +28,9 @@ The helper reads status without authentication. Changes require root, accept onl
 the switch, memory amount and foreground-priority values, lock concurrent changes,
 and replace the configuration atomically. Other INI keys remain; saving formats
 the file using Python's standard INI writer. Restore Recommended Settings resets
-only these controls to enabled, 250 MiB and priority 300.
+only these controls to enabled, 250 MiB and priority 300. The memory editor
+accepts 32–4096 MiB. A value outside that range stays visible and unchanged
+until someone explicitly edits it or restores the recommended settings.
 
 At boot the normal upstream services read the file. Apply stops/restarts these
 services and reports their actual state. If saving succeeds but a service fails,
@@ -38,6 +42,12 @@ systemd restart-on-failure handles daemon failures.
 Apply also removes upstream's generated session drop-in before starting the saved
 policy and reloads the existing graphical user managers. This computed `/run`
 file is not saved preferences. Boot does not run a cleanup or recovery hook.
+During package configuration APKG manages the system service. Once this has
+finished, postinst reloads the user managers and applies the Debian service
+policy to the static user service in existing graphical sessions. Boot and
+interactive Apply use the saved configuration directly. On upstream 0.5.5,
+restarting the user daemon can leave the focused application at normal priority.
+Switching away and back reapplies its foreground weight.
 Remove preserves the conffile; purge follows dpkg's normal conffile removal.
 Removing Control Panel does not remove or disable the backend.
 

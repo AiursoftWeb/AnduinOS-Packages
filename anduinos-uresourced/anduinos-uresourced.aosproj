@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-uresourced</PackageName>
-    <PackageVersion>0.5.5-3+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>0.5.5-4+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Protect the active graphical session and prioritize focused applications with upstream uresourced.</PackageDescription>
     <Section>admin</Section>
@@ -42,6 +42,7 @@
     <Dependency Include="systemd" />
     <Dependency Include="systemd-oomd" />
     <Dependency Include="python3" />
+    <Dependency Include="python3-gi" />
     <Dependency Include="pkexec" />
     <Dependency Include="dbus-user-session" />
     <Dependency Include="init-system-helpers" />
@@ -61,6 +62,7 @@
     <IncludeFile Include="data/oomd-app.conf" Target="/usr/lib/systemd/user/background.slice.d/30-anduinos-resource-policy.conf" />
     <IncludeFile Include="data/oomd-user.conf" Target="/usr/lib/systemd/system/user@.service.d/30-anduinos-resource-policy.conf" />
     <IncludeFile Include="data/oomd-root.conf" Target="/usr/lib/systemd/system/-.slice.d/30-anduinos-resource-policy.conf" />
+    <TestCommand Name="helper" Profile="anduinos-package-release-test" Run="PYTHONDONTWRITEBYTECODE=1 /usr/bin/python3 -m unittest discover -s tests -v" TimeoutSeconds="60" />
     <PostInstallScript Include="scripts/postinst.sh" />
     <PreRemoveScript Include="scripts/prerm.sh" />
     <PostRemoveScript Include="scripts/postrm.sh" />

@@ -1250,16 +1250,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "Nije moguće pročitati postavke resursa: {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "Zaštita je uključena, ali jedna usluga resursa nije pokrenuta."
+msgid "The resource services do not match the saved setting."
+msgstr "Stanje servisa za resurse ne odgovara spremljenoj postavci."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "Zaštita resursa radne površine je uključena."
+msgid "Desktop resource priority is enabled."
+msgstr "Davanje prednosti resursima radne površine je uključeno."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "Zaštita resursa radne površine je isključena."
+msgid "Desktop resource priority is disabled."
+msgstr "Davanje prednosti resursima radne površine je isključeno."
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1268,3 +1268,7 @@ msgstr "Nije moguće primijeniti postavke: {error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "Zadrži odziv radne površine pod opterećenjem"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "Neke osobne postavke aplikacija nije bilo moguće pročitati. I dalje možete mijenjati postavke sustava."

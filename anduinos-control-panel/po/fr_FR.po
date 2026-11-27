@@ -1282,16 +1282,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "Impossible de lire les réglages des ressources : {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "La protection est activée, mais un service de ressources ne fonctionne pas."
+msgid "The resource services do not match the saved setting."
+msgstr "L’état des services de gestion des ressources ne correspond pas au réglage enregistré."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "La protection des ressources du bureau est activée."
+msgid "Desktop resource priority is enabled."
+msgstr "La priorité des ressources du bureau est activée."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "La protection des ressources du bureau est désactivée."
+msgid "Desktop resource priority is disabled."
+msgstr "La priorité des ressources du bureau est désactivée."
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1300,3 +1300,7 @@ msgstr "Impossible d’appliquer les réglages : {error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "Préserver la réactivité du bureau sous charge"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "Certains réglages personnels des applications sont illisibles. Vous pouvez toujours modifier les réglages du système."

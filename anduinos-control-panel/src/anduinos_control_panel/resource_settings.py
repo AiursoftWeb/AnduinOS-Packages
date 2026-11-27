@@ -43,6 +43,10 @@ class ResourceSettingsWindow(Adw.Window):
         group.add(self.enabled)
         self.status = Gtk.Label(wrap=True, xalign=0)
         body.append(self.status)
+        self.personal_warning = Gtk.Label(
+            label=_("Some personal application settings could not be read. You can still change the system settings."),
+            xalign=0, wrap=True, visible=False)
+        body.append(self.personal_warning)
         self.install = Gtk.Button(label=_("Install"), halign=Gtk.Align.START)
         self.install.connect('clicked', self._install)
         body.append(self.install)
@@ -64,6 +68,9 @@ class ResourceSettingsWindow(Adw.Window):
         self.memory.set_value(250)
         self.memory.connect('value-changed', self._changed)
         self.memory_row.add_suffix(self.memory)
+        self.custom_memory = Gtk.Button(valign=Gtk.Align.CENTER, visible=False)
+        self.custom_memory.connect('clicked', self._edit_custom_memory)
+        self.memory_row.add_suffix(self.custom_memory)
         settings.add(self.memory_row)
         self.priority = Adw.ComboRow(title=_("Foreground application priority"))
         self.priority.set_model(Gtk.StringList.new([
@@ -119,6 +126,13 @@ class ResourceSettingsWindow(Adw.Window):
                 result['priority'] = value
         return result
 
+    def _edit_custom_memory(self, _button):
+        self.custom_memory.set_visible(False)
+        self.memory.set_visible(True)
+        self.saved_memory = None
+        self.memory.grab_focus()
+        self._sensitivity()
+
     def _changed(self, *_arguments):
         if not self.updating:
             self._sensitivity()
@@ -148,6 +162,7 @@ class ResourceSettingsWindow(Adw.Window):
         if not installed:
             self.loading = False
             self.saved = None
+            self.personal_warning.set_visible(False)
             self.status.set_label(_("Install desktop resource protection to configure it."))
             self._sensitivity()
             return
@@ -166,6 +181,7 @@ class ResourceSettingsWindow(Adw.Window):
         self.loading = False
         self.saved = None
         self.retry.set_visible(True)
+        self.personal_warning.set_visible(False)
         self.status.set_label(_("Could not read resource settings: {error}").format(error=error))
         self._sensitivity()
 
@@ -185,25 +201,30 @@ class ResourceSettingsWindow(Adw.Window):
         amount, suffix = int(match[1]), match[2]
         mib = amount * ram_kib / 1024 / 100 if suffix == '%' else amount * {
             '': 1 / 1048576, 'K': 1 / 1024, 'M': 1, 'G': 1024, 'T': 1048576}[suffix]
-        self.memory.set_range(min(32, mib), max(4096, mib))
+        custom = not 32 <= mib <= 4096
+        self.memory.set_visible(not custom)
+        self.custom_memory.set_label(f"{_('Custom (unchanged)')} · {raw}  ✎")
+        self.custom_memory.set_visible(custom)
         self.memory.set_value(mib)
         self.saved_memory = self.memory.get_value_as_int()
         weights = values['cpu_weight'], values['io_weight']
         selected = PRIORITIES.index(weights[0]) if weights[0] == weights[1] and weights[0] in PRIORITIES else 3
         self.priority.set_selected(selected)
+        errors = state.get('personal_errors', [])
+        self.personal_warning.set_visible(bool(errors))
         overrides = state['overridden']
         self.notice.set_label(_("Some choices are overridden by administrator or personal configuration.") if overrides else '')
         self.notice.set_visible(overrides)
         self.owner._append_package_output(self.buffer, self.output,
             json.dumps({'effective': values, 'personal': state['personal'], 'sources': state['sources'],
-                        'personal_override': state['overridden']}, ensure_ascii=False, indent=2) + '\n')
+                        'personal_override': state['overridden'], 'personal_errors': errors}, ensure_ascii=False, indent=2) + '\n')
         if message:
             self.status.set_label(message)
-        elif (values['enabled'] or state['system_active'] or state['user_active']) and not (state['system_active'] and state['user_active']):
-            self.status.set_label(_("Protection is enabled, but a resource service is not running."))
+        elif (state['system_active'], state['user_active']) != (values['enabled'], values['enabled']):
+            self.status.set_label(_("The resource services do not match the saved setting."))
         else:
-            self.status.set_label(_("Desktop resource protection is enabled.") if state['system_active'] and state['user_active']
-                                  else _("Desktop resource protection is disabled."))
+            self.status.set_label(_("Desktop resource priority is enabled.") if values['enabled']
+                                  else _("Desktop resource priority is disabled."))
         self.updating = False
         self._sensitivity()
 

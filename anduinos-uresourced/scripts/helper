@@ -5,7 +5,6 @@ import fcntl
 import json
 import os
 from pathlib import Path
-import pwd
 import re
 import stat
 import subprocess
@@ -16,10 +15,10 @@ CONFIG = Path('/etc/uresourced.conf')
 DEFAULTS = {'enabled': True, 'memory': '250M', 'cpu_weight': 300, 'io_weight': 300}
 
 
-def read(path=CONFIG):
+def read():
     parser = configparser.ConfigParser(interpolation=None, strict=False)
     parser.optionxform = str
-    parser.read_string(path.read_text())
+    parser.read_string(CONFIG.read_text())
     return parser
 
 
@@ -38,13 +37,16 @@ def values(parser):
 
 
 def ctl(*arguments, user=None, check=True):
-    command = ['/usr/bin/systemctl', *(['--user'] if user is not None else []), *arguments]
+    command = ['/usr/bin/systemctl']
     environment = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LANG': 'C.UTF-8'}
     if user is not None:
-        environment.update(XDG_RUNTIME_DIR=f'/run/user/{user}',
-                           DBUS_SESSION_BUS_ADDRESS=f'unix:path=/run/user/{user}/bus')
+        command.append('--user')
         if os.geteuid() == 0:
-            command = ['/usr/sbin/runuser', '-u', pwd.getpwuid(user).pw_name, '--', *command]
+            command.append(f'--machine={user}@.host')
+        else:
+            environment.update(XDG_RUNTIME_DIR=f'/run/user/{user}',
+                               DBUS_SESSION_BUS_ADDRESS=f'unix:path=/run/user/{user}/bus')
+    command.extend(arguments)
     result = subprocess.run(command, env=environment, cwd='/', text=True,
                             capture_output=True, timeout=30)
     if check and result.returncode:
@@ -59,12 +61,32 @@ def active(user=None, unit='uresourced.service'):
 def status():
     parser = read()
     current = values(parser)
-    personal = Path(os.environ.get('XDG_CONFIG_HOME', Path.home() / '.config')) / 'uresourced.conf'
-    application = {**current, **weights(read(personal))} if personal.is_file() else current.copy()
-    return {'values': current, 'personal': application,
-            'sources': {'system': str(CONFIG),
-                        'applications': str(personal if personal.is_file() else CONFIG)},
-            'overridden': personal.is_file() or parser.has_option('SessionSlice', 'MemoryMin'),
+    # Use the same key-file parser and integer defaults as upstream r-app-policy.
+    from gi.repository import GLib
+    personal = Path(GLib.get_user_config_dir()) / 'uresourced.conf'
+    source = CONFIG
+    diagnostics = []
+    application = current.copy()
+    keyfile = GLib.KeyFile.new()
+    try:
+        keyfile.load_from_file(str(personal), GLib.KeyFileFlags.NONE)
+    except GLib.Error as error:
+        if not error.matches(GLib.file_error_quark(), GLib.FileError.NOENT):
+            diagnostics.append(f'{personal}: {error.message}')
+    else:
+        source = personal
+        for kind in ('cpu', 'io'):
+            key = 'Active' + kind.upper() + 'Weight'
+            weight = 100
+            try:
+                weight = keyfile.get_integer('AppBoost', key)
+            except GLib.Error as error:
+                if error.matches(GLib.key_file_error_quark(), GLib.KeyFileError.INVALID_VALUE):
+                    diagnostics.append(f'{personal}: [AppBoost] {key}')
+            application[kind + '_weight'] = min(10000, max(1, weight))
+    return {'values': current, 'personal': application, 'personal_errors': diagnostics,
+            'sources': {'system': str(CONFIG), 'applications': str(source)},
+            'overridden': source == personal or parser.has_option('SessionSlice', 'MemoryMin'),
             'system_active': active(), 'user_active': active(os.getuid()),
             'can_reset': current != DEFAULTS}
 
@@ -131,7 +153,7 @@ def apply():
             ctl('start', 'uresourced.service', user=uid)
     if active() != enabled or any(active(uid) != enabled for uid in graphical):
         raise RuntimeError('Resource service state differs from the saved setting; check the journal')
-    print(f'Desktop protection {"enabled" if enabled else "disabled"}. Saved settings and running services verified.', flush=True)
+    print(f'Desktop resource priority {"enabled" if enabled else "disabled"}. Saved settings and running services verified.', flush=True)
 
 
 def main():

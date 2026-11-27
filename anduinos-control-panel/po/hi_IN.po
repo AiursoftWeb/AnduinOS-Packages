@@ -1234,16 +1234,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "संसाधन सेटिंग पढ़ी नहीं जा सकीं: {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "सुरक्षा सक्षम है, लेकिन कोई संसाधन सेवा नहीं चल रही है।"
+msgid "The resource services do not match the saved setting."
+msgstr "संसाधन सेवाओं की स्थिति सहेजी गई सेटिंग से मेल नहीं खाती।"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "डेस्कटॉप संसाधन सुरक्षा सक्षम है।"
+msgid "Desktop resource priority is enabled."
+msgstr "डेस्कटॉप संसाधनों को प्राथमिकता देना चालू है।"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "डेस्कटॉप संसाधन सुरक्षा अक्षम है।"
+msgid "Desktop resource priority is disabled."
+msgstr "डेस्कटॉप संसाधनों को प्राथमिकता देना बंद है।"
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1252,3 +1252,7 @@ msgstr "सेटिंग लागू नहीं की जा सकीं:
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "अधिक लोड में डेस्कटॉप को प्रतिक्रियाशील रखें"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "कुछ निजी ऐप सेटिंग पढ़ी नहीं जा सकीं। आप अभी भी सिस्टम सेटिंग बदल सकते हैं।"

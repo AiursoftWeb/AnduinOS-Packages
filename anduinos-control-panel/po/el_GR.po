@@ -1271,16 +1271,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "Αδυναμία ανάγνωσης ρυθμίσεων πόρων: {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "Η προστασία είναι ενεργή, αλλά μια υπηρεσία πόρων δεν εκτελείται."
+msgid "The resource services do not match the saved setting."
+msgstr "Η κατάσταση των υπηρεσιών πόρων δεν αντιστοιχεί στην αποθηκευμένη ρύθμιση."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "Η προστασία πόρων επιφάνειας εργασίας είναι ενεργή."
+msgid "Desktop resource priority is enabled."
+msgstr "Η προτεραιότητα πόρων για την επιφάνεια εργασίας είναι ενεργοποιημένη."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "Η προστασία πόρων επιφάνειας εργασίας είναι ανενεργή."
+msgid "Desktop resource priority is disabled."
+msgstr "Η προτεραιότητα πόρων για την επιφάνεια εργασίας είναι απενεργοποιημένη."
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1289,3 +1289,7 @@ msgstr "Αδυναμία εφαρμογής ρυθμίσεων: {error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "Διατήρηση απόκρισης της επιφάνειας εργασίας υπό φόρτο"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "Δεν ήταν δυνατή η ανάγνωση ορισμένων προσωπικών ρυθμίσεων εφαρμογών. Μπορείτε ακόμα να αλλάξετε τις ρυθμίσεις συστήματος."

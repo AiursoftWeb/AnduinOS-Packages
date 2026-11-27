@@ -1254,16 +1254,16 @@ msgid "Could not read resource settings: {error}"
 msgstr "Không thể đọc cài đặt tài nguyên: {error}"
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Protection is enabled, but a resource service is not running."
-msgstr "Bảo vệ đã bật nhưng có dịch vụ tài nguyên không chạy."
+msgid "The resource services do not match the saved setting."
+msgstr "Trạng thái các dịch vụ tài nguyên không khớp với thiết lập đã lưu."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is enabled."
-msgstr "Bảo vệ tài nguyên màn hình nền đã bật."
+msgid "Desktop resource priority is enabled."
+msgstr "Đã bật ưu tiên tài nguyên cho màn hình nền."
 
 #: src/anduinos_control_panel/resource_settings.py
-msgid "Desktop resource protection is disabled."
-msgstr "Bảo vệ tài nguyên màn hình nền đã tắt."
+msgid "Desktop resource priority is disabled."
+msgstr "Đã tắt ưu tiên tài nguyên cho màn hình nền."
 
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Could not apply settings: {error}"
@@ -1272,3 +1272,7 @@ msgstr "Không thể áp dụng cài đặt: {error}"
 #: src/anduinos_control_panel/resource_settings.py
 msgid "Keep the desktop responsive under load"
 msgstr "Giữ màn hình nền phản hồi nhanh khi tải cao"
+
+#: src/anduinos_control_panel/resource_settings.py
+msgid "Some personal application settings could not be read. You can still change the system settings."
+msgstr "Không thể đọc một số thiết lập ứng dụng cá nhân. Bạn vẫn có thể thay đổi thiết lập hệ thống."
