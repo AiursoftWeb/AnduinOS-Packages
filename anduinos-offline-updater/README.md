@@ -84,8 +84,8 @@ application changes that behavior.
 The GTK interface uses the same read-only inspector in a separate unprivileged
 process. It checks local files without contacting the Pro website; the link only
 opens when requested. Temporary files use the user's cache directory and are
-removed when inspection finishes, including after the window closes. The default
-production trust key is still required and is not supplied by this package.
+removed when inspection finishes, including after the window closes. Verification
+uses the official signing key installed with the updater.
 
 Select **Continue** to authorize importing a verified file. Review the freshly
 checked installation plan, then select **Start Update** to install it. Progress
@@ -151,8 +151,8 @@ normally. Snapshot results are reported separately, and an unconfirmed snapshot
 is not a recovery guarantee. Local staging, package expansion and separate boot
 partition capacity are checked conservatively; script and CoW peaks can vary.
 
-Imported files and results remain in `/var/lib/anduinos-offline-updater` until
-explicitly removed. Save any needed diagnostic results, then release the space:
+Imported files and results stay in `/var/lib/anduinos-offline-updater` for the
+current boot. To release the space earlier, save any diagnostics you need and run
 
 ```sh
 anduinos-offline-updater discard JOB_ID

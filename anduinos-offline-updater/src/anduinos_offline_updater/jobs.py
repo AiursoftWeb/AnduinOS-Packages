@@ -116,7 +116,7 @@ def status(identifier, uid):
     plan = job_path(identifier) / "plan.json"
     if report["state"] == "prepared" and (report.get("confirmation_required") or
             (plan.exists() and plan.stat().st_mode & stat.S_IROTH)):
-        # New jobs expose package metadata for reconnecting GTK. Legacy private
+        # Current jobs expose package metadata for plan review. Legacy private
         # plans remain queryable without requiring their contents to be readable.
         report["preview"] = json.loads((job_path(identifier) / "plan.json").read_text())
     if not report.get("source_version") or not report.get("target_version"):
