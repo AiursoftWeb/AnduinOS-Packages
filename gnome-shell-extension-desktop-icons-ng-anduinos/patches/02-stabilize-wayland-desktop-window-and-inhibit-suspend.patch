@@ -1,0 +1,413 @@
+DING GTK 4: stabilize Wayland desktop window placement and inhibit suspend.
+
+Upstream DING v105 (MR !527) switched from map to window-created with a single
+250ms move_frame timer, dropped position/minimize/fullscreen/stacking guards,
+never recomputed target (x, y) on workarea or monitor updates, and left the
+GTK4 Wayland surface vulnerable to Mutter's XDG_TOPLEVEL_STATE_SUSPENDED after
+3s of window occlusion (causing desktop icons to vanish permanently after
+minimizing or closing a covering window, upstream #379).
+
+Recompute target coordinates dynamically, enforce desktop type and placement
+across first-frame/map/position-changed/size-changed/unlock, guard stacking
+without dual-monitor loops, and attach a 1x1 zero-opacity Clutter.Clone to keep
+Mutter's MetaWindowActor suspend state inhibited.
+
+Upstream component: https://gitlab.com/rastersoft/desktop-icons-ng
+
+--- a/emulateX11WindowType.js
++++ b/emulateX11WindowType.js
+@@ -16,8 +16,11 @@
+  */
+ // SPDX-License-Identifier: GPL-3.0-only
+ 'use strict';
++import Clutter from 'gi://Clutter';
++import Gio from 'gi://Gio';
+ import GLib from 'gi://GLib';
+ import Meta from 'gi://Meta';
++import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+ 
+ 
+ class ManageWindow {
+@@ -29,6 +32,7 @@
+ 
+        * T : put this window at the top of the window stack
+        * D : show this window in all desktops
++       * H : hide this window from the window list
+ 
+        Using the title is generally not a problem because the desktop window
+        doesn't have a title, and it allows to take advantage of these flags
+@@ -40,15 +44,177 @@
+         this._X11Emulator = X11Emulator;
+         this._window = window;
+         this._signalIDs = [];
++        this._actor = null;
++        this._actorSignalIDs = [];
++        this._suspendInhibitClone = null;
++        this._moveIntoPlaceID = 0;
++        this._movingFrame = false;
++        this._desktopIndex = null;
++        this._isDesktopWindow = false;
++        this._hideFromWindowList = false;
+         this.windowUnmanaged = false;
+         this._keepAtTop = false;
+         this._showInAllDesktops = false;
+-        // This signal is disconnected in `disable`, when `clearWindow()` is
+-        // called for each window to remove everything added.
++
+         this._signalIDs.push(window.connect('notify::title', () => {
+             this._parseTitle();
+         }));
++        this._signalIDs.push(window.connect('position-changed', () => {
++            if (this._fixed && !this.windowUnmanaged)
++                this._enforceDesktopPlacement();
++        }));
++        this._signalIDs.push(window.connect_after('size-changed', () => {
++            if (this._fixed && !this.windowUnmanaged) {
++                this._enforceDesktopPlacement();
++                this._moveIntoPlace();
++            }
++        }));
++        this._signalIDs.push(window.connect('notify::minimized', () => {
++            if (this._isDesktopWindow && this._window?.minimized && !this.windowUnmanaged)
++                this._window.unminimize();
++        }));
++        this._signalIDs.push(window.connect('notify::fullscreen', () => {
++            if (this._isDesktopWindow && this._window?.fullscreen && !this.windowUnmanaged)
++                this._window.unmake_fullscreen();
++        }));
++        this._signalIDs.push(window.connect('notify::above', () => {
++            if (this._isDesktopWindow && this._window?.above && !this.windowUnmanaged)
++                this._window.unmake_above();
++        }));
++        this._signalIDs.push(window.connect_after('raised', () => {
++            if (this._isDesktopWindow && this._window && !this.windowUnmanaged)
++                this._lowerBelowNormalWindows();
++        }));
++
+         this._parseTitle();
++        this._bindActor(window.get_compositor_private?.());
++    }
++
++    _lowerBelowNormalWindows() {
++        const ws = global.workspace_manager?.get_active_workspace?.();
++        if (!ws || !global.display)
++            return;
++
++        const stack = global.display.sort_windows_by_stacking(ws.list_windows());
++        const myIdx = stack.indexOf(this._window);
++        if (myIdx > 0 && stack.slice(0, myIdx).some(w => w.get_window_type() !== Meta.WindowType.DESKTOP))
++            this._window.lower();
++    }
++
++    _bindActor(actor) {
++        if (!actor || actor === this._actor || this.windowUnmanaged)
++            return;
++
++        this._unbindActor();
++        this._actor = actor;
++        this._actorSignalIDs.push(actor.connect('first-frame', () => {
++            this._enforceDesktopPlacement();
++            this._moveIntoPlace();
++        }));
++        this._actorSignalIDs.push(actor.connect('notify::mapped', () => {
++            if (actor.mapped) {
++                this._enforceDesktopPlacement();
++                this._moveIntoPlace();
++            }
++        }));
++        this._actorSignalIDs.push(actor.connect('destroy', () => {
++            this._actorSignalIDs = [];
++            this._actor = null;
++            this._destroySuspendInhibitClone();
++        }));
++        if (this._isDesktopWindow)
++            this._ensureSuspendInhibitClone();
++    }
++
++    _unbindActor() {
++        if (this._actor) {
++            for (const id of this._actorSignalIDs)
++                this._actor.disconnect(id);
++        }
++        this._actorSignalIDs = [];
++        this._actor = null;
++        this._destroySuspendInhibitClone();
++    }
++
++    /* Keep a 1x1 zero-opacity mapped Clutter.Clone for each desktop window so
++       Mutter's MetaWindowActor (n_mapped_clones > 0) keeps suspend state
++       inhibited instead of sending XDG_TOPLEVEL_STATE_SUSPENDED after 3s of
++       window occlusion (upstream #379). */
++    _ensureSuspendInhibitClone() {
++        if (this._suspendInhibitClone || !this._actor || !Main.layoutManager?.uiGroup || this.windowUnmanaged)
++            return;
++
++        const clone = new Clutter.Clone({
++            source: this._actor,
++            width: 1,
++            height: 1,
++            x: 0,
++            y: 0,
++            opacity: 0,
++            reactive: false,
++        });
++        Main.layoutManager.uiGroup.add_child(clone);
++        this._suspendInhibitClone = clone;
++    }
++
++    _destroySuspendInhibitClone() {
++        if (this._suspendInhibitClone) {
++            this._suspendInhibitClone.destroy();
++            this._suspendInhibitClone = null;
++        }
++    }
++
++    onActorMapped(actor) {
++        this._bindActor(actor);
++        this._enforceDesktopPlacement();
++        this._moveIntoPlace();
++    }
++
++    _updateTargetCoordinates() {
++        if (!this._isDesktopWindow || this._desktopIndex === null)
++            return false;
++
++        const desktopData = this._X11Emulator.getMonitorData(this._desktopIndex);
++        if (!desktopData)
++            return false;
++
++        this._x = desktopData.x + desktopData.windowMarginLeft;
++        this._y = desktopData.y + desktopData.windowMarginTop;
++        return true;
++    }
++
++    _enforceDesktopPlacement() {
++        if (!this._window || this.windowUnmanaged || this._movingFrame)
++            return;
++
++        this._movingFrame = true;
++        try {
++            if (this._isDesktopWindow) {
++                if (this._window.get_window_type() !== Meta.WindowType.DESKTOP)
++                    this._window.set_type(Meta.WindowType.DESKTOP);
++
++                if (this._window.fullscreen)
++                    this._window.unmake_fullscreen();
++
++                if (this._window.minimized)
++                    this._window.unminimize();
++
++                if (this._window.above)
++                    this._window.unmake_above();
++
++                this._bindActor(this._window.get_compositor_private?.());
++                this._ensureSuspendInhibitClone();
++            }
++
++            this._updateTargetCoordinates();
++            if (this._fixed && Number.isFinite(this._x) && Number.isFinite(this._y)) {
++                const frameRect = this._window.get_frame_rect?.();
++                if (!frameRect || frameRect.x !== this._x || frameRect.y !== this._y)
++                    this._window.move_frame(true, this._x, this._y);
++            }
++        } finally {
++            this._movingFrame = false;
++        }
+     }
+ 
+     _moveIntoPlace() {
+@@ -56,21 +222,23 @@
+             GLib.source_remove(this._moveIntoPlaceID);
+ 
+         this._moveIntoPlaceID = GLib.timeout_add(GLib.PRIORITY_LOW, 250, () => {
+-            if (this._fixed && (this._x !== null) && (this._y !== null))
+-                this._window.move_frame(true, this._x, this._y);
+-
+             this._moveIntoPlaceID = 0;
++            this._enforceDesktopPlacement();
+             return GLib.SOURCE_REMOVE;
+         });
+     }
+ 
+     refreshWindowPosition() {
++        this._enforceDesktopPlacement();
+         this._moveIntoPlace();
+     }
+ 
+     destroy() {
+         for (const signalID of this._signalIDs)
+             this._window.disconnect(signalID);
++        this._signalIDs = [];
++
++        this._unbindActor();
+ 
+         if (this._moveIntoPlaceID) {
+             GLib.source_remove(this._moveIntoPlaceID);
+@@ -85,15 +253,21 @@
+ 
+     setWaylandClient(client) {
+         this._waylandClient = client;
++        if (this._hideFromWindowList && this._window && !this.windowUnmanaged)
++            this._waylandClient?.hide_from_window_list?.(this._window);
+     }
+ 
+     _parseTitle() {
+         this._x = null;
+         this._y = null;
++        this._desktopIndex = null;
++        this._isDesktopWindow = false;
+         const keepAtTop = this._keepAtTop;
+         this._keepAtTop = false;
+         const showInAllDesktops = this._showInAllDesktops;
+         this._showInAllDesktops = false;
++        const hideFromWindowList = this._hideFromWindowList;
++        this._hideFromWindowList = false;
+         this._fixed = false;
+         let title = this._window.get_title();
+         if (title !== null) {
+@@ -114,6 +288,9 @@
+                     case 'D':
+                         this._showInAllDesktops = true;
+                         break;
++                    case 'H':
++                        this._hideFromWindowList = true;
++                        break;
+                     }
+                 }
+             }
+@@ -121,15 +298,25 @@
+             if (title.startsWith('Desktop Icons ')) {
+                 this._keepAtTop = false;
+                 this._fixed = true;
++                this._isDesktopWindow = true;
++                this._hideFromWindowList = true;
+                 try {
+-                    const desktopIndex = parseInt(title.substring(14).trim());
+-                    const desktopData = this._X11Emulator.getMonitorData(desktopIndex - 1);
+-                    this._x = desktopData.x + desktopData.windowMarginLeft;
+-                    this._y = desktopData.y + desktopData.windowMarginTop;
++                    const desktopIndex = parseInt(title.substring(14).trim(), 10);
++                    if (Number.isFinite(desktopIndex) && desktopIndex >= 1) {
++                        this._desktopIndex = desktopIndex - 1;
++                        this._updateTargetCoordinates();
++                    }
+                 } catch (e) {
+                     console.log(`Exception ${e.message}.\n${e.stack}`);
+                 }
+-                this._window.set_type(Meta.WindowType.DESKTOP);
++            } else {
++                this._destroySuspendInhibitClone();
++            }
++            if (this._hideFromWindowList !== hideFromWindowList) {
++                if (this._hideFromWindowList)
++                    this._waylandClient?.hide_from_window_list?.(this._window);
++                else
++                    this._waylandClient?.show_in_window_list?.(this._window);
+             }
+             if (this._keepAtTop !== keepAtTop) {
+                 if (this._keepAtTop)
+@@ -143,6 +330,7 @@
+                 else
+                     this._window.unstick();
+             }
++            this._enforceDesktopPlacement();
+             this._moveIntoPlace();
+         }
+     }
+@@ -159,6 +347,7 @@
+         this._windowList = [];
+         this._waylandClient = null;
+         this._monitorData = [];
++        this._lockSignalId = 0;
+     }
+ 
+     setMonitorData(data) {
+@@ -166,7 +355,7 @@
+     }
+ 
+     getMonitorData(idx) {
+-        if (idx >= this._monitorData.length)
++        if (idx < 0 || idx >= this._monitorData.length)
+             return null;
+ 
+         return this._monitorData[idx];
+@@ -185,25 +374,60 @@
+             if (this._waylandClient && this._waylandClient.query_window_belongs_to(window))
+                 this.addWindow(window);
+         }, this);
++
++        global.window_manager.connectObject('map', (_, actor) => {
++            const window = actor?.meta_window;
++            if (!window)
++                return;
++            if (!window.customJS_ding && this._waylandClient &&
++                this._waylandClient.query_window_belongs_to(window))
++                this.addWindow(window);
++            if (window.customJS_ding)
++                window.customJS_ding.onActorMapped(actor);
++        }, this);
++
++        this._lockSignalId = Gio.DBus.session.signal_subscribe(
++            'org.gnome.ScreenSaver',
++            'org.gnome.ScreenSaver',
++            'ActiveChanged',
++            '/org/gnome/ScreenSaver',
++            null,
++            Gio.DBusSignalFlags.NONE,
++            (_conn, _sender, _path, _iface, _signal, params) => {
++                const [active] = params.deepUnpack();
++                if (!active)
++                    this.refreshWindowsPosition();
++            }
++        );
+     }
+ 
+     disable() {
++        if (this._lockSignalId) {
++            Gio.DBus.session.signal_unsubscribe(this._lockSignalId);
++            this._lockSignalId = 0;
++        }
++
+         for (const window of this._windowList)
+             this._clearWindow(window);
+ 
+         this._windowList = [];
+ 
+         // disconnect signals
++        global.window_manager.disconnectObject(this);
+         global.display.disconnectObject(this);
+-        this.refreshWindowsPosition();
+     }
+ 
+     addWindow(window) {
++        if (window.customJS_ding)
++            return;
++
+         window.customJS_ding = new ManageWindow(window, this._waylandClient, this);
+         this._windowList.push(window);
+         window.customJS_ding.unmanagedID = window.connect('unmanaged', iWindow => {
+-            iWindow.customJS_ding.windowUnmanaged = true;
+-            this._clearWindow(iWindow);
++            if (iWindow.customJS_ding) {
++                iWindow.customJS_ding.windowUnmanaged = true;
++                this._clearWindow(iWindow);
++            }
+             this._windowList = this._windowList.filter(item => item !== iWindow);
+         });
+         this.refreshWindowsPosition();
+@@ -211,11 +435,14 @@
+ 
+     refreshWindowsPosition() {
+         this._windowList.forEach(window => {
+-            window.customJS_ding.refreshWindowPosition();
++            window.customJS_ding?.refreshWindowPosition();
+         });
+     }
+ 
+     _clearWindow(window) {
++        if (!window.customJS_ding)
++            return;
++
+         window.disconnect(window.customJS_ding.unmanagedID);
+         window.customJS_ding.destroy();
+         window.customJS_ding = null;
