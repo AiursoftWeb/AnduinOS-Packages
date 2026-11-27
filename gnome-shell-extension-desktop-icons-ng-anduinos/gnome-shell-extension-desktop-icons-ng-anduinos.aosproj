@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>gnome-shell-extension-desktop-icons-ng-anduinos</PackageName>
-    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <Section>gnome</Section>
     <PackageDescription>Desktop Icons NG (DING) adds icons to the GNOME desktop. For the best support, please report any issues on GitHub.</PackageDescription>
@@ -39,7 +39,6 @@
     <IncludeFolder Include="deploy/noble/ding@rastersoft.com"
                    Target="/usr/share/gnome-shell/extensions/ding@rastersoft.com"
                    Condition="'$(Suite)' == 'noble-addon'" />
-                   Target="/usr/share/gnome-shell/extensions/ding@rastersoft.com"
     <IncludeFolder Include="deploy/resolute/ding@rastersoft.com"
                    Target="/usr/share/gnome-shell/extensions/ding@rastersoft.com"
                    Condition="'$(Suite)' == 'resolute-addon'" />
@@ -54,5 +53,8 @@
     <IncludeFile Include="dconf/08-desktop-icons-ng.conf" Target="/etc/dconf/db/anduinos.d/08-desktop-icons-ng.conf" />
   </ItemGroup>
   <ItemGroup>
+    <TestCommand Name="gtk4-wayland-stability" Profile="anduinos-package-release-test"
+                 Run="bash download.sh &amp;&amp; PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v"
+                 TimeoutSeconds="300" />
   </ItemGroup>
 </Project>

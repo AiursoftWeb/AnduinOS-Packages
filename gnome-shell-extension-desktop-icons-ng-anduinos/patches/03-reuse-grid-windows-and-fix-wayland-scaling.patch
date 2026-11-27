@@ -1,0 +1,162 @@
+DING GTK 4: reuse desktop windows on margin updates and fix Wayland scaling.
+
+1. Skip premature _updateDesktop() before initial desktopGeometry arrives and
+   replace trySpawn(['nautilus', '--version']) with GLib.find_program_in_path,
+   avoiding cancelled startup directory enumeration (+500ms retry sleep) and a
+   duplicate nautilus process spawn at boot.
+2. Resize existing Gtk.ApplicationWindow grids in-place when monitor topology is
+   unchanged (e.g. dash-to-panel workarea updates or resolution changes) instead
+   of destroying all windows and re-reading ~/Desktop from disk.
+3. Keep _size_divisor = 1 on Wayland (Meta.is_stage_views_scaled()), preventing
+   double-division of logical monitor dimensions at 200% scale (upstream #368),
+   and fix the y-axis typo in DesktopGrid.getDistance().
+
+Upstream component: https://gitlab.com/rastersoft/desktop-icons-ng
+
+--- a/extension.js
++++ b/extension.js
+@@ -222,7 +222,9 @@
+         const desktopVariantList = [];
+         const desktopList = [];
+         const ws = global.workspace_manager.get_active_workspace();
+-        const {scaleFactor} = St.ThemeContext.get_for_stage(global.stage);
++        const scaleFactor = Meta.is_stage_views_scaled?.()
++            ? 1
++            : St.ThemeContext.get_for_stage(global.stage).scaleFactor;
+         for (let monitorIndex = 0; monitorIndex < Main.layoutManager.monitors.length; monitorIndex++) {
+             const area = this.data.visibleArea.getMonitorGeometry(ws, monitorIndex);
+             const monitorData = {
+--- a/app/desktopGrid.js
++++ b/app/desktopGrid.js
+@@ -136,16 +136,24 @@
+     }
+ 
+     updateWindowGeometry() {
+-        this._zoom = this._desktopDescription.scaleFactor;
++        this._zoom = this._desktopDescription.scaleFactor ?? this._desktopDescription.zoom ?? 1;
+         this._x = this._desktopDescription.x + this._desktopDescription.windowMarginLeft;
+         this._y = this._desktopDescription.y + this._desktopDescription.windowMarginTop;
+         this._monitor = this._desktopDescription.monitorIndex;
+-        this._size_divisor = this._zoom;
++        this._size_divisor = (this._asDesktop && this._desktopManager.using_X11) ? this._zoom : 1;
+ 
+         this._windowWidth = Math.floor((this._desktopDescription.width - (this._desktopDescription.windowMarginRight + this._desktopDescription.windowMarginLeft)) / this._size_divisor);
+         this._windowHeight = Math.floor((this._desktopDescription.height - (this._desktopDescription.windowMarginTop + this._desktopDescription.windowMarginBottom)) / this._size_divisor);
+     }
+ 
++    resizeWindow(desktopDescription) {
++        this.updateGridDescription(desktopDescription);
++        this.updateWindowGeometry();
++        this.resizeGrid();
++        this._window.set_default_size(this._windowWidth, this._windowHeight);
++        this._window.set_size_request(this._windowWidth, this._windowHeight);
++    }
++
+     updateUnscaledHeightWidthMargins() {
+         this._marginTop = this._desktopDescription.marginTop - this._desktopDescription.windowMarginTop;
+         this._marginBottom = this._desktopDescription.marginBottom - this._desktopDescription.windowMarginBottom;
+@@ -347,7 +355,7 @@
+         if (this._coordinatesBelongToThisGrid(x, y))
+             return 0;
+ 
+-        return Math.pow(x - (this._x + this._windowWidth * this._zoom / 2), 2) + Math.pow(x - (this._y + this._windowHeight * this._zoom / 2), 2);
++        return Math.pow(x - (this._x + this._windowWidth * this._size_divisor / 2), 2) + Math.pow(y - (this._y + this._windowHeight * this._size_divisor / 2), 2);
+     }
+ 
+     coordinatesGlobalToLocal(X, Y) {
+--- a/app/desktopManager.js
++++ b/app/desktopManager.js
+@@ -220,18 +220,21 @@
+         DBusUtils.GtkVfsMetadata.connectSignalToProxy('AttributeChanged', this._metadataChanged.bind(this));
+         this._allFileList = null;
+         this._forcedExit = false;
+-        this._updateDesktop().catch(e => {
+-            print(`Exception while Initiating Desktop: ${e.message}\n${e.stack}`);
+-        });
++        if (!this._asDesktop || this._desktopList.length > 0) {
++            this._updateDesktop().catch(e => {
++                print(`Exception while Initiating Desktop: ${e.message}\n${e.stack}`);
++            });
++        }
+ 
+         this._scriptsList = [];
+ 
+         this.ignoreKeys = [Gdk.KEY_space, Gdk.KEY_Shift_L, Gdk.KEY_Shift_R, Gdk.KEY_Control_L, Gdk.KEY_Control_R, Gdk.KEY_Caps_Lock, Gdk.KEY_Shift_Lock, Gdk.KEY_Meta_L, Gdk.KEY_Meta_R, Gdk.KEY_Alt_L, Gdk.KEY_Alt_R, Gdk.KEY_Super_L, Gdk.KEY_Super_R, Gdk.KEY_ISO_Level3_Shift, Gdk.KEY_ISO_Level5_Shift];
+ 
+ 
+-        // Check if Nautilus is available
++        // Check if Nautilus is available without spawning a heavy process at boot
+         try {
+-            DesktopIconsUtil.trySpawn(null, ['nautilus', '--version']);
++            if (!GLib.find_program_in_path('nautilus'))
++                throw new Error('Nautilus not found');
+         } catch {
+             this._errorWindow = new ShowErrorPopup.ShowErrorPopup(_('Nautilus File Manager not found'),
+                 _('The Nautilus File Manager is mandatory to work with Desktop Icons NG.'),
+@@ -300,33 +303,39 @@
+     }
+ 
+     updateGridWindows(newdesktoplist) {
++        const oldPrimaryIndex = this._primaryIndex;
+         if ((newdesktoplist.length > 0) && ('primaryMonitor' in newdesktoplist[0])) {
+             this._primaryIndex = newdesktoplist[0].primaryMonitor;
+             console.log(`Primary screen is ${this._primaryIndex}`);
+         }
++        let canResizeInPlace =
++            newdesktoplist.length > 0 &&
++            newdesktoplist.length === this._desktopList.length &&
++            this._desktops.length === newdesktoplist.length;
+         if (newdesktoplist.length === this._desktopList.length) {
+             const gridschanged = [];
+             for (let index = 0; index < newdesktoplist.length; index++) {
+                 const area = newdesktoplist[index];
+                 const area2 = this._desktopList[index];
++                if (area.monitorIndex !== area2.monitorIndex)
++                    canResizeInPlace = false;
+                 if ((area.x !== area2.x) ||
+                     (area.y !== area2.y) ||
+                     (area.width !== area2.width) ||
+                     (area.height !== area2.height) ||
+                     (area.scaleFactor !== area2.scaleFactor) ||
+-                    (area.monitorIndex !== area2.monitorIndex)) {
+-                    gridschanged.push(index);
+-                    continue;
+-                }
+-                if ((area.marginTop !== area2.marginTop) ||
++                    (area.monitorIndex !== area2.monitorIndex) ||
++                    (area.marginTop !== area2.marginTop) ||
+                     (area.marginBottom !== area2.marginBottom) ||
+                     (area.marginLeft !== area2.marginLeft) ||
+-                    (area.marginRight !== area2.marginRight)) {
+-                    if (!gridschanged.includes(index))
+-                        gridschanged.push(index);
+-                }
++                    (area.marginRight !== area2.marginRight) ||
++                    (area.windowMarginTop !== area2.windowMarginTop) ||
++                    (area.windowMarginBottom !== area2.windowMarginBottom) ||
++                    (area.windowMarginLeft !== area2.windowMarginLeft) ||
++                    (area.windowMarginRight !== area2.windowMarginRight))
++                    gridschanged.push(index);
+             }
+-            if (gridschanged.length === 0)
++            if (gridschanged.length === 0 && this._primaryIndex === oldPrimaryIndex)
+                 return;
+         }
+         this._desktopList = newdesktoplist;
+@@ -335,6 +344,16 @@
+         else
+             this._primaryScreen = null;
+ 
++        if (canResizeInPlace) {
++            this._fileList.forEach(x => x.removeFromGrid(false));
++            for (let i = 0; i < this._desktops.length; i++)
++                this._desktops[i].resizeWindow(this._desktopList[i]);
++
++            if (!this._readingDesktopFiles && this._fileList.length > 0)
++                this._placeAllFilesOnGrids(true);
++            return;
++        }
++
+         this._createGridWindows();
+         this._updateDesktop().catch(e => {
+             console.log(`Exception while updating Desktop after Show Emblems changed: ${e.message}\n${e.stack}`);

@@ -1,0 +1,295 @@
+DING GTK 4: avoid cold-boot D-Bus activation storms and 6s SIGKILL livelock.
+
+Upstream DING v105 synchronously introspects org.gnome.Nautilus during
+application startup before creating any window, constructs session D-Bus
+proxies without DO_NOT_AUTO_START_AT_CONSTRUCTION, unconditionally queries
+org.gnome.ArchiveManager1 1s after startup, and kills ding.js with SIGKILL if
+all monitor windows do not appear within 6000ms (relaunching it 1ms later).
+On cold boot, Live USB, or loaded systems, GTK4/GSK initialization plus
+Nautilus/Tracker3/File-Roller activation exceeds 6s and locks the extension in
+an infinite SIGKILL/respawn loop with missing desktop icons.
+
+Use bundled introspection XML, defer D-Bus service activation until actual user
+operations, guard shutdown relaunches, and remove the destructive 6s SIGKILL
+watchdog.
+
+Upstream component: https://gitlab.com/rastersoft/desktop-icons-ng
+
+--- a/extension.js
++++ b/extension.js
+@@ -265,11 +265,12 @@
+             GLib.source_remove(this.data.launchDesktopId);
+             this.data.launchDesktopId = 0;
+         }
+-        if (this.data.isEnabled) {
++        if (this.data.isEnabled && global.display) {
+             this.data.launchDesktopId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, reloadTime, () => {
+                 this.data.launchDesktopId = 0;
+-                this.launchDesktop();
+-                return false;
++                if (this.data.isEnabled && global.display)
++                    this.launchDesktop();
++                return GLib.SOURCE_REMOVE;
+             });
+         }
+     }
+@@ -312,8 +313,13 @@
+                 // but if the process is dying over and over again, ensure that it isn't respawn faster than once per second
+                 reloadTime = 1000;
+             }
+-            obj.wait_finish(res);
+-            if (!this.data.currentProcess || obj !== this.data.currentProcess.subprocess)
++            try {
++                obj.wait_finish(res);
++            } catch {
++                return;
++            }
++            if (!this.data.isEnabled || !global.display ||
++                !this.data.currentProcess || obj !== this.data.currentProcess.subprocess)
+                 return;
+ 
+             if (obj.get_if_exited())
+@@ -370,16 +376,10 @@
+                 this.cancel_timer();
+             });
+             this.process_running = true;
+-            if (Main.layoutManager.monitors.length !== 0) {
+-                // This ensures that, if the DING window isn't detected in three seconds
+-                // after launch, the desktop will be killed and, thus, relaunched again.
+-                this._waiting_for_windows = Main.layoutManager.monitors.length;
+-                this._launch_timer = GLib.timeout_add(GLib.PRIORITY_DEFAULT, 6000, () => {
+-                    this._launch_timer = 0;
+-                    this.subprocess.force_exit();
+-                    return false;
+-                });
+-            }
++            // Do not SIGKILL ding.js on a 6-second wall-clock watchdog: cold
++            // GTK4/GSK initialization under heavy I/O or low vCPU counts can
++            // legitimately exceed 6 seconds, and killing it mid-startup causes
++            // an infinite SIGKILL -> 1ms respawn livelock with 0 desktop icons.
+         }
+         return this.subprocess;
+     }
+@@ -439,4 +439,14 @@
+             return false;
+         }
+     }
++
++    hide_from_window_list(window) {
++        if (this.process_running && this._waylandClient?.hide_from_window_list)
++            this._waylandClient.hide_from_window_list(window);
++    }
++
++    show_in_window_list(window) {
++        if (this.process_running && this._waylandClient?.show_in_window_list)
++            this._waylandClient.show_in_window_list(window);
++    }
+ };
+--- a/app/dbusInterfaces.js
++++ b/app/dbusInterfaces.js
+@@ -18,6 +18,24 @@
+ // SPDX-License-Identifier: GPL-3.0-only
+ 'use strict';
+ export var DBusInterfaces = {
++    // org.freedesktop.DBus
++    'org.freedesktop.DBus': `<node>
++    <interface name="org.freedesktop.DBus">
++      <method name="ListNames">
++        <arg direction="out" type="as"/>
++      </method>
++      <method name="ListActivatableNames">
++        <arg direction="out" type="as"/>
++      </method>
++      <signal name="NameOwnerChanged">
++        <arg type="s" name="name"/>
++        <arg type="s" name="old_owner"/>
++        <arg type="s" name="new_owner"/>
++      </signal>
++      <signal name="ActivatableServicesChanged"/>
++    </interface>
++  </node>`,
++
+     // net.haddes.SwitcherooControl
+     'net.hadess.SwitcherooControl': `<node>
+     <interface name="net.hadess.SwitcherooControl">
+--- a/app/dbusUtils.js
++++ b/app/dbusUtils.js
+@@ -164,7 +164,9 @@
+                             console.error(error, `Error creating proxy, ${this._programNeeded[2]} (${this._interfaceName}); relaunching.\n`);
+                             this.makeNewProxy(1000);
+                         }
+-                    }
++                    },
++                    null,
++                    Gio.DBusProxyFlags.DO_NOT_AUTO_START_AT_CONSTRUCTION
+                 );
+             } catch (e) {
+                 console.error(e, `Error creating proxy, ${this._programNeeded[0]}`);
+@@ -228,29 +230,34 @@
+             '/org/freedesktop/DBus',
+             'org.freedesktop.DBus',
+             Enums.DBusBus.SYSTEM, // system bus
+-            true); // use DBus Introspection
++            false);
+         const DBusSystemProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXML);
+         this._dbusSystemProxy = new DBusSystemProxy(
+             Gio.DBus.system,
+             'org.freedesktop.DBus',
+             '/org/freedesktop/DBus',
+-            null
++            null,
++            null,
++            Gio.DBusProxyFlags.DO_NOT_AUTO_START_AT_CONSTRUCTION |
++            Gio.DBusProxyFlags.DO_NOT_LOAD_PROPERTIES
+         );
+         const ASCinSystemBus = interfaceXML.includes('ActivatableServicesChanged');
+ 
+-        // Don't presume that both system and local have the same interface (just in case)
+         interfaceXML = this.getInterface(
+             'org.freedesktop.DBus',
+             '/org/freedesktop/DBus',
+             'org.freedesktop.DBus',
+             Enums.DBusBus.SESSION,
+-            true); // use DBus Introspection
++            false);
+         const DBusSessionProxy = Gio.DBusProxy.makeProxyWrapper(interfaceXML);
+         this._dbusLocalProxy = new DBusSessionProxy(
+             Gio.DBus.session,
+             'org.freedesktop.DBus',
+             '/org/freedesktop/DBus',
+-            null
++            null,
++            null,
++            Gio.DBusProxyFlags.DO_NOT_AUTO_START_AT_CONSTRUCTION |
++            Gio.DBusProxyFlags.DO_NOT_LOAD_PROPERTIES
+         );
+         const ASCinLocalBus = interfaceXML.includes('ActivatableServicesChanged');
+ 
+@@ -283,7 +290,10 @@
+             Gio.DBus.session,
+             'org.freedesktop.Notifications',
+             '/org/freedesktop/Notifications',
+-            null
++            null,
++            null,
++            Gio.DBusProxyFlags.DO_NOT_AUTO_START_AT_CONSTRUCTION |
++            Gio.DBusProxyFlags.DO_NOT_LOAD_PROPERTIES
+         );
+     }
+ 
+@@ -783,7 +793,7 @@
+     }
+ 
+     UndoStatus() {
+-        return this.fileOperationsManager.proxy.UndoStatus;
++        return this.fileOperationsManager.proxy?.UndoStatus ?? Enums.UndoStatus.NONE;
+     }
+ }
+ 
+@@ -932,7 +942,7 @@
+     }
+ 
+     UndoStatus() {
+-        return this.fileOperationsManager.proxy.UndoStatus;
++        return this.fileOperationsManager.proxy?.UndoStatus ?? Enums.UndoStatus.NONE;
+     }
+ }
+ 
+@@ -944,33 +954,18 @@
+ export function init(mainApp) {
+     dbusManagerObject = new DBusManager();
+ 
+-    const data = dbusManagerObject.getIntrospectionData(
++    // Avoid synchronous IntrospectSync on org.gnome.Nautilus during startup:
++    // GNOME 50/51 Nautilus always exposes FileOperations2, and introspecting it
++    // at cold boot blocks ding.js on Nautilus + Tracker3 initialization before
++    // any desktop window can be created.
++    NautilusFileOperations2 = new ProxyManager(
++        dbusManagerObject,
+         'org.gnome.Nautilus',
+         '/org/gnome/Nautilus/FileOperations2',
+-        Enums.DBusBus.SESSION);
+-
+-    if (data) {
+-        // NautilusFileOperations2
+-        NautilusFileOperations2 = new ProxyManager(
+-            dbusManagerObject,
+-            'org.gnome.Nautilus',
+-            '/org/gnome/Nautilus/FileOperations2',
+-            'org.gnome.Nautilus.FileOperations2',
+-            Enums.DBusBus.SESSION,
+-            'Nautilus'
+-        );
+-    } else {
+-        print('Emulating NautilusFileOperations2 with the old NautilusFileOperations interface');
+-        // Emulate NautilusFileOperations2 with the old interface
+-        NautilusFileOperations2 = new ProxyManager(
+-            dbusManagerObject,
+-            'org.gnome.Nautilus',
+-            '/org/gnome/Nautilus',
+-            'org.gnome.Nautilus.FileOperations',
+-            Enums.DBusBus.SESSION,
+-            'Nautilus'
+-        );
+-    }
++        'org.gnome.Nautilus.FileOperations2',
++        Enums.DBusBus.SESSION,
++        'Nautilus'
++    );
+ 
+     FreeDesktopFileManager = new ProxyManager(
+         dbusManagerObject,
+@@ -1021,10 +1016,7 @@
+         discreteGpuAvailable = newStatus;
+     });
+ 
+-    if (data)
+-        RemoteFileOperations = new RemoteFileOperationsManager(mainApp, NautilusFileOperations2, FreeDesktopFileManager, GnomeNautilusPreview, GnomeArchiveManager);
+-    else
+-        RemoteFileOperations = new LegacyRemoteFileOperationsManager(NautilusFileOperations2, FreeDesktopFileManager, GnomeNautilusPreview, GnomeArchiveManager);
++    RemoteFileOperations = new RemoteFileOperationsManager(mainApp, NautilusFileOperations2, FreeDesktopFileManager, GnomeNautilusPreview, GnomeArchiveManager);
+ 
+ 
+     extensionControl = Gio.DBusActionGroup.get(
+--- a/app/fileItemMenu.js
++++ b/app/fileItemMenu.js
+@@ -39,14 +39,14 @@
+         this._lastMenu = null;
+         this._menuSignals = new SignalManager.SignalManager();
+         this._desktopManager = desktopManager;
+-        DBusUtils.GnomeArchiveManager.connect('changed-status', () => {
+-            // wait a second to ensure that everything has settled
+-            GLib.timeout_add(GLib.PRIORITY_DEFAULT, 1000, () => {
+-                this._getExtractionSupportedTypes();
+-                return false;
+-            });
+-        });
++        this._decompressibleTypes = [];
+         this._askedSupportedTypes = false;
++        DBusUtils.GnomeArchiveManager.connect('changed-status', (_obj, available) => {
++            if (!available) {
++                this._decompressibleTypes = [];
++                this._askedSupportedTypes = false;
++            }
++        });
+         this._scriptsMonitor = new TemplatesScriptsManager.TemplatesScriptsManager(
+             DesktopIconsUtil.getScriptsDir(),
+             TemplatesScriptsManager.TemplatesScriptsManagerFlags.ONLY_EXECUTABLE,
+@@ -593,8 +593,15 @@
+     }
+ 
+     _getExtractable() {
+-        for (const item of this._desktopManager.getCurrentSelection(false))
+-            return this._decompressibleTypes.includes(item.attributeContentType);
++        if (!this._askedSupportedTypes && DBusUtils.GnomeArchiveManager.isAvailable)
++            this._getExtractionSupportedTypes();
++
++        for (const item of this._desktopManager.getCurrentSelection(false)) {
++            if (this._decompressibleTypes.length > 0)
++                return this._decompressibleTypes.includes(item.attributeContentType);
++            return DBusUtils.GnomeArchiveManager.isAvailable &&
++                this._desktopManager.autoAr.fileIsCompressed(item.fileName);
++        }
+ 
+         return false;
+     }
