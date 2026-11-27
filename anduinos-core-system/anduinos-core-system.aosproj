@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-core-system</PackageName>
-    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-2+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>AnduinOS core system foundation metapackage — essential system services, networking, hardware support, and administration tools. This is the base layer for all AnduinOS variants (Desktop, Server, IoT).</PackageDescription>
     <Section>metapackages</Section>
@@ -98,7 +98,8 @@
          Filesystem & Storage (core — FUSE is required)
          ============================================================ -->
     <Dependency Include="libfuse2t64" />
-    <Dependency Include="libfuse3-4" />
+    <Dependency Include="libfuse3-3" Condition="'$(Suite)' == 'noble-addon'" />
+    <Dependency Include="libfuse3-4" Condition="'$(Suite)' != 'noble-addon'" />
 
     <!-- ============================================================
          Locale & Timezone

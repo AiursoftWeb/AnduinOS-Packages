@@ -8441,15 +8441,6 @@ def _copy_log(log_buf, widget):
 
 # ── page 11: Done (standalone, for future use) ───────────────────────────
 
-def build_done_page(shared, nav_view):
-    """Simple post-install page. Currently unused — progress page handles both states."""
-    lang = shared.get("lang", DEFAULT_LANGUAGE)
-    page = Adw.NavigationPage(title=_("Installation Complete", lang))
-    page.set_tag("done")
-    page.set_child(Gtk.Label(label=_("Installation Complete", lang)))
-    return page
-
-
 # ── build all pages (called from main.py) ─────────────────────────────────
 
 def build_all_pages(shared: dict, nav_view: Adw.NavigationView):

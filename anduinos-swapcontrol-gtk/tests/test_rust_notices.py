@@ -9,7 +9,7 @@ import unittest
 from unittest.mock import patch
 
 
-SCRIPT = Path(__file__).resolve().parents[1] / "scripts/rust-notices.py"
+SCRIPT = Path(__file__).resolve().parents[2] / "lib/rust-notices.py"
 spec = importlib.util.spec_from_file_location("rust_notices", SCRIPT)
 notices = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(notices)
