@@ -89,15 +89,15 @@ production trust key is still required and is not supplied by this package.
 
 Select **Continue** to authorize importing a verified file. Review the freshly
 checked installation plan, then select **Start Update** to install it. Progress
-comes from the system service; closing the window does not stop installation.
-Reopen the app as the same user to reconnect to the saved job. If the updater
+appears in the window, which stays open until installation finishes. After a
+restart, opening the updater clears previous temporary copies and shows the file chooser. If the updater
 upgrades itself first, review and confirm the remaining plan before continuing.
 The UI does not silently retry a failed or interrupted package transaction.
 
 The result screen shows the outcome, the original and target versions, and what
 to do next. A required restart is shown explicitly. **Done** closes a successful
 update; **Close** dismisses a failure. Neither requests authorization, restarts
-the computer or deletes diagnostics. Reopening the app retains the last result.
+the computer or deletes diagnostics. Each new window starts at the file chooser.
 Under **Technical details**, **Remove Imported File** deletes the root-owned
 copy and job history. It does not delete your original download.
 Keep an independent backup and connect your computer to power before updating.
@@ -121,8 +121,8 @@ it shows and asks separately about the remaining plan. Use `-y` (or `--yes`)
 to confirm these plans without prompts. Both modes wait for the final result
 and say if you need to restart. Exit status is 0 on success or if the update is
 already installed, 1 if you decline, 2 on failure, and 130 if you press Ctrl+C.
-Once installation has started, Ctrl+C stops following it. Use
-`sudo anduinos-offline-updater status JOB_ID` to check the saved job.
+Keep the terminal open until installation finishes. After an interruption,
+check the package state before trying again.
 
 To review and confirm a plan in separate commands, `prepare` requests administrator authorization,
 imports the selected file into root-owned storage and returns a fresh plan.
@@ -141,12 +141,10 @@ local repository, preserves existing package hooks and retains changed dpkg
 configuration files. Extra applications are not automatically removed to make
 an upgrade succeed. Broken package state or an incompatible plan stops the job.
 
-A transient system service owns installation, so closing the caller does not
-terminate dpkg. Reconnect using `status`; package progress and the final result
-are separate. `complete` means actual package targets and OS metadata passed
+Installation runs in the foreground. During this boot, `status` shows the
+package progress and final result. `complete` means actual package targets and OS metadata passed
 verification; a requested reboot must still be performed. `partial` or
-`interrupted` requires inspection of the system and the service journal, not a
-blind retry. There is no force-cancel operation during package installation.
+`interrupted` requires checking the system package state before retrying. There is no force-cancel operation during package installation.
 
 Existing APT snapshot policy is retained. Systems without that capability update
 normally. Snapshot results are reported separately, and an unconfirmed snapshot

@@ -68,4 +68,14 @@
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-offline-updater-helper</annotate>
   </action>
+  <action id="com.anduinos.offline-updater.cleanup">
+    <description>Remove temporary offline updates from previous boots</description>
+    <message>Clean up old offline update files</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-offline-updater-cleanup</annotate>
+  </action>
 </policyconfig>

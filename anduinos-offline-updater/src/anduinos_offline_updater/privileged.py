@@ -27,7 +27,7 @@ def main(argv=None):
                           LC_ALL="C.UTF-8", DEBIAN_FRONTEND="noninteractive")
         os.umask(0o022)
         if args.action == "run":
-            require(uid == 0, "Installation workers are started by the system service")
+            require(uid == 0, "Only the authorized installer can run a package transaction")
             from .install import execute
             return execute(args.job)
         if args.action == "prepare":
@@ -35,7 +35,7 @@ def main(argv=None):
         elif args.action == "start": result = jobs.start(args.job, args.plan, uid)
         else: result = jobs.discard(args.job, uid)
         print(json.dumps(result, indent=2))
-        return 0
+        return 2 if args.action == "start" and result["state"] in {"blocked", "partial", "interrupted", "failed"} else 0
     except Exception as error:
         print(json.dumps({"state": "blocked", "blockers": [str(error)]}))
         return 2

@@ -1,0 +1,5 @@
+#!/usr/bin/python3 -I
+"""Remove only the updater's staging files from previous boots."""
+from anduinos_offline_updater import jobs
+
+jobs.clean_previous_boot(jobs.ROOT, jobs.JOB_NAME, 0)
