@@ -147,6 +147,9 @@ class InstallationChecks(unittest.TestCase):
                 (path / "bundle.atgz").write_bytes(b"archive")
             (own / "offline-plan-test").mkdir()
             (other / "import.lock").touch()
+            damaged = root / ("d" * 32)
+            damaged.mkdir()
+            (damaged / "status.json").write_text("{")
             writer = "from anduinos_offline_updater import jobs; from pathlib import Path; import sys\n" \
                      "with jobs.import_writer(Path(sys.argv[1])):\n print('ready', flush=True); sys.stdin.readline()"
             with patch.object(jobs, "ROOT", root), patch.object(jobs, "trusted_directory", side_effect=lambda path: path):
@@ -172,6 +175,7 @@ class InstallationChecks(unittest.TestCase):
                 self.assertEqual(json.loads((own / "status.json").read_text())["state"], "interrupted")
                 self.assertTrue((other / "bundle.atgz").exists())
                 self.assertTrue((complete / "bundle.atgz").exists())
+                self.assertEqual((damaged / "status.json").read_text(), "{")
                 self.assertEqual(jobs.discard(own.name, 1000)["state"], "discarded")
 
     def test_only_previous_boot_proves_an_untracked_legacy_import_stopped(self):

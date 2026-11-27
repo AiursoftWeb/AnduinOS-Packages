@@ -231,7 +231,7 @@ class DesktopTests(unittest.TestCase):
         preview = self.complete(self.fixture.bundle)
         with patch.object(self.window, "command") as command:
             self.window.prepare()
-            self.assertEqual(command.call_args.args[0], ["prepare", str(self.fixture.bundle)])
+            self.assertEqual(command.call_args.args[0], ["prepare", str(self.fixture.bundle), "--job-id", self.window.job])
             prepared = self.job_report(preview)
             self.window.prepared(prepared, None)
             self.assertFalse(self.window.back.get_visible())

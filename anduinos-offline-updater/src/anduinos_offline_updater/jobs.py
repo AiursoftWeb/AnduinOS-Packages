@@ -88,9 +88,12 @@ def import_stopped(path, report):
         marker = (path / "import.lock").open("rb")
     except FileNotFoundError:
         # Older importers have no lock. Only a previous boot proves they exited.
+        written = report.get("updated_at")
+        if not isinstance(written, (int, float)):
+            return False
         for line in Path("/proc/stat").read_text().splitlines():
             if line.startswith("btime "):
-                return report["updated_at"] < int(line.split()[1])
+                return written < int(line.split()[1])
         return False
     with marker:
         try:
@@ -232,8 +235,11 @@ def recover_imports(uid):
         if not re.fullmatch(r"[a-f0-9]{32}", path.name):
             continue
         try:
-            report = json.loads(file.read_text())
-            if report["owner_uid"] != uid or report["state"] != "importing":
+            try:
+                report = json.loads(file.read_text())
+            except ValueError:
+                continue
+            if not isinstance(report, dict) or report.get("owner_uid") != uid or report.get("state") != "importing":
                 continue
             if not import_stopped(path, report):
                 continue
