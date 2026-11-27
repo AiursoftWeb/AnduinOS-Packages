@@ -210,7 +210,7 @@ class UpdateWindow(Adw.ApplicationWindow):
                 [sys.executable, "-m", "anduinos_offline_updater.cli", "inspect", str(file),
                  "--work-directory", str(self.cache), "--json"],
                 Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE)
-        except (OSError, GLib.Error) as error:
+        except (OSError, ValueError, GLib.Error) as error:
             self.busy = False
             self.error(str(error))
             return False

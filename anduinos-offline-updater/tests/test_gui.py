@@ -30,6 +30,10 @@ class DesktopTests(unittest.TestCase):
         self.fixture.setUp()
         self.state_patch = patch.object(self.gui.GLib, "get_user_state_dir", return_value=str(self.fixture.work / "state"))
         self.state_patch.start()
+        self.addCleanup(self.state_patch.stop)
+        cache_patch = patch.object(self.gui.GLib, "get_user_cache_dir", return_value=str(self.fixture.work / "cache"))
+        cache_patch.start()
+        self.addCleanup(cache_patch.stop)
         self.legacy_bookmark = self.fixture.work / "state/anduinos-offline-updater/job.json"
         self.window = self.gui.UpdateWindow(self.application)
         self.window.present()
@@ -38,7 +42,6 @@ class DesktopTests(unittest.TestCase):
 
     def tearDown(self):
         self.window.close()
-        self.state_patch.stop()
         self.fixture.tearDown()
         self.assertEqual(hashlib.sha256(self.status.read_bytes()).hexdigest(), self.before)
 
@@ -209,10 +212,8 @@ class DesktopTests(unittest.TestCase):
         self.assertIn("downgrade", report["compatibility_issues"], "Full diagnostics remain available")
 
     def test_closing_window_allows_child_to_clean_up(self):
-        directory = self.fixture.work / "user-cache"
-        with patch.object(self.gui.GLib, "get_user_cache_dir", return_value=str(directory)):
-            self.complete(self.fixture.bundle, close=True)
-        self.assertFalse(any((directory / "anduinos-offline-updater").iterdir()))
+        self.complete(self.fixture.bundle, close=True)
+        self.assertEqual([p.name for p in self.window.cache.iterdir()], [".boot-id"])
 
     def job_report(self, preview, **fields):
         return dict(job_id="a" * 32, state="prepared", plan_sha256="b" * 64, preview=preview, **fields)
