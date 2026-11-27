@@ -7,7 +7,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use crate::i18n::{i18n, i18n_fmt};
-use crate::swap::{stress, sysctl};
+use crate::swap::{ram_info, stress, sysctl};
 
 mod imp {
     use super::*;
@@ -212,7 +212,7 @@ impl StressTestView {
         let pressure_row = adw::ActionRow::builder()
             .title(&i18n("Target Pressure"))
             .subtitle(&format!(
-                "{} {:.0} GiB · {} 25%–200% · {} 75%",
+                "{} {:.1} GiB · {} 25%–200% · {} 75%",
                 i18n("RAM"),
                 ram_gb,
                 i18n("range"),
@@ -646,37 +646,11 @@ impl StressTestView {
     }
 
     fn refresh_mem_stats(&self) {
-        // Read /proc/meminfo (same pattern as dashboard_view)
-        let mut total: u64 = 0;
-        let mut free: u64 = 0;
-        let mut avail: u64 = 0;
-        let mut swap_total: u64 = 0;
-        let mut swap_free: u64 = 0;
-
-        if let Ok(content) = std::fs::read_to_string("/proc/meminfo") {
-            for line in content.lines() {
-                let p: Vec<&str> = line.split_whitespace().collect();
-                if p.len() < 2 {
-                    continue;
-                }
-                let kb: u64 = p[1].parse().unwrap_or(0);
-                match p[0].trim_end_matches(':') {
-                    "MemTotal" => total = kb * 1024,
-                    "MemFree" => free = kb * 1024,
-                    "MemAvailable" => avail = kb * 1024,
-                    "SwapTotal" => swap_total = kb * 1024,
-                    "SwapFree" => swap_free = kb * 1024,
-                    _ => {}
-                }
-            }
-        }
-
-        let used = total.saturating_sub(free);
-        let swap_used = swap_total.saturating_sub(swap_free);
-        let total_gb = total as f64 / (1024.0 * 1024.0 * 1024.0);
-        let used_gb = used as f64 / (1024.0 * 1024.0 * 1024.0);
-        let avail_gb = avail as f64 / (1024.0 * 1024.0 * 1024.0);
-        let swap_gb = swap_used as f64 / (1024.0 * 1024.0 * 1024.0);
+        let mem = ram_info::read_meminfo();
+        let total_gb = mem.total as f64 / (1024.0 * 1024.0 * 1024.0);
+        let used_gb = mem.used as f64 / (1024.0 * 1024.0 * 1024.0);
+        let avail_gb = mem.available as f64 / (1024.0 * 1024.0 * 1024.0);
+        let swap_gb = mem.swap_used as f64 / (1024.0 * 1024.0 * 1024.0);
 
         if let Some(l) = self.imp().mem_stats_label.borrow().as_ref() {
             l.set_text(&i18n_fmt(
