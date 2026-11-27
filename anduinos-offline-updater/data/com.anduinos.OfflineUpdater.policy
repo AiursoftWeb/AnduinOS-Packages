@@ -69,8 +69,64 @@
     <annotate key="org.freedesktop.policykit.exec.path">/usr/libexec/anduinos-offline-updater-helper</annotate>
   </action>
   <action id="com.anduinos.offline-updater.cleanup">
-    <description>Remove temporary offline updates from previous boots</description>
-    <message>Clean up old offline update files</message>
+    <description>Remove temporary offline update files from previous boots</description>
+    <description xml:lang="hr">Ukloni privremene datoteke izvanmrežnih ažuriranja iz prethodnih pokretanja sustava</description>
+    <description xml:lang="zh_TW">清除先前開機時留下的離線更新暫存檔</description>
+    <description xml:lang="zh_HK">清除先前開機時留下的離線更新暫存檔案</description>
+    <description xml:lang="zh_CN">清理之前开机时留下的离线更新临时文件</description>
+    <description xml:lang="vi">Xóa các tệp cập nhật ngoại tuyến tạm thời còn lại từ những lần khởi động trước</description>
+    <description xml:lang="uk">Вилучити тимчасові файли автономного оновлення, що залишилися після попередніх запусків системи</description>
+    <description xml:lang="tr">Önceki sistem başlatmalarından kalan geçici çevrimdışı güncelleme dosyalarını kaldır</description>
+    <description xml:lang="th">ลบไฟล์ชั่วคราวของการอัปเดตแบบออฟไลน์ที่เหลือจากการบูตก่อนหน้า</description>
+    <description xml:lang="sv">Ta bort tillfälliga filer för offlineuppdateringar från tidigare systemstarter</description>
+    <description xml:lang="ru">Удалить временные файлы автономного обновления, оставшиеся от предыдущих загрузок системы</description>
+    <description xml:lang="ro">Șterge fișierele temporare de actualizare offline rămase de la pornirile anterioare</description>
+    <description xml:lang="pt_BR">Remover os arquivos temporários de atualização offline de inicializações anteriores</description>
+    <description xml:lang="pt">Remover os ficheiros temporários de atualização offline de arranques anteriores</description>
+    <description xml:lang="pl">Usuń tymczasowe pliki aktualizacji offline pozostałe po poprzednich uruchomieniach systemu</description>
+    <description xml:lang="nl">Tijdelijke bestanden voor offline-updates van eerdere systeemstarts verwijderen</description>
+    <description xml:lang="ko">이전 부팅에서 남은 오프라인 업데이트 임시 파일 삭제</description>
+    <description xml:lang="ja">以前の起動時に残ったオフライン更新の一時ファイルを削除</description>
+    <description xml:lang="it">Rimuovi i file temporanei degli aggiornamenti offline rimasti dagli avvii precedenti</description>
+    <description xml:lang="id">Hapus berkas pembaruan luring sementara yang tersisa dari boot sebelumnya</description>
+    <description xml:lang="hi">पिछली बार सिस्टम चालू होने पर बची ऑफ़लाइन अपडेट की अस्थायी फ़ाइलें हटाएँ</description>
+    <description xml:lang="fr">Supprimer les fichiers temporaires de mise à jour hors ligne laissés par les démarrages précédents</description>
+    <description xml:lang="fi">Poista aiemmilta käynnistyskerroilta jääneet verkottomien päivitysten väliaikaistiedostot</description>
+    <description xml:lang="es">Eliminar los archivos temporales de actualización sin conexión de arranques anteriores</description>
+    <description xml:lang="en_GB">Remove temporary offline update files from previous boots</description>
+    <description xml:lang="el">Διαγραφή προσωρινών αρχείων ενημερώσεων εκτός σύνδεσης από προηγούμενες εκκινήσεις</description>
+    <description xml:lang="de">Temporäre Dateien für Offline-Aktualisierungen aus früheren Systemstarts entfernen</description>
+    <description xml:lang="da">Fjern midlertidige filer til offlineopdateringer fra tidligere opstarter</description>
+    <description xml:lang="ar">إزالة ملفات التحديث دون اتصال المؤقتة المتبقية من مرات تشغيل النظام السابقة</description>
+    <message>Remove temporary offline update files from previous boots</message>
+    <message xml:lang="hr">Ukloni privremene datoteke izvanmrežnih ažuriranja iz prethodnih pokretanja sustava</message>
+    <message xml:lang="zh_TW">清除先前開機時留下的離線更新暫存檔</message>
+    <message xml:lang="zh_HK">清除先前開機時留下的離線更新暫存檔案</message>
+    <message xml:lang="zh_CN">清理之前开机时留下的离线更新临时文件</message>
+    <message xml:lang="vi">Xóa các tệp cập nhật ngoại tuyến tạm thời còn lại từ những lần khởi động trước</message>
+    <message xml:lang="uk">Вилучити тимчасові файли автономного оновлення, що залишилися після попередніх запусків системи</message>
+    <message xml:lang="tr">Önceki sistem başlatmalarından kalan geçici çevrimdışı güncelleme dosyalarını kaldır</message>
+    <message xml:lang="th">ลบไฟล์ชั่วคราวของการอัปเดตแบบออฟไลน์ที่เหลือจากการบูตก่อนหน้า</message>
+    <message xml:lang="sv">Ta bort tillfälliga filer för offlineuppdateringar från tidigare systemstarter</message>
+    <message xml:lang="ru">Удалить временные файлы автономного обновления, оставшиеся от предыдущих загрузок системы</message>
+    <message xml:lang="ro">Șterge fișierele temporare de actualizare offline rămase de la pornirile anterioare</message>
+    <message xml:lang="pt_BR">Remover os arquivos temporários de atualização offline de inicializações anteriores</message>
+    <message xml:lang="pt">Remover os ficheiros temporários de atualização offline de arranques anteriores</message>
+    <message xml:lang="pl">Usuń tymczasowe pliki aktualizacji offline pozostałe po poprzednich uruchomieniach systemu</message>
+    <message xml:lang="nl">Tijdelijke bestanden voor offline-updates van eerdere systeemstarts verwijderen</message>
+    <message xml:lang="ko">이전 부팅에서 남은 오프라인 업데이트 임시 파일 삭제</message>
+    <message xml:lang="ja">以前の起動時に残ったオフライン更新の一時ファイルを削除</message>
+    <message xml:lang="it">Rimuovi i file temporanei degli aggiornamenti offline rimasti dagli avvii precedenti</message>
+    <message xml:lang="id">Hapus berkas pembaruan luring sementara yang tersisa dari boot sebelumnya</message>
+    <message xml:lang="hi">पिछली बार सिस्टम चालू होने पर बची ऑफ़लाइन अपडेट की अस्थायी फ़ाइलें हटाएँ</message>
+    <message xml:lang="fr">Supprimer les fichiers temporaires de mise à jour hors ligne laissés par les démarrages précédents</message>
+    <message xml:lang="fi">Poista aiemmilta käynnistyskerroilta jääneet verkottomien päivitysten väliaikaistiedostot</message>
+    <message xml:lang="es">Eliminar los archivos temporales de actualización sin conexión de arranques anteriores</message>
+    <message xml:lang="en_GB">Remove temporary offline update files from previous boots</message>
+    <message xml:lang="el">Διαγραφή προσωρινών αρχείων ενημερώσεων εκτός σύνδεσης από προηγούμενες εκκινήσεις</message>
+    <message xml:lang="de">Temporäre Dateien für Offline-Aktualisierungen aus früheren Systemstarts entfernen</message>
+    <message xml:lang="da">Fjern midlertidige filer til offlineopdateringer fra tidligere opstarter</message>
+    <message xml:lang="ar">إزالة ملفات التحديث دون اتصال المؤقتة المتبقية من مرات تشغيل النظام السابقة</message>
     <defaults>
       <allow_any>no</allow_any>
       <allow_inactive>no</allow_inactive>
