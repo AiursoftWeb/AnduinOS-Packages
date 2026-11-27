@@ -1,4 +1,4 @@
-"""Native APT installation; called only by the fixed root systemd worker."""
+"""Native APT installation; called only by the authorized foreground helper."""
 import hashlib
 import json
 import os
@@ -243,7 +243,7 @@ def execute(identifier):
     if handoff:
         try:
             # Replaces all Python modules and python-apt bindings, in the same
-            # inhibited system service. Both the APT and job locks are now closed.
+            # foreground transaction. Both the APT and job locks are now closed.
             os.execv(jobs.HELPER, [jobs.HELPER, "run", identifier])
         except OSError as error:
             with jobs.job_lock(path):

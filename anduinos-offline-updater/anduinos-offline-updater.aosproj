@@ -1,7 +1,7 @@
 <Project Sdk="Aiursoft.Apkg.Sdk">
   <PropertyGroup>
     <PackageName>anduinos-offline-updater</PackageName>
-    <PackageVersion>2.1.0-16+$(SuiteShortName)</PackageVersion>
+    <PackageVersion>2.1.0-17+$(SuiteShortName)</PackageVersion>
     <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
     <PackageDescription>Preview and install cumulative AnduinOS offline update bundles</PackageDescription>
     <Section>admin</Section>
@@ -34,6 +34,7 @@
   <ItemGroup>
     <IncludeScript Include="src/anduinos-offline-updater" Target="/usr/bin/anduinos-offline-updater" />
     <IncludeScript Include="scripts/anduinos-offline-updater-helper" Target="/usr/libexec/anduinos-offline-updater-helper" />
+    <IncludeScript Include="scripts/anduinos-offline-updater-cleanup" Target="/usr/libexec/anduinos-offline-updater-cleanup" />
     <IncludeFile Include="data/com.anduinos.OfflineUpdater.policy" Target="/usr/share/polkit-1/actions/com.anduinos.OfflineUpdater.policy" Mode="644" />
     <IncludeFolder Include="src/anduinos_offline_updater/" Target="/usr/lib/python3/dist-packages/anduinos_offline_updater/" />
     <IncludeFile Include="README.md" Target="/usr/share/doc/anduinos-offline-updater/README.md" Mode="644" />

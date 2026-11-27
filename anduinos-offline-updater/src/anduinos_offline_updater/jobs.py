@@ -1,4 +1,4 @@
-"""Root-owned imports and durable, owner-scoped installation jobs."""
+"""Boot-scoped staging for owner-confirmed offline updates."""
 import fcntl
 import hashlib
 import json
@@ -19,6 +19,9 @@ from .native import BundleError, run
 ROOT = Path("/var/lib/anduinos-offline-updater")
 KEYRING = Path("/usr/share/keyrings/anduinos-offline-updates.gpg")
 HELPER = "/usr/libexec/anduinos-offline-updater-helper"
+CLEANUP_HELPER = "/usr/libexec/anduinos-offline-updater-cleanup"
+JOB_NAME = re.compile(r"[a-f0-9]{32}")
+PREVIEW_NAME = re.compile(r"offline-updater-[a-z0-9_]{8}")
 TERMINAL = {"complete", "already-installed", "blocked", "partial", "failed", "interrupted"}
 
 
@@ -47,8 +50,48 @@ def trusted_directory(path, create=False):
     return path
 
 
+def boot_id():
+    return Path("/proc/sys/kernel/random/boot_id").read_text().strip()
+
+
+def needs_cleanup(directory):
+    if not directory.exists():
+        return False
+    try:
+        return json.loads((directory / ".boot-id").read_text()) != boot_id()
+    except (FileNotFoundError, ValueError):
+        return True
+
+
+def clean_previous_boot(directory, names, owner):
+    """Remove only this application's staging directories, once on first use."""
+    if not needs_cleanup(directory):
+        return
+    fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+    try:
+        meta = os.fstat(fd)
+        require(meta.st_uid == owner and not meta.st_mode & 0o022, "Invalid updater storage directory")
+        fcntl.flock(fd, fcntl.LOCK_EX)
+        if not needs_cleanup(directory):
+            return
+        # On the first upgrade there is no marker. Old installations and
+        # previews created during this boot may still be in use.
+        legacy = not (directory / ".boot-id").exists()
+        started = next(int(line.split()[1]) for line in Path("/proc/stat").read_text().splitlines()
+                       if line.startswith("btime "))
+        for path in directory.iterdir():
+            if not names.fullmatch(path.name):
+                continue
+            info = path.lstat()
+            if stat.S_ISDIR(info.st_mode) and info.st_uid == owner and (not legacy or info.st_mtime < started):
+                shutil.rmtree(path)
+        atomic_json(directory / ".boot-id", boot_id(), mode=0o644)
+    finally:
+        os.close(fd)
+
+
 def job_path(identifier):
-    require(re.fullmatch(r"[a-f0-9]{32}", identifier) is not None, "Invalid job identifier")
+    require(JOB_NAME.fullmatch(identifier) is not None, "Invalid job identifier")
     trusted_directory(ROOT)
     return trusted_directory(ROOT / identifier)
 
@@ -68,21 +111,12 @@ def job_lock(path):
 def status(identifier, uid):
     report = json.loads((job_path(identifier) / "status.json").read_text())
     require(uid in (0, report["owner_uid"]), "This job belongs to another user")
-    if (report["state"] in {"complete", "already-installed"} and report.get("reboot_required") and
-            report.get("boot_id") and report["boot_id"] != Path("/proc/sys/kernel/random/boot_id").read_text().strip()):
-        # Keep the stored result as history, but do not repeat a reboot request
-        # that has already been satisfied. Another update may request a new one.
-        report["reboot_required"] = Path("/var/run/reboot-required").exists()
-    if report["state"] in {"queued", "checking", "installing", "handoff"} and time.time() - report["updated_at"] > 10:
-        active = subprocess.run(["systemctl", "show", "--value", "--property=ActiveState", report["unit"] + ".service"],
-                                capture_output=True, text=True, check=False, timeout=10)
-        boot_changed = report.get("boot_id") != Path("/proc/sys/kernel/random/boot_id").read_text().strip()
-        if boot_changed or active.returncode != 0 or active.stdout.strip() in {"inactive", "failed"}:
-            report.update(state="interrupted", error="Installation service stopped without a final result; inspect dpkg before retrying")
+    if report.get("boot_id"):
+        require(report["boot_id"] == boot_id(), "This update belongs to a previous boot")
     plan = job_path(identifier) / "plan.json"
     if report["state"] == "prepared" and (report.get("confirmation_required") or
             (plan.exists() and plan.stat().st_mode & stat.S_IROTH)):
-        # New jobs expose package metadata for reconnecting GTK. Legacy private
+        # Current jobs expose package metadata for plan review. Legacy private
         # plans remain queryable without requiring their contents to be readable.
         report["preview"] = json.loads((job_path(identifier) / "plan.json").read_text())
     if not report.get("source_version") or not report.get("target_version"):
@@ -130,8 +164,8 @@ def copy_as_user(source, destination, uid):
     os.close(write_fd)
     digest, size = hashlib.sha256(), 0
     try:
-        fd = os.open(destination, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        with os.fdopen(read_fd, "rb") as incoming, os.fdopen(fd, "wb") as outgoing:
+        with os.fdopen(read_fd, "rb") as incoming, open(destination, "xb",
+                opener=lambda path, flags: os.open(path, flags, 0o600)) as outgoing:
             while chunk := incoming.read(1024 * 1024):
                 size += len(chunk)
                 require(size <= MAX_PAYLOAD, "Update file exceeds the import limit")
@@ -185,9 +219,10 @@ def save_plan(path, report):
 
 def prepare(source, uid, *, allow_foreign_removals=False):
     trusted_directory(ROOT, create=True)
+    clean_previous_boot(ROOT, JOB_NAME, 0)
     path = ROOT / uuid.uuid4().hex; path.mkdir(mode=0o711)
     try:
-        update(path, schema_version=1, job_id=path.name, owner_uid=uid, state="importing")
+        update(path, schema_version=1, job_id=path.name, owner_uid=uid, boot_id=boot_id(), state="importing")
         digest, size = copy_as_user(source, path / "bundle.atgz", uid)
         report = inspect_import(path, allow_foreign_removals=True) if allow_foreign_removals else inspect_import(path)
         ensure_installable(report)
@@ -205,24 +240,24 @@ def prepare(source, uid, *, allow_foreign_removals=False):
 
 
 def start(identifier, plan_hash, uid):
+    clean_previous_boot(ROOT, JOB_NAME, 0)
     path = job_path(identifier)
     with job_lock(path):
         report = status(identifier, uid)
         require(report["state"] == "prepared" and report["plan_sha256"] == plan_hash,
                 "The confirmed plan is no longer available")
-        unit = "anduinos-offline-update-" + identifier + "-" + uuid.uuid4().hex[:8]
-        update(path, state="queued", confirmation_required=False, unit=unit, boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip())
-        try:
-            run(["systemd-run", "--quiet", "--collect", "--unit=" + unit,
-                 "--property=Type=exec", "--property=TimeoutStopSec=infinity",
-                 "--property=StandardInput=null", "--property=UMask=0022",
-                 "--property=Environment=DEBIAN_FRONTEND=noninteractive",
-                 "--", "/usr/bin/systemd-inhibit", "--what=shutdown:sleep:idle", "--mode=block",
-                 "--who=AnduinOS Offline Updater", "--why=Installing a verified offline update",
-                 HELPER, "run", identifier])
-        except Exception:
-            update(path, state="blocked", error="Could not start installation service; no packages changed")
-            raise
+        update(path, state="queued", confirmation_required=False, boot_id=boot_id())
+    try:
+        # The caller waits for this child. The inhibitor lasts only while the
+        # approved package transaction is running.
+        result = subprocess.run(["/usr/bin/systemd-inhibit", "--what=shutdown:sleep:idle", "--mode=block",
+                                 "--who=AnduinOS Offline Updater", "--why=Installing a verified offline update",
+                                 HELPER, "run", identifier], stdout=subprocess.DEVNULL, check=False)
+    except OSError as error:
+        update(path, state="blocked", error=str(error))
+    else:
+        if result.returncode and status(identifier, uid)["state"] not in TERMINAL:
+            update(path, state="interrupted", error="Installation interrupted. Check the package state before retrying.")
     return status(identifier, uid)
 
 

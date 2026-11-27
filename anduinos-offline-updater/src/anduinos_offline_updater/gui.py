@@ -1,12 +1,12 @@
-"""Unprivileged GTK frontend for verified, service-owned offline updates."""
+"""Unprivileged GTK frontend for verified, foreground offline updates."""
 import gettext
 import json
 import os
 from pathlib import Path
-import re
 import sys
-import tempfile
 from datetime import datetime, timezone
+
+from . import jobs
 
 import gi
 gi.require_version("Gtk", "4.0")
@@ -46,7 +46,7 @@ class UpdateWindow(Adw.ApplicationWindow):
         self.job = None
         self.poll_source = None
         self.command_pending = False
-        self.bookmark = Path(GLib.get_user_state_dir()) / "anduinos-offline-updater" / "job.json"
+        self.cache = Path(GLib.get_user_cache_dir()) / "anduinos-offline-updater"
         self.connect("close-request", self.on_close)
         toolbar = Adw.ToolbarView()
         self.set_content(toolbar)
@@ -72,16 +72,35 @@ class UpdateWindow(Adw.ApplicationWindow):
         drop = Gtk.DropTarget.new(Gdk.FileList, Gdk.DragAction.COPY)
         drop.connect("drop", self.on_drop)
         self.add_controller(drop)
-        self.home()
+        self.open_updater()
+
+    def open_updater(self, *_args):
         try:
-            saved = json.loads(self.bookmark.read_text())
-            if re.fullmatch(r"[a-f0-9]{32}", saved["job_id"]):
-                self.job = saved["job_id"]
-                self.back.set_visible(False)
-                self.page(_("Reconnecting to your update…"))
-                self.poll_job()
-        except (OSError, ValueError, KeyError, TypeError):
-            pass
+            # Older clients saved the last job in the user's persistent state.
+            old_bookmark = Path(GLib.get_user_state_dir()) / "anduinos-offline-updater" / "job.json"
+            old_bookmark.unlink(missing_ok=True)
+            if not (jobs.needs_cleanup(self.cache) or jobs.needs_cleanup(jobs.ROOT)):
+                self.busy = False
+                self.home()
+                return
+        except OSError as error:
+            self.opened(None, str(error))
+            return
+        self.busy = True
+        self.back.set_visible(False)
+        self.page(_("Removing the imported file…"))
+        self.command(["cleanup"], self.opened)
+
+    def opened(self, _report, error):
+        self.busy = False
+        if error:
+            self.busy = True
+            self.back.set_visible(False)
+            self.page(_("Removing the imported file…"), error)
+            self.button(_("Continue"), self.open_updater, True)
+            self.button(_("Close"), lambda *_: self.close())
+        else:
+            self.home()
 
     def page(self, title, description=None, icon=None, icon_class="accent"):
         self.progress_bar = None
@@ -185,13 +204,13 @@ class UpdateWindow(Adw.ApplicationWindow):
         # Nothing is elevated, and the child uses only the existing read-only CLI.
         app = self.get_application()
         try:
-            cache = Path(GLib.get_user_cache_dir()) / "anduinos-offline-updater"
-            cache.mkdir(mode=0o700, parents=True, exist_ok=True)
+            self.cache.mkdir(mode=0o700, parents=True, exist_ok=True)
+            jobs.clean_previous_boot(self.cache, jobs.PREVIEW_NAME, os.getuid())
             process = Gio.Subprocess.new(
                 [sys.executable, "-m", "anduinos_offline_updater.cli", "inspect", str(file),
-                 "--work-directory", str(cache), "--json"],
+                 "--work-directory", str(self.cache), "--json"],
                 Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE)
-        except (OSError, GLib.Error) as error:
+        except (OSError, ValueError, GLib.Error) as error:
             self.busy = False
             self.error(str(error))
             return False
@@ -359,8 +378,7 @@ class UpdateWindow(Adw.ApplicationWindow):
         return button
 
     def command(self, arguments, callback):
-        # GTK stays unprivileged. The CLI owns Polkit and the fixed helper;
-        # the existing system service owns the lifetime of dpkg.
+        # GTK stays responsive while the foreground CLI waits for its authorized helper.
         if self.command_pending:
             return
         app = self.get_application()
@@ -379,7 +397,8 @@ class UpdateWindow(Adw.ApplicationWindow):
                 _ok, output, _stderr = child.communicate_utf8_finish(result)
                 if not child.get_if_exited() or child.get_exit_status() != 0:
                     try:
-                        message = "; ".join(json.loads(output).get("blockers", []))
+                        failure = json.loads(output)
+                        message = failure.get("error") or "; ".join(failure.get("blockers", []))
                     except (ValueError, AttributeError, TypeError):
                         message = ""
                     raise ValueError(message or _("The request did not complete. Authorization may have been cancelled."))
@@ -408,18 +427,6 @@ class UpdateWindow(Adw.ApplicationWindow):
             arguments.append("--allow-foreign-removals")
         self.command(arguments, self.prepared)
 
-    def remember(self):
-        self.bookmark.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
-        with tempfile.NamedTemporaryFile(mode="w", dir=self.bookmark.parent, delete=False) as stream:
-            temporary = Path(stream.name)
-            try:
-                json.dump({"job_id": self.job}, stream)
-                stream.flush()
-                os.fsync(stream.fileno())
-                os.replace(temporary, self.bookmark)
-            finally:
-                temporary.unlink(missing_ok=True)
-
     def prepared(self, report, error):
         self.busy = False
         if error:
@@ -427,14 +434,6 @@ class UpdateWindow(Adw.ApplicationWindow):
                 self.error(error)
             return
         self.job = report["job_id"]
-        try:
-            self.remember()
-        except OSError:
-            if not self.closed:
-                self.page(_("Could not save the update session"), self.job)
-                self.content.append(text(_("Keep this job ID to reconnect from the command line.")))
-                self.button(_("Continue"), lambda *_: self.show_job(report), True)
-            return
         if not self.closed:
             self.show_job(report)
 
@@ -466,45 +465,35 @@ class UpdateWindow(Adw.ApplicationWindow):
         if self.busy or not self.job or not self.report:
             return
         self.busy = True
-        self.page(_("Starting your update…"))
+        self.show_job({"state": "queued"})
         self.command(["install", self.job, "--confirm-plan", self.plan_hash], self.started)
 
     def started(self, report, error):
         if self.closed:
             return
         if error:
-            # A service may have started before its caller lost the response.
-            self.connection_error(error)
-        else:
-            self.show_job(report)
+            try:
+                report = jobs.status(self.job, os.getuid())
+            except (OSError, ValueError):
+                report = None
+            if not report or report.get("state") not in jobs.TERMINAL | {"prepared"}:
+                report = {"state": "interrupted", "error": error}
+        self.show_job(report)
+        if error:
+            self.content.append(text(error, "dim-label"))
 
     def poll_job(self):
         self.poll_source = None
-        if not self.closed and self.job:
-            self.command(["status", self.job], self.queried)
-        return GLib.SOURCE_REMOVE
-
-    def queried(self, report, error):
-        if error and not self.closed:
-            from .jobs import ROOT
+        if not self.closed and self.command_pending:
             try:
-                removed = not (ROOT / self.job).exists()
-            except OSError:
-                removed = False
-            if removed:
-                self.discarded(None, None)
-                return
-        self.started(report, error)
-
-    def connection_error(self, reason):
-        self.busy = True
-        self.back.set_visible(False)
-        self.page(_("Cannot read the update status"),
-                  _("The update may still be running. Reconnect to check it; do not start another installation."),
-                  "dialog-warning-symbolic", "warning")
-        self.content.append(text(reason, "dim-label"))
-        self.content.append(text(self.job, "caption", "dim-label"))
-        self.button(_("Reconnect"), lambda *_: self.poll_job(), True)
+                report = jobs.status(self.job, os.getuid())
+            except (ValueError, OSError):
+                report = {}
+            if report.get("state") in {"queued", "checking", "installing", "handoff"}:
+                self.show_job(report)
+            else:
+                self.poll_source = GLib.timeout_add_seconds(1, self.poll_job)
+        return GLib.SOURCE_REMOVE
 
     def discard(self, *_args):
         if self.busy or not self.job:
@@ -517,13 +506,9 @@ class UpdateWindow(Adw.ApplicationWindow):
         self.busy = False
         if error:
             if not self.closed:
-                self.connection_error(error)
+                self.started(None, error)
             return
         self.job = None
-        try:
-            self.bookmark.unlink(missing_ok=True)
-        except OSError:
-            pass
         if not self.closed:
             self.home()
 
@@ -549,7 +534,7 @@ class UpdateWindow(Adw.ApplicationWindow):
                     self.content.prepend(text(_("The updater has been upgraded. Review and confirm the remaining update."), "accent"))
                 if preview["state"] != "already-installed":
                     self.button(_("Start Update"), self.start_update, True)
-                    self.content.append(text(_("Keep your computer connected to power. You can close this window and return to check progress."), "caption", "dim-label"))
+                    self.content.append(text(_("Keep this window open until the update finishes."), "caption", "dim-label"))
             self.button(_("Remove Imported File"), self.discard)
             return
         if self.busy:
@@ -557,7 +542,7 @@ class UpdateWindow(Adw.ApplicationWindow):
             if state == "handoff":
                 title = _("Restarting the updater…")
             if self.progress_bar is None:
-                self.page(title, _("Keep your computer connected to power. Closing this window will not stop the update."))
+                self.page(title, _("Keep this window open until the update finishes."))
                 self.progress_bar = Gtk.ProgressBar(show_text=True)
                 self.content.append(self.progress_bar)
                 self.package_status = text("", "dim-label")
@@ -618,6 +603,8 @@ class UpdateWindow(Adw.ApplicationWindow):
         return detail
 
     def on_close(self, *_):
+        if self.command_pending:
+            return True
         self.closed = True
         if self.poll_source:
             GLib.source_remove(self.poll_source)

@@ -17,11 +17,9 @@ from anduinos_offline_updater.planning import replaces_runtime
 
 
 class ApplyCommandTests(unittest.TestCase):
-    def apply(self, helper, statuses=(), answers=(), flags=()):
+    def apply(self, helper, answers=(), flags=()):
         with patch.object(cli.os, "geteuid", return_value=0), \
                 patch.object(cli, "call_helper", side_effect=helper) as service, \
-                patch.object(jobs, "status", side_effect=statuses), \
-                patch.object(cli.time, "sleep"), \
                 patch("builtins.input", side_effect=answers) as prompt, \
                 redirect_stdout(io.StringIO()) as out, redirect_stderr(io.StringIO()) as err:
             code = cli.main(["apply", *flags, "/tmp/update.atgz"])
@@ -59,22 +57,18 @@ class ApplyCommandTests(unittest.TestCase):
 
     def test_waits_for_result_and_reports_reboot(self):
         code, out, _, commands, prompts = self.apply(
-            [self.plan(), {"state": "queued", "job_id": "test-job"}], answers=["yes"],
-            statuses=[{"state": "checking", "job_id": "test-job"},
-                      {"state": "installing", "job_id": "test-job", "stage": 1, "stage_count": 1},
-                      {"state": "complete", "reboot_required": True}])
+            [self.plan(), {"state": "complete", "reboot_required": True}], answers=["yes"])
         self.assertEqual(code, 0)
         self.assertEqual(prompts, 1)
         self.assertEqual(commands[-1], call("start", "test-job", "first"))
-        self.assertEqual(out.count("Checking the installation"), 1)
+        self.assertEqual(out.count("Installing the update"), 1)
         self.assertIn("Update complete.", out)
         self.assertIn("Restart your computer", out)
 
     def test_yes_confirms_a_new_plan_after_the_updater_handoff(self):
         handoff = self.plan("fresh", confirmation_required=True)
         code, out, _, commands, prompts = self.apply(
-            [self.plan(state="updater-update-required"), {"state": "handoff", "job_id": "test-job"},
-             {"state": "complete"}], flags=["-y"], statuses=[handoff])
+            [self.plan(state="updater-update-required"), handoff, {"state": "complete"}], flags=["-y"])
         self.assertEqual(code, 0)
         self.assertEqual(prompts, 0)
         self.assertIn("Remaining update plan", out)
@@ -104,9 +98,9 @@ class ApplyCommandTests(unittest.TestCase):
         self.assertIn("Package installation failed", err)
         self.assertIn("status test-job", err)
 
-    def test_ctrl_c_stops_following_without_discarding_a_running_job(self):
+    def test_interrupted_foreground_install_exits_without_reporting_success(self):
         code, _, err, commands, _ = self.apply(
-            [self.plan(), {"state": "queued", "job_id": "test-job"}], statuses=[KeyboardInterrupt], flags=["-y"])
+            [self.plan(), KeyboardInterrupt], flags=["-y"])
         self.assertEqual(code, 130)
         self.assertIn("status test-job", err)
         self.assertEqual(commands[-1], call("start", "test-job", "first"))
@@ -124,11 +118,12 @@ class InstallationChecks(unittest.TestCase):
     def test_interrupted_import_removes_incomplete_job(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
+            jobs.atomic_json(root / ".boot-id", jobs.boot_id())
             with patch.object(jobs, "ROOT", root), patch.object(jobs, "trusted_directory", return_value=root), \
                     patch.object(jobs, "copy_as_user", side_effect=KeyboardInterrupt):
                 with self.assertRaises(KeyboardInterrupt):
                     jobs.prepare(Path("/tmp/update.atgz"), 0)
-            self.assertEqual(list(root.iterdir()), [])
+            self.assertEqual([entry.name for entry in root.iterdir()], [".boot-id"])
 
     def test_targets_are_checked_even_if_os_version_already_matches(self):
         apt_pkg.init_config(); apt_pkg.init_system()
@@ -241,18 +236,40 @@ class InstallationChecks(unittest.TestCase):
                 self.assertEqual(report["source_version"], "2.0.0")
                 self.assertEqual(report["target_version"], "2.0.5")
 
-    def test_completed_job_does_not_repeat_a_satisfied_reboot_request(self):
+    def test_previous_boot_is_forgotten_on_open(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            job = root / ("a" * 32)
+            job.mkdir()
+            (job / "bundle.atgz").write_bytes(b"part of an import")
+            original = root / "my-update.atgz"
+            original.write_bytes(b"original")
+            jobs.atomic_json(root / ".boot-id", "previous-boot")
+            jobs.clean_previous_boot(root, jobs.JOB_NAME, os.getuid())
+            self.assertFalse(job.exists())
+            self.assertEqual(original.read_bytes(), b"original")
+            job.mkdir()
+            jobs.clean_previous_boot(root, jobs.JOB_NAME, os.getuid())
+            self.assertTrue(job.is_dir(), "Opening a second window must preserve current work")
+
+    def test_first_upgrade_preserves_current_jobs_and_clears_old_previews(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            old = root / "offline-updater-abcdefgh"
+            recent = root / "offline-updater-bcdefghi"
+            old.mkdir(); recent.mkdir()
+            os.utime(old, (1, 1))
+            jobs.clean_previous_boot(root, jobs.PREVIEW_NAME, os.getuid())
+            self.assertFalse(old.exists())
+            self.assertTrue(recent.exists())
+
+    def test_previous_boot_plan_cannot_be_read(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory)
-            jobs.update(path, state="complete", owner_uid=1000, reboot_required=True, boot_id="previous-boot")
-            with patch("anduinos_offline_updater.jobs.job_path", return_value=path):
-                with patch.object(Path, "exists", return_value=False):
-                    self.assertFalse(jobs.status("unused", 1000)["reboot_required"])
-                with patch.object(Path, "exists", return_value=True):
-                    self.assertTrue(jobs.status("unused", 1000)["reboot_required"])
-                jobs.update(path, boot_id=Path("/proc/sys/kernel/random/boot_id").read_text().strip())
-                with patch.object(Path, "exists", return_value=False):
-                    self.assertTrue(jobs.status("unused", 1000)["reboot_required"])
+            jobs.update(path, state="prepared", owner_uid=0, boot_id="previous-boot")
+            with patch.object(jobs, "job_path", return_value=path):
+                with self.assertRaisesRegex(BundleError, "previous boot"):
+                    jobs.status("unused", 0)
 
     def test_hook_success_without_snapshot_is_not_reported_as_protected(self):
         with tempfile.TemporaryDirectory() as directory:

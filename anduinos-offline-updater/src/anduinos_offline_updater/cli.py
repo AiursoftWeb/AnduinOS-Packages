@@ -5,7 +5,6 @@ import os
 import subprocess
 import sys
 import tempfile
-import time
 from pathlib import Path
 
 from . import VERSION
@@ -33,9 +32,9 @@ def call_helper(*args):
     try:
         report = json.loads(result.stdout)
     except json.JSONDecodeError as error:
-        raise BundleError("Could not read the installation service response") from error
+        raise BundleError("Could not read the installation response") from error
     if result.returncode:
-        raise BundleError("; ".join(report.get("blockers", [])) or "Installation service request failed")
+        raise BundleError(report.get("error") or "; ".join(report.get("blockers", [])) or "Installation request failed")
     return report
 
 
@@ -47,26 +46,6 @@ def show_plan(plan):
         before = change["before"] or "not installed"
         after = change["after"] or "removed"
         print(f'  {change["name"]}:{change["architecture"]}  {before} → {after}')
-
-
-def wait_for_update(job):
-    from . import jobs
-
-    previous_message = None
-    while job["state"] in {"queued", "checking", "installing", "handoff"}:
-        state = job["state"]
-        if state == "installing":
-            message = f'Installing stage {job["stage"]} of {job["stage_count"]}…'
-        elif state == "handoff":
-            message = "Restarting the updated installation worker…"
-        else:
-            message = "Checking the installation…"
-        if message != previous_message:
-            print(message, flush=True)
-            previous_message = message
-        time.sleep(1)
-        job = jobs.status(job["job_id"], os.getuid())
-    return job
 
 
 def apply_update(file, assume_yes, *, allow_foreign_removals=False):
@@ -108,7 +87,8 @@ def apply_update(file, assume_yes, *, allow_foreign_removals=False):
                         print("Update cancelled.")
                     return 1
 
-            job = wait_for_update(call_helper("start", job_id, job["plan_sha256"]))
+            print("Installing the update…", flush=True)
+            job = call_helper("start", job_id, job["plan_sha256"])
             if job["state"] in {"complete", "already-installed"}:
                 print("Update complete.")
                 if job.get("reboot_required"):
@@ -119,7 +99,7 @@ def apply_update(file, assume_yes, *, allow_foreign_removals=False):
                 raise BundleError(detail)
         raise BundleError("The update requested another confirmation. Review the saved job.")
     except KeyboardInterrupt:
-        print("\nStopped following the update.", file=sys.stderr)
+        print("\nUpdate interrupted. Check the system package state before retrying.", file=sys.stderr)
         exit_code = 130
     except (ValueError, OSError, subprocess.SubprocessError) as error:
         print(f"Update failed: {error}", file=sys.stderr)
@@ -134,6 +114,19 @@ def main(argv=None):
     if not argv or argv == ["gui"]:
         from .gui import main as gui_main
         return gui_main()
+    if argv == ["cleanup"]:
+        from . import jobs
+        try:
+            cache = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "anduinos-offline-updater"
+            jobs.clean_previous_boot(cache, jobs.PREVIEW_NAME, os.getuid())
+            if jobs.needs_cleanup(jobs.ROOT):
+                prefix = [] if os.geteuid() == 0 else ["/usr/bin/pkexec"]
+                subprocess.run([*prefix, jobs.CLEANUP_HELPER], check=True)
+            print("{}")
+            return 0
+        except (OSError, ValueError, subprocess.SubprocessError) as error:
+            print(json.dumps({"blockers": [str(error)]}))
+            return 2
     client_version = running_version()
     parser = argparse.ArgumentParser(description="Inspect or install a signed AnduinOS offline update.")
     parser.add_argument("--version", action="version", version=client_version)

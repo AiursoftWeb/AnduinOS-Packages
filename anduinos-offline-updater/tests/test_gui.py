@@ -30,6 +30,11 @@ class DesktopTests(unittest.TestCase):
         self.fixture.setUp()
         self.state_patch = patch.object(self.gui.GLib, "get_user_state_dir", return_value=str(self.fixture.work / "state"))
         self.state_patch.start()
+        self.addCleanup(self.state_patch.stop)
+        cache_patch = patch.object(self.gui.GLib, "get_user_cache_dir", return_value=str(self.fixture.work / "cache"))
+        cache_patch.start()
+        self.addCleanup(cache_patch.stop)
+        self.legacy_bookmark = self.fixture.work / "state/anduinos-offline-updater/job.json"
         self.window = self.gui.UpdateWindow(self.application)
         self.window.present()
         self.status = Path("/var/lib/dpkg/status")
@@ -37,7 +42,6 @@ class DesktopTests(unittest.TestCase):
 
     def tearDown(self):
         self.window.close()
-        self.state_patch.stop()
         self.fixture.tearDown()
         self.assertEqual(hashlib.sha256(self.status.read_bytes()).hexdigest(), self.before)
 
@@ -208,10 +212,8 @@ class DesktopTests(unittest.TestCase):
         self.assertIn("downgrade", report["compatibility_issues"], "Full diagnostics remain available")
 
     def test_closing_window_allows_child_to_clean_up(self):
-        directory = self.fixture.work / "user-cache"
-        with patch.object(self.gui.GLib, "get_user_cache_dir", return_value=str(directory)):
-            self.complete(self.fixture.bundle, close=True)
-        self.assertFalse(any((directory / "anduinos-offline-updater").iterdir()))
+        self.complete(self.fixture.bundle, close=True)
+        self.assertEqual([p.name for p in self.window.cache.iterdir()], [".boot-id"])
 
     def job_report(self, preview, **fields):
         return dict(job_id="a" * 32, state="prepared", plan_sha256="b" * 64, preview=preview, **fields)
@@ -235,7 +237,7 @@ class DesktopTests(unittest.TestCase):
             prepared = self.job_report(preview)
             self.window.prepared(prepared, None)
             self.assertFalse(self.window.back.get_visible())
-            self.assertEqual(json.loads(self.window.bookmark.read_text())["job_id"], "a" * 32)
+            self.assertFalse(self.legacy_bookmark.exists())
             self.window.start_update()
             self.assertEqual(command.call_args.args[0], ["install", "a" * 32, "--confirm-plan", "b" * 64])
             self.window.start_update()
@@ -293,7 +295,7 @@ class DesktopTests(unittest.TestCase):
         self.window.prepared(None, "Authorization cancelled")
         self.assertFalse(self.window.busy)
         self.assertIsNone(self.window.job)
-        self.assertFalse(self.window.bookmark.exists())
+        self.assertFalse(self.legacy_bookmark.exists())
         self.assertIn(self.gui._("No system packages were changed."), self.labels())
 
     def test_handoff_requires_a_new_confirmation_and_never_autostarts(self):
@@ -362,7 +364,6 @@ class DesktopTests(unittest.TestCase):
 
     def test_done_closes_without_authorization_reboot_or_erasing_diagnostics(self):
         self.window.job = "a" * 32
-        self.window.remember()
         self.window.show_job(dict(state="complete", source_version="2.0.0", target_version="2.0.5", reboot_required=False))
         self.assertIn(self.gui._("You can keep using your computer."), self.labels())
         self.assertNotIn(self.gui._("Restart your computer to finish applying the update."), self.labels())
@@ -372,7 +373,7 @@ class DesktopTests(unittest.TestCase):
             button.emit("clicked")
             command.assert_not_called()
         self.assertTrue(self.window.closed)
-        self.assertTrue(self.window.bookmark.exists())
+        self.assertFalse(self.legacy_bookmark.exists())
         self.assertTrue(self.fixture.bundle.exists())
 
     def test_already_installed_shows_one_version_without_claiming_an_upgrade(self):
@@ -381,47 +382,48 @@ class DesktopTests(unittest.TestCase):
         self.assertIn(self.gui._("AnduinOS {version}").format(version="2.0.5"), self.labels())
         self.assertIn(self.gui._("Done"), self.labels())
 
-    def test_reopen_reconnects_without_reinstalling_or_trusting_a_saved_hash(self):
-        preview = self.complete(self.fixture.bundle)
-        self.window.prepared(self.job_report(preview), None)
+    def test_open_cleans_before_showing_the_file_chooser(self):
         self.window.close()
-        with patch.object(self.gui.UpdateWindow, "command") as command:
+        self.legacy_bookmark.parent.mkdir(parents=True, exist_ok=True)
+        self.legacy_bookmark.write_text(json.dumps({"job_id": "a" * 32}))
+        with patch.object(self.gui.jobs, "needs_cleanup", return_value=True), \
+                patch.object(self.gui.UpdateWindow, "command") as command:
             self.window = self.gui.UpdateWindow(self.application)
             self.window.present()
-            self.assertEqual(command.call_args.args[0], ["status", "a" * 32])
+            self.assertEqual(command.call_args.args[0], ["cleanup"])
+            self.assertNotIn(self.gui._("Choose Update File"), self.labels())
+            self.assertTrue(self.window.busy)
+            self.assertFalse(self.legacy_bookmark.exists())
+            self.window.opened({}, None)
+            self.assertIn(self.gui._("Choose Update File"), self.labels())
+            self.assertIsNone(self.window.job)
+
+    def test_foreground_install_keeps_window_open_until_it_finishes(self):
+        self.window.command_pending = True
+        self.window.job = "a" * 32
         self.window.show_job(dict(state="installing", progress={}))
-        with patch.object(self.window, "command") as command:
-            self.window.close()
-            command.assert_not_called()
-            self.assertIsNone(self.window.poll_source)
-        self.assertTrue(self.window.bookmark.exists())
+        self.assertTrue(self.window.on_close())
+        self.assertFalse(self.window.closed)
+        self.window.command_pending = False
+        self.window.started(dict(state="complete"), None)
+        self.assertFalse(self.window.on_close())
 
-    def test_response_loss_keeps_the_job_and_only_offers_reconnect(self):
-        self.window.job = "a" * 32
-        self.window.started(None, "Caller response was lost")
+    def test_unsuccessful_cleanup_can_be_retried_before_selecting(self):
+        self.window.opened(None, "Cleanup could not finish")
         self.assertTrue(self.window.busy)
-        self.assertIn(self.gui._("Reconnect"), self.labels())
-        self.assertNotIn(self.gui._("Start Update"), self.labels())
+        self.assertIn("Cleanup could not finish", self.labels())
+        self.assertNotIn(self.gui._("Choose Update File"), self.labels())
 
-    def test_session_removed_from_cli_does_not_leave_the_app_stuck(self):
-        self.window.job = "a" * 32
-        self.window.remember()
-        with patch("anduinos_offline_updater.jobs.ROOT", self.fixture.work / "removed-jobs"):
-            self.window.queried(None, "Job no longer exists")
-        self.assertIsNone(self.window.job)
-        self.assertFalse(self.window.bookmark.exists())
-        self.assertFalse(self.window.busy)
-
-    def test_discard_is_explicit_and_only_clears_bookmark_after_success(self):
+    def test_discard_clears_only_the_imported_job(self):
         preview = self.complete(self.fixture.bundle)
         self.window.prepared(self.job_report(preview), None)
         with patch.object(self.window, "command") as command:
             self.window.discard()
             self.assertEqual(command.call_args.args[0], ["discard", "a" * 32])
-            self.assertTrue(self.window.bookmark.exists())
+            self.assertFalse(self.legacy_bookmark.exists())
             self.window.discarded(dict(state="discarded"), None)
         self.assertIsNone(self.window.job)
-        self.assertFalse(self.window.bookmark.exists())
+        self.assertFalse(self.legacy_bookmark.exists())
         self.assertTrue(self.fixture.bundle.exists())
 
 
