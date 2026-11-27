@@ -305,6 +305,7 @@ class ManualExecutorTests(unittest.TestCase):
         step.preflight(context)
         execution = context.values["manual_storage_execution_plan"]
         self.assertIs(context.values["storage_execution_plan"], execution)
+        self.assertIn("wipefs", runner.required)
         for name, device in execution.commands.devices.items():
             filesystem = {
                 "efi-system": "vfat",
@@ -317,6 +318,11 @@ class ManualExecutorTests(unittest.TestCase):
         with patch("installer_core.storage_steps.Path.exists", return_value=True):
             step.execute(context)
         step.verify(context)
+        commands = [command for command, _ in runner.commands]
+        expected = [("wipefs", "--all", "--", cmd[-1]) for cmd in execution.commands.format]
+        self.assertEqual([cmd for cmd in commands if cmd[0] == "wipefs"], expected)
+        for wipe, formatter in zip(expected, execution.commands.format):
+            self.assertEqual(commands[commands.index(formatter) - 1], wipe)
         flattened = {
             argument
             for command, _kwargs in runner.commands

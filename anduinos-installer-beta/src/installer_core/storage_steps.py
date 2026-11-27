@@ -163,13 +163,12 @@ class PrepareStorageStep:
             "parted",
             "partprobe",
             "udevadm",
+            "wipefs",
             "mkfs.vfat",
             "swapon",
             "swapoff",
             "sync",
         ]
-        if context.plan.storage.mode is InstallMode.ERASE_DISK:
-            commands.append("wipefs")
         if context.plan.boot.esp_replacement is not None:
             commands.append("blkid")
         if context.plan.storage.swap_size_mib:
@@ -292,12 +291,9 @@ class PrepareStorageStep:
             volume = encrypted.get(command[-1])
             if volume is not None:
                 prepare_encrypted_volume(context, self.runner, volume)
-            elif isinstance(execution_plan, EraseDiskExecutionPlan):
-                # mkfs.btrfs --force does not remove LUKS signatures at byte
-                # 0/16384. Reinstalling an encrypted disk as plaintext would
-                # otherwise leave both signatures and still probe as LUKS.
-                # FORMAT already authorizes this exact physical partition;
-                # never clear a preserved/reused ESP or a whole-disk device.
+            else:
+                # A formatter can leave an older filesystem signature intact.
+                # Each entry here authorizes formatting this partition only.
                 self.runner.run(("wipefs", "--all", "--", command[-1]), timeout=30)
             self.runner.run(command, timeout=300)
             if guided or manual:

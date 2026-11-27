@@ -166,6 +166,11 @@ class GuidedPrepareStorageTests(unittest.TestCase):
         step.verify(context)
 
         commands = [item[0] for item in runner.commands]
+        self.assertIn("wipefs", runner.required)
+        expected = [("wipefs", "--all", "--", cmd[-1]) for cmd in frozen.commands.format]
+        self.assertEqual([cmd for cmd in commands if cmd[0] == "wipefs"], expected)
+        for wipe, formatter in zip(expected, frozen.commands.format):
+            self.assertEqual(commands[commands.index(formatter) - 1], wipe)
         flattened = {argument for command in commands for argument in command}
         self.assertNotIn("mklabel", flattened)
         self.assertNotIn("rm", flattened)
