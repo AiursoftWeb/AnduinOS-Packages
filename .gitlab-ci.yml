@@ -439,6 +439,13 @@ anduinos-templates:
   variables:
     PACKAGE_DIR: anduinos-templates
 
+anduinos-copy-file-path:
+  extends: .publish
+  needs:
+    - test-all
+  variables:
+    PACKAGE_DIR: anduinos-copy-file-path
+
 anduinos-ufwall-gtk:
   extends: .publish
   needs:
@@ -824,6 +831,7 @@ anduinos-desktop:
     - base-files
     - anduinos-theme
     - anduinos-templates
+    - anduinos-copy-file-path
     - anduinos-software-properties-common
     - anduinos-no-snapd
     - anduinos-kernel-parameters

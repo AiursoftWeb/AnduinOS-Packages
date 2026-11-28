@@ -1,0 +1,49 @@
+<Project Sdk="Aiursoft.Apkg.Sdk">
+  <PropertyGroup>
+    <PackageName>anduinos-copy-file-path</PackageName>
+    <PackageVersion>2.1.0-1+$(SuiteShortName)</PackageVersion>
+    <Maintainer>AnduinOS Team &lt;anduin@aiursoft.com&gt;</Maintainer>
+    <PackageDescription>GNOME Files (Nautilus) extension that adds a Copy Path entry to the file context menu</PackageDescription>
+    <Section>gnome</Section>
+    <PackageHomepage>https://www.anduinos.com</PackageHomepage>
+    <RepositoryUrl>https://github.com/AiursoftWeb/AnduinOS-Packages</RepositoryUrl>
+    <LicenseType>GPL-3.0</LicenseType>
+    <TargetDistro>anduinos</TargetDistro>
+    <TargetSuites>resolute-addon stonking-addon</TargetSuites>
+    <TargetArchitectures>amd64 arm64</TargetArchitectures>
+    <Component>main</Component>
+    <SuiteShortNameMap>resolute-addon=resolute stonking-addon=stonking</SuiteShortNameMap>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <DependencyCheckSource Url="https://mirror.aiursoft.com/ubuntu" SuiteMap="resolute-addon=resolute stonking-addon=stonking" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Dependency Include="nautilus" />
+    <Dependency Include="libnautilus-extension4" />
+    <Dependency Include="libgtk-4-1" />
+    <Dependency Include="libglib2.0-0t64 | libglib2.0-0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PrebuildCommand Run="bash build.sh amd64" Condition="'$(Arch)' == 'amd64'" />
+    <PrebuildCommand Run="bash build.sh arm64" Condition="'$(Arch)' == 'arm64'" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <IncludeFile Include="obj/amd64/libnautilus-copy-file-path.so"
+                 Target="/usr/lib/x86_64-linux-gnu/nautilus/extensions-4/libnautilus-copy-file-path.so"
+                 Mode="644"
+                 Condition="'$(Arch)' == 'amd64'" />
+    <IncludeFile Include="obj/arm64/libnautilus-copy-file-path.so"
+                 Target="/usr/lib/aarch64-linux-gnu/nautilus/extensions-4/libnautilus-copy-file-path.so"
+                 Mode="644"
+                 Condition="'$(Arch)' == 'arm64'" />
+    <IncludeFolder Include="locale" Target="/usr/share/locale" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TestCommand Name="source" Profile="anduinos-package-release-test" Run="bash tests/test-package.sh" TimeoutSeconds="300" />
+  </ItemGroup>
+</Project>
