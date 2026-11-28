@@ -36,6 +36,13 @@ def values(parser):
             'memory': memory, **weights(parser)}
 
 
+def user_has_left(uid):
+    # A GDM greeter's bus socket can outlive its dynamic account.
+    users = subprocess.check_output(['/usr/bin/loginctl', 'list-users', '--json=short'],
+                                    env={'LANG': 'C.UTF-8'}, cwd='/', timeout=30)
+    return not any(user['uid'] == uid and user['state'] != 'closing' for user in json.loads(users))
+
+
 def ctl(*arguments, user=None, check=True):
     command = ['/usr/bin/systemctl']
     environment = {'PATH': '/usr/sbin:/usr/bin:/sbin:/bin', 'LANG': 'C.UTF-8'}
@@ -49,8 +56,9 @@ def ctl(*arguments, user=None, check=True):
     command.extend(arguments)
     result = subprocess.run(command, env=environment, cwd='/', text=True,
                             capture_output=True, timeout=30)
-    if check and result.returncode:
-        raise RuntimeError(result.stderr.strip() or 'Resource service operation failed')
+    if check and result.returncode and (user is None or not user_has_left(user)):
+        message = result.stderr.strip() or 'Resource service operation failed'
+        raise RuntimeError(message if user is None else f'User {user}: {message}')
     return result
 
 
@@ -152,7 +160,7 @@ def apply():
         for uid in graphical:
             ctl('reset-failed', 'uresourced.service', user=uid)
             ctl('start', 'uresourced.service', user=uid)
-    if active() != enabled or any(active(uid) != enabled for uid in graphical):
+    if active() != enabled or any(active(uid) != enabled and not user_has_left(uid) for uid in graphical):
         raise RuntimeError('Resource service state differs from the saved setting; check the journal')
     print(f'Desktop resource priority {"enabled" if enabled else "disabled"}. Saved settings and running services verified.', flush=True)
 

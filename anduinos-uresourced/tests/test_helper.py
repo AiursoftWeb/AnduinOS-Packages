@@ -1,6 +1,7 @@
 """Exercise the installed helper's read and write paths without changing a service."""
 from importlib.machinery import SourceFileLoader
 from importlib.util import module_from_spec, spec_from_loader
+import json
 from pathlib import Path
 import stat
 import tempfile
@@ -82,9 +83,26 @@ class ResourceHelperTests(unittest.TestCase):
                 helper.save({'memory_mib': value})
         self.assertEqual(self.machine.read_text(), MACHINE)
 
+    def test_user_command_errors_only_apply_to_users_still_present(self):
+        failed = SimpleNamespace(returncode=1, stderr='Reload failed')
+        for state in ('active', 'online', 'lingering', 'closing', None):
+            users = [{'uid': 1000, 'state': 'active'}]
+            if state is not None:
+                users.append({'uid': 1001, 'state': state})
+            with (
+                self.subTest(state=state),
+                patch.object(helper.subprocess, 'run', return_value=failed),
+                patch.object(helper.subprocess, 'check_output', return_value=json.dumps(users)),
+            ):
+                if state in ('closing', None):
+                    helper.ctl('daemon-reload', user=1001)
+                else:
+                    with self.assertRaisesRegex(RuntimeError, 'Reload failed'):
+                        helper.ctl('daemon-reload', user=1001)
+
     def test_apply_reloads_graphical_and_lingering_managers(self):
         root = self.machine.parent
-        for uid in (1000, 1001):
+        for uid in (1000, 1001, 1002):
             runtime = root / 'run/user' / str(uid)
             runtime.mkdir(parents=True)
             (runtime / 'bus').touch()
@@ -95,9 +113,15 @@ class ResourceHelperTests(unittest.TestCase):
         for enabled in (False, True):
             with self.subTest(enabled=enabled):
                 self.machine.write_text(MACHINE.replace('Enabled=true', f'Enabled={enabled}'))
+                # User 1002 logs out after Apply discovers their graphical session.
                 helper.active.side_effect = lambda user=None, unit=None: (
-                    user == 1000 if unit == 'graphical-session.target' else enabled and user != 1001)
-                with patch.object(helper, 'Path', side_effect=test_path), patch.object(helper, 'ctl') as ctl:
+                    user in (1000, 1002) if unit == 'graphical-session.target' else enabled and user in (None, 1000))
+                remaining = json.dumps([{'uid': 1000, 'state': 'active'}, {'uid': 1001, 'state': 'lingering'}])
+                with (
+                    patch.object(helper, 'Path', side_effect=test_path),
+                    patch.object(helper, 'ctl') as ctl,
+                    patch.object(helper.subprocess, 'check_output', return_value=remaining),
+                ):
                     helper.apply()
 
                 def actions(uid):
