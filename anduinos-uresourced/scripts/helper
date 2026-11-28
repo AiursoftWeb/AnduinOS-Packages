@@ -40,7 +40,10 @@ def user_has_left(uid):
     # A GDM greeter's bus socket can outlive its dynamic account.
     users = subprocess.check_output(['/usr/bin/loginctl', 'list-users', '--json=short'],
                                     env={'LANG': 'C.UTF-8'}, cwd='/', timeout=30)
-    return not any(user['uid'] == uid and user['state'] != 'closing' for user in json.loads(users))
+    for user in json.loads(users):
+        if user['uid'] == uid:
+            return user['state'] == 'closing' and not user['linger']
+    return True
 
 
 def ctl(*arguments, user=None, check=True):

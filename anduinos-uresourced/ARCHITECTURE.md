@@ -43,7 +43,7 @@ Apply reloads every running user manager after removing the generated session
 drop-in and again when the system daemon recreates it. This updates
 `session.slice` for users whose manager outlives their graphical login.
 If a user operation fails, Apply checks logind. It skips users who have left
-or are logging out and reports failures for users who are still present.
+or are closing without linger. Failures for active and lingering users are reported.
 Only active graphical sessions start the user daemon. The generated file lives
 in `/run`. Boot uses normal upstream service activation.
 During package configuration APKG manages the system service. Once this has

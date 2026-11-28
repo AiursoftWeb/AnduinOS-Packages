@@ -85,16 +85,17 @@ class ResourceHelperTests(unittest.TestCase):
 
     def test_user_command_errors_only_apply_to_users_still_present(self):
         failed = SimpleNamespace(returncode=1, stderr='Reload failed')
-        for state in ('active', 'online', 'lingering', 'closing', None):
-            users = [{'uid': 1000, 'state': 'active'}]
+        for state, linger in (('active', False), ('online', False), ('lingering', True),
+                              ('closing', True), ('closing', False), (None, False)):
+            users = [{'uid': 1000, 'state': 'active', 'linger': False}]
             if state is not None:
-                users.append({'uid': 1001, 'state': state})
+                users.append({'uid': 1001, 'state': state, 'linger': linger})
             with (
-                self.subTest(state=state),
+                self.subTest(state=state, linger=linger),
                 patch.object(helper.subprocess, 'run', return_value=failed),
                 patch.object(helper.subprocess, 'check_output', return_value=json.dumps(users)),
             ):
-                if state in ('closing', None):
+                if state in ('closing', None) and not linger:
                     helper.ctl('daemon-reload', user=1001)
                 else:
                     with self.assertRaisesRegex(RuntimeError, 'Reload failed'):
@@ -116,7 +117,8 @@ class ResourceHelperTests(unittest.TestCase):
                 # User 1002 logs out after Apply discovers their graphical session.
                 helper.active.side_effect = lambda user=None, unit=None: (
                     user in (1000, 1002) if unit == 'graphical-session.target' else enabled and user in (None, 1000))
-                remaining = json.dumps([{'uid': 1000, 'state': 'active'}, {'uid': 1001, 'state': 'lingering'}])
+                remaining = json.dumps([{'uid': 1000, 'state': 'active', 'linger': False},
+                                        {'uid': 1001, 'state': 'lingering', 'linger': True}])
                 with (
                     patch.object(helper, 'Path', side_effect=test_path),
                     patch.object(helper, 'ctl') as ctl,
